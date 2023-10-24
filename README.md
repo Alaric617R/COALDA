@@ -42,6 +42,8 @@ llvm-dis *.bc
 ## RGB
 This is a minimal example, initializing ```32``` random pixels and copy them on the device.
 
+To verify the correctness of a pass, compile and run ```main.cpp```.
+
 ### rgb.cu
 In ```rgb.cu```, there are two versions of the copy function:
 #### ```__global__ void rgb_copy_interleaved(pixel *pixel_dst, pixel *pixel_src)```
