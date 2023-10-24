@@ -10,7 +10,7 @@ __global__ void rgb_copy_interleaved(pixel *pixel_dst, pixel *pixel_src) {
   pixel_dst[threadIdx.x].b = pixel_src[threadIdx.x].b;
 };
 
-__global__ void rgb_copy_interleaved(pixel *pixel_dst, pixel *pixel_src) {
+__global__ void rgb_copy_coalesced(pixel *pixel_dst, pixel *pixel_src) {
   int *ptr_src = (int *)pixel_src;
   int *ptr_dst = (int *)pixel_dst;
   ptr_src[threadIdx.x + 0 * blockDim.x] = ptr_dst[threadIdx.x + 0 * blockDim.x];
