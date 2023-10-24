@@ -1,5 +1,24 @@
 # CUDA Memory Coalescing
 
+## Problem Definition
+In CUDA SIMT programming, we frequently want a consecutive region of memory get filled, such as copy data and shared memory loading.
+
+Each thread usually works with a group of data, such as an RGB pixel, and a few adjacent matrix elements, etc.
+
+The intuitive approach is to have each thread load the elements subsequently, yielding uncoalesced memory access and low memory bandwidth utilization.
+
+We want to identify such patterns and use compiler pass to reorgnize them to a strided pattern.
+
+Currently we only consider the case that all threads filling a consecutive region in memory so that we can neglect which thread holds which data.
+
+## Solution Overview
+
+There are overall two steps:
+
+### Summarize the access region
+
+### Restructure to strided pattern
+
 ## CUDA to LLVM
 
 ### Compile CUDA Executable
