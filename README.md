@@ -8,10 +8,6 @@ Each thread usually works with a group of data, such as an RGB pixel, and a few 
 The intuitive approach is to have each thread load the elements subsequently, yielding uncoalesced memory access and low memory bandwidth utilization.
 
 ![image](https://github.com/zianglih/EECS583_Project/assets/40673516/c29dc0fe-c1b0-4880-be0f-222297b7720a)
-![image](https://github.com/zianglih/EECS583_Project/assets/52993433/6019f708-ea1a-44e2-a650-e7b558a50ace)
-
-
-
 
 
 
@@ -58,6 +54,9 @@ llvm-dis *.bc
 This is a minimal example, initializing ```32``` random pixels and copy them on the device.
 
 To verify the correctness of a pass, compile and run ```main.cpp```.
+
+![image](https://github.com/zianglih/EECS583_Project/assets/52993433/88bfcad0-6f1a-4e49-8d31-1c58e497c5d8)
+
 
 ### rgb.cu
 In ```rgb.cu```, there are two versions of the copy function:
