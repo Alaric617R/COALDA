@@ -7,9 +7,19 @@ Each thread usually works with a group of data, such as an RGB pixel, and a few 
 
 The intuitive approach is to have each thread load the elements subsequently, yielding uncoalesced memory access and low memory bandwidth utilization.
 
-We want to identify such patterns and use compiler pass to reorgnize them to a strided pattern.
+![image](https://github.com/zianglih/EECS583_Project/assets/40673516/c29dc0fe-c1b0-4880-be0f-222297b7720a)
 
+
+For example, suppose n vector of length m are stored in a linear fashion. Element i of vector j denoted as $V_j^i$. Earch thread in the GPU kernel is assigned to one-m length vector. Threads in CUDA are grouped in an array of blocks and every thread in GPU has a unique id which can be defined as $indx = bd*bx +tx$, where bd is rerpesents the block dimension, bx represents the block index, and tx is the offset in a block.
+
+In the case where we want to access thr first components of each vector i.e. address 0, m, 2m ... of the memory, a lot of store and load would need to be performed by the GPU kernel because the size of each load only guarantees one such address. It is trickier since the allowed size of residing threads per GPU block is bd. The solution is to store data in the following fashion: store the first elements of the first bd vectors in consecutive order, followed by the first element of the second bd vectors and so on. The rest of the elements are stored in a similar fashion. If n is not a factor of bdit is needed to pad the remaining data in the last block with some trivial value like 0.
+
+In the linear data storage described above, component i(0 <= i < m) of vector indx (0<=indx<n) is addressed by $m * indx + i$; the same component in the coalesced storage pattern is addressed as $(m*bd)*ixC + bd * ixB + ixA$, where $ixC = floor[(m.indx + i)/(m.bd)]=bx$, $ixB=i$, $ixA=mod(indx,bd)=tx$.
+The original linear indexing is mapped to coalesced indexing according to $$m.indx+i \rightarrow m.bd.bx+i.bd+tx$$.
+
+We want to identify such patterns and use compiler pass to reorgnize them to a strided pattern.
 Currently we only consider the case that all threads filling a consecutive region in memory so that we can neglect which thread holds which data.
+
 
 ## Solution Overview
 
