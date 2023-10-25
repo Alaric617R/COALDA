@@ -8,6 +8,11 @@ Each thread usually works with a group of data, such as an RGB pixel, and a few 
 The intuitive approach is to have each thread load the elements subsequently, yielding uncoalesced memory access and low memory bandwidth utilization.
 
 ![image](https://github.com/zianglih/EECS583_Project/assets/40673516/c29dc0fe-c1b0-4880-be0f-222297b7720a)
+![image](https://github.com/zianglih/EECS583_Project/assets/52993433/6019f708-ea1a-44e2-a650-e7b558a50ace)
+
+
+
+
 
 
 For example, suppose n vector of length m are stored in a linear fashion. Element i of vector j denoted as $V_j^i$. Earch thread in the GPU kernel is assigned to one-m length vector. Threads in CUDA are grouped in an array of blocks and every thread in GPU has a unique id which can be defined as $indx = bd*bx +tx$, where bd is rerpesents the block dimension, bx represents the block index, and tx is the offset in a block.
