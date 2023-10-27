@@ -1,7 +1,4 @@
 build
 *.o
 .vscode
-*.bc
-*.ll
-*.ptx
 *.out
