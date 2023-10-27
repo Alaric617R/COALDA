@@ -66,3 +66,7 @@ This is common but non-coalescing.
 #### ```__global__ void rgb_copy_interleaved(pixel *pixel_dst, pixel *pixel_src)```
 which uses pointers to perform a strided copy.
 This is coalescing.
+
+
+## Useful Resources
+https://docs.nvidia.com/cuda/cuda-binary-utilities/index.html
