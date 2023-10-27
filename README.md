@@ -70,3 +70,5 @@ This is coalescing.
 
 ## Useful Resources
 https://docs.nvidia.com/cuda/cuda-binary-utilities/index.html
+
+https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#using-separate-compilation-in-cuda
