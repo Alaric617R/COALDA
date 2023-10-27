@@ -12,10 +12,7 @@ rm -f default.profraw *_prof *_fplicm *.bc *.profdata *_output *.ll
 clang++ -c -emit-llvm --cuda-gpu-arch=sm_89 ${1}.cu
 
 # Generate binary executable with profiler embedded
-llc -march=nvptx64 -mcpu=sm_89 -filetype=asm ${1}-cuda-nvptx64-nvidia-cuda-sm_89.bc -o ${1}.ptx
-llc -filetype=obj ${1}.ll -o ${1}.o
-clang++ -L/opt/cuda/lib -lcudart ${1}.o ${1}.ptx -o ${1}_prof
-
+clang++ -stdlib=libc++ ${1}.cu -o ${1}_prof --cuda-gpu-arch=sm_89 -L/opt/cuda/lib -lcudart_static -ldl -lrt -pthread
 
 
 # When we run the profiler embedded executable, it generates a default.profraw file that contains the profile data.
