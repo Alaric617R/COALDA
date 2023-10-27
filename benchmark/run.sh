@@ -14,9 +14,10 @@ clang++ -c -emit-llvm --cuda-gpu-arch=sm_89 ${1}.cu
 # Generate binary executable with profiler embedded
 llc -march=nvptx64 -mcpu=sm_89 -filetype=asm ${1}-cuda-nvptx64-nvidia-cuda-sm_89.bc -o ${1}.ptx
 llc -filetype=obj ${1}.bc -o ${1}.o
-nvcc -arch=sm_89 -dlink correct1.ptx correct1.o -o gpuCode.o
 
-nvcc gpuCode.o correct1.o -lcudart -L/opt/cuda/lib -o app
+nvcc -c correct1.cu -o fullcode.o
+nvcc -arch=sm_89 -dlink fullcode.o -o gpuCode.o
+nvcc fullcode.o gpuCode.o -lcudart -L/opt/cuda/lib -o ${1}_prof
 
 
 
@@ -25,4 +26,4 @@ nvcc gpuCode.o correct1.o -lcudart -L/opt/cuda/lib -o app
 
 
 # Cleanup: Remove this if you want to retain the created files. And you do need to.
-rm -f default.profraw *_prof *_fplicm *.bc *.profdata *_output *.ll
+rm -f default.profraw *_prof *_fplicm *.bc *.profdata *_output *.ll *.o *.ptx
