@@ -16,9 +16,16 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
     PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM){
         // Add your code here
 
-
+        errs() << F.getName() << '\n';
+        for (auto &bb : F){
+            bb.printAsOperand(errs(), false); errs() << '\n';
+            for (auto &inst : bb){
+              errs() << inst << '\t' << inst.getOpcodeName() << '\n';
+            }
+        }
         return PreservedAnalyses::all();
     }
+
 };
 }
 
@@ -39,3 +46,7 @@ extern "C" ::llvm::PassPluginLibraryInfo LLVM_ATTRIBUTE_WEAK llvmGetPassPluginIn
     }
   };
 }
+
+
+
+

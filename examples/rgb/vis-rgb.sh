@@ -3,7 +3,7 @@
 # TYPE should be one of: cfg, cfg-only, dom, dom-only, postdom, postdom-only.
 # Default type is cfg.
 
-BENCH=$1
+BENCH="rgb-cuda-nvptx64-nvidia-cuda-sm_89"
 
 # Default to cfg
 VIZ_TYPE=${2:-cfg}
