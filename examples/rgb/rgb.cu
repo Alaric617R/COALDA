@@ -49,3 +49,9 @@ __global__ void rgb_copy_struct_coalesced(pixel *pixel_dst, pixel *pixel_src)
   ptr_dst[threadIdx.x + 1 * blockDim.x] = ptr_src[threadIdx.x + 1 * blockDim.x];
   ptr_dst[threadIdx.x + 2 * blockDim.x] = ptr_src[threadIdx.x + 2 * blockDim.x];
 };
+
+__global__ void rgb_copy_struct_whole(pixel *pix_dst, pixel *pixel_src)
+{
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  pix_dst[tid] = pixel_src[tid];
+};
