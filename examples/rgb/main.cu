@@ -51,7 +51,7 @@ void test_rgb_array()
   cudaFree(device_pixel_cpy);
 }
 
-int main()
+void test_rgb_struct()
 {
   pixel host_pixel_src[32];
   pixel host_pixel_res[32];
@@ -102,6 +102,10 @@ int main()
 
   cudaFree(device_pixel_src);
   cudaFree(device_pixel_cpy);
+}
 
+int main()
+{
+  test_rgb_array();
   return 0;
 }
