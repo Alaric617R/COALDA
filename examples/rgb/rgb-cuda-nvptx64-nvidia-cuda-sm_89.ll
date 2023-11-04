@@ -242,22 +242,51 @@ define dso_local void @_Z25rgb_copy_struct_coalescedP5pixelS0_(ptr noundef %0, p
   ret void
 }
 
-; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare i32 @llvm.nvvm.read.ptx.sreg.ctaid.x() #1
+; Function Attrs: convergent mustprogress noinline norecurse nounwind
+define dso_local void @_Z21rgb_copy_struct_wholeP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
+  %3 = alloca ptr, align 8
+  %4 = alloca ptr, align 8
+  %5 = alloca i32, align 4
+  store ptr %0, ptr %3, align 8
+  store ptr %1, ptr %4, align 8
+  %6 = call i32 @llvm.nvvm.read.ptx.sreg.ctaid.x()
+  %7 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
+  %8 = mul i32 %6, %7
+  %9 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
+  %10 = add i32 %8, %9
+  store i32 %10, ptr %5, align 4
+  %11 = load ptr, ptr %4, align 8
+  %12 = load i32, ptr %5, align 4
+  %13 = sext i32 %12 to i64
+  %14 = getelementptr inbounds %struct.pixel.5, ptr %11, i64 %13
+  %15 = load ptr, ptr %3, align 8
+  %16 = load i32, ptr %5, align 4
+  %17 = sext i32 %16 to i64
+  %18 = getelementptr inbounds %struct.pixel.5, ptr %15, i64 %17
+  call void @llvm.memcpy.p0.p0.i64(ptr align 4 %18, ptr align 4 %14, i64 12, i1 false)
+  ret void
+}
+
+; Function Attrs: nocallback nofree nounwind willreturn memory(argmem: readwrite)
+declare void @llvm.memcpy.p0.p0.i64(ptr noalias nocapture writeonly, ptr noalias nocapture readonly, i64, i1 immarg) #1
 
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare i32 @llvm.nvvm.read.ptx.sreg.ntid.x() #1
+declare i32 @llvm.nvvm.read.ptx.sreg.ctaid.x() #2
 
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare i32 @llvm.nvvm.read.ptx.sreg.tid.x() #1
+declare i32 @llvm.nvvm.read.ptx.sreg.ntid.x() #2
+
+; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
+declare i32 @llvm.nvvm.read.ptx.sreg.tid.x() #2
 
 attributes #0 = { convergent mustprogress noinline norecurse nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="sm_89" "target-features"="+ptx78,+sm_89" }
-attributes #1 = { nocallback nofree nosync nounwind speculatable willreturn memory(none) }
+attributes #1 = { nocallback nofree nounwind willreturn memory(argmem: readwrite) }
+attributes #2 = { nocallback nofree nosync nounwind speculatable willreturn memory(none) }
 
 !llvm.module.flags = !{!0, !1, !2, !3}
-!nvvm.annotations = !{!4, !5, !6, !7}
-!llvm.ident = !{!8, !9}
-!nvvmir.version = !{!10}
+!nvvm.annotations = !{!4, !5, !6, !7, !8}
+!llvm.ident = !{!9, !10}
+!nvvmir.version = !{!11}
 
 !0 = !{i32 2, !"SDK Version", [2 x i32] [i32 11, i32 8]}
 !1 = !{i32 1, !"wchar_size", i32 4}
@@ -267,6 +296,7 @@ attributes #1 = { nocallback nofree nosync nounwind speculatable willreturn memo
 !5 = !{ptr @_Z24rgb_copy_array_coalescedPiS_, !"kernel", i32 1}
 !6 = !{ptr @_Z27rgb_copy_struct_interleavedP5pixelS0_, !"kernel", i32 1}
 !7 = !{ptr @_Z25rgb_copy_struct_coalescedP5pixelS0_, !"kernel", i32 1}
-!8 = !{!"clang version 16.0.6"}
-!9 = !{!"clang version 3.8.0 (tags/RELEASE_380/final)"}
-!10 = !{i32 2, i32 0}
+!8 = !{ptr @_Z21rgb_copy_struct_wholeP5pixelS0_, !"kernel", i32 1}
+!9 = !{!"clang version 16.0.6"}
+!10 = !{!"clang version 3.8.0 (tags/RELEASE_380/final)"}
+!11 = !{i32 2, i32 0}
