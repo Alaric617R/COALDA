@@ -15,7 +15,25 @@ struct pixel
 };
 
 // Commonly used, intuitive but uncoalesced
-__global__ void rgb_copy_interleaved(pixel *pixel_dst, pixel *pixel_src)
+__global__ void rgb_copy_array_interleaved(int *pixel_dst, int *pixel_src)
+{
+  int idx = blockIdx.x * blockDim.x + threadIdx.x;
+  pixel_dst[3 * idx + 0] = pixel_src[3 * idx + 0]; // r
+  pixel_dst[3 * idx + 1] = pixel_src[3 * idx + 1]; // g
+  pixel_dst[3 * idx + 2] = pixel_src[3 * idx + 2]; // b
+};
+
+// Desired, coalesced
+__global__ void rgb_copy_array_coalesced(int *pixel_dst, int *pixel_src)
+{
+  int idx = blockIdx.x * blockDim.x + threadIdx.x;
+  pixel_dst[idx + 0 * blockDim.x] = pixel_src[idx + 0 * blockDim.x]; // r/g/b stride 1
+  pixel_dst[idx + 1 * blockDim.x] = pixel_src[idx + 1 * blockDim.x]; // r/g/b stride 2
+  pixel_dst[idx + 2 * blockDim.x] = pixel_src[idx + 2 * blockDim.x]; // r/g/b stride 3
+};
+
+// Commonly used, intuitive but uncoalesced
+__global__ void rgb_copy_struct_interleaved(pixel *pixel_dst, pixel *pixel_src)
 {
   pixel_dst[threadIdx.x].r = pixel_src[threadIdx.x].r;
   pixel_dst[threadIdx.x].g = pixel_src[threadIdx.x].g;
@@ -23,7 +41,7 @@ __global__ void rgb_copy_interleaved(pixel *pixel_dst, pixel *pixel_src)
 };
 
 // Desired, coalesced
-__global__ void rgb_copy_coalesced(pixel *pixel_dst, pixel *pixel_src)
+__global__ void rgb_copy_struct_coalesced(pixel *pixel_dst, pixel *pixel_src)
 {
   int *ptr_src = (int *)pixel_src;
   int *ptr_dst = (int *)pixel_dst;

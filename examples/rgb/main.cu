@@ -28,7 +28,7 @@ int main()
   dim3 dimGrid = dim3(1, 1, 1);
   dim3 dimBlock = dim3(32, 1, 1);
 
-  rgb_copy_interleaved<<<dimGrid, dimBlock, 32 * sizeof(pixel)>>>(device_pixel_cpy, device_pixel_src);
+  rgb_copy_struct_interleaved<<<dimGrid, dimBlock, 32 * sizeof(pixel)>>>(device_pixel_cpy, device_pixel_src);
   cudaDeviceSynchronize();
 
   cudaMemcpy(host_pixel_res, device_pixel_cpy, 32 * sizeof(pixel), cudaMemcpyDeviceToHost);
