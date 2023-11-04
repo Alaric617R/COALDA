@@ -27,61 +27,69 @@ define dso_local void @_Z26rgb_copy_array_interleavedPiS_(ptr noundef %0, ptr no
   %11 = add i32 %9, %10
   store i32 %11, ptr %5, align 4
   store i32 0, ptr %6, align 4
-  %12 = load ptr, ptr %4, align 8
-  %13 = load i32, ptr %5, align 4
-  %14 = mul nsw i32 3, %13
-  %15 = add nsw i32 %14, 0
-  %16 = sext i32 %15 to i64
-  %17 = getelementptr inbounds i32, ptr %12, i64 %16
-  %18 = load i32, ptr %17, align 4
-  %19 = load ptr, ptr %3, align 8
-  %20 = load i32, ptr %5, align 4
-  %21 = mul nsw i32 3, %20
-  %22 = add nsw i32 %21, 0
-  %23 = sext i32 %22 to i64
-  %24 = getelementptr inbounds i32, ptr %19, i64 %23
-  store i32 %18, ptr %24, align 4
-  %25 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %26 = icmp ult i32 %25, 15
-  br i1 %26, label %27, label %28
+  %12 = load i32, ptr %5, align 4
+  %13 = icmp slt i32 %12, 16
+  br i1 %13, label %14, label %59
 
-27:                                               ; preds = %2
+14:                                               ; preds = %2
+  %15 = load ptr, ptr %4, align 8
+  %16 = load i32, ptr %5, align 4
+  %17 = mul nsw i32 3, %16
+  %18 = add nsw i32 %17, 0
+  %19 = sext i32 %18 to i64
+  %20 = getelementptr inbounds i32, ptr %15, i64 %19
+  %21 = load i32, ptr %20, align 4
+  %22 = load ptr, ptr %3, align 8
+  %23 = load i32, ptr %5, align 4
+  %24 = mul nsw i32 3, %23
+  %25 = add nsw i32 %24, 0
+  %26 = sext i32 %25 to i64
+  %27 = getelementptr inbounds i32, ptr %22, i64 %26
+  store i32 %21, ptr %27, align 4
+  %28 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
+  %29 = icmp ult i32 %28, 10
+  br i1 %29, label %30, label %31
+
+30:                                               ; preds = %14
   store i32 1, ptr %6, align 4
-  br label %29
+  br label %32
 
-28:                                               ; preds = %2
+31:                                               ; preds = %14
   store i32 2, ptr %6, align 4
-  br label %29
+  br label %32
 
-29:                                               ; preds = %28, %27
-  %30 = load ptr, ptr %4, align 8
-  %31 = load i32, ptr %5, align 4
-  %32 = mul nsw i32 3, %31
-  %33 = add nsw i32 %32, 1
-  %34 = sext i32 %33 to i64
-  %35 = getelementptr inbounds i32, ptr %30, i64 %34
-  %36 = load i32, ptr %35, align 4
-  %37 = load ptr, ptr %3, align 8
-  %38 = load i32, ptr %5, align 4
-  %39 = mul nsw i32 3, %38
-  %40 = add nsw i32 %39, 1
-  %41 = sext i32 %40 to i64
-  %42 = getelementptr inbounds i32, ptr %37, i64 %41
-  store i32 %36, ptr %42, align 4
-  %43 = load ptr, ptr %4, align 8
-  %44 = load i32, ptr %5, align 4
-  %45 = mul nsw i32 3, %44
-  %46 = add nsw i32 %45, 2
-  %47 = sext i32 %46 to i64
-  %48 = getelementptr inbounds i32, ptr %43, i64 %47
-  %49 = load i32, ptr %48, align 4
-  %50 = load ptr, ptr %3, align 8
-  %51 = load i32, ptr %5, align 4
-  %52 = mul nsw i32 3, %51
-  %53 = add nsw i32 %52, 2
-  %54 = sext i32 %53 to i64
-  %55 = getelementptr inbounds i32, ptr %50, i64 %54
-  store i32 %49, ptr %55, align 4
+32:                                               ; preds = %31, %30
+  %33 = load ptr, ptr %4, align 8
+  %34 = load i32, ptr %5, align 4
+  %35 = mul nsw i32 3, %34
+  %36 = add nsw i32 %35, 1
+  %37 = sext i32 %36 to i64
+  %38 = getelementptr inbounds i32, ptr %33, i64 %37
+  %39 = load i32, ptr %38, align 4
+  %40 = load ptr, ptr %3, align 8
+  %41 = load i32, ptr %5, align 4
+  %42 = mul nsw i32 3, %41
+  %43 = add nsw i32 %42, 1
+  %44 = sext i32 %43 to i64
+  %45 = getelementptr inbounds i32, ptr %40, i64 %44
+  store i32 %39, ptr %45, align 4
+  %46 = load ptr, ptr %4, align 8
+  %47 = load i32, ptr %5, align 4
+  %48 = mul nsw i32 3, %47
+  %49 = add nsw i32 %48, 2
+  %50 = sext i32 %49 to i64
+  %51 = getelementptr inbounds i32, ptr %46, i64 %50
+  %52 = load i32, ptr %51, align 4
+  %53 = load ptr, ptr %3, align 8
+  %54 = load i32, ptr %5, align 4
+  %55 = mul nsw i32 3, %54
+  %56 = add nsw i32 %55, 2
+  %57 = sext i32 %56 to i64
+  %58 = getelementptr inbounds i32, ptr %53, i64 %57
+  store i32 %52, ptr %58, align 4
+  br label %59
+
+59:                                               ; preds = %32, %2
   ret void
 }
 
