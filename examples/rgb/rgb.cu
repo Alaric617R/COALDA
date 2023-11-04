@@ -18,7 +18,9 @@ struct pixel
 __global__ void rgb_copy_array_interleaved(int *pixel_dst, int *pixel_src)
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int tmp = 0;
   pixel_dst[3 * tid + 0] = pixel_src[3 * tid + 0]; // r
+  if (threadIdx.x < 15) {tmp = 1;} else {tmp = 2;}
   pixel_dst[3 * tid + 1] = pixel_src[3 * tid + 1]; // g
   pixel_dst[3 * tid + 2] = pixel_src[3 * tid + 2]; // b
 };
