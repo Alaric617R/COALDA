@@ -28,8 +28,8 @@ define dso_local void @_Z26rgb_copy_array_interleavedPiS_(ptr noundef %0, ptr no
   store i32 %11, ptr %5, align 4
   store i32 0, ptr %6, align 4
   %12 = load i32, ptr %5, align 4
-  %13 = icmp slt i32 %12, 16
-  br i1 %13, label %14, label %59
+  %13 = icmp slt i32 %12, 10
+  br i1 %13, label %14, label %54
 
 14:                                               ; preds = %2
   %15 = load ptr, ptr %4, align 8
@@ -46,50 +46,37 @@ define dso_local void @_Z26rgb_copy_array_interleavedPiS_(ptr noundef %0, ptr no
   %26 = sext i32 %25 to i64
   %27 = getelementptr inbounds i32, ptr %22, i64 %26
   store i32 %21, ptr %27, align 4
-  %28 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %29 = icmp ult i32 %28, 10
-  br i1 %29, label %30, label %31
+  %28 = load ptr, ptr %4, align 8
+  %29 = load i32, ptr %5, align 4
+  %30 = mul nsw i32 3, %29
+  %31 = add nsw i32 %30, 1
+  %32 = sext i32 %31 to i64
+  %33 = getelementptr inbounds i32, ptr %28, i64 %32
+  %34 = load i32, ptr %33, align 4
+  %35 = load ptr, ptr %3, align 8
+  %36 = load i32, ptr %5, align 4
+  %37 = mul nsw i32 3, %36
+  %38 = add nsw i32 %37, 1
+  %39 = sext i32 %38 to i64
+  %40 = getelementptr inbounds i32, ptr %35, i64 %39
+  store i32 %34, ptr %40, align 4
+  %41 = load ptr, ptr %4, align 8
+  %42 = load i32, ptr %5, align 4
+  %43 = mul nsw i32 3, %42
+  %44 = add nsw i32 %43, 2
+  %45 = sext i32 %44 to i64
+  %46 = getelementptr inbounds i32, ptr %41, i64 %45
+  %47 = load i32, ptr %46, align 4
+  %48 = load ptr, ptr %3, align 8
+  %49 = load i32, ptr %5, align 4
+  %50 = mul nsw i32 3, %49
+  %51 = add nsw i32 %50, 2
+  %52 = sext i32 %51 to i64
+  %53 = getelementptr inbounds i32, ptr %48, i64 %52
+  store i32 %47, ptr %53, align 4
+  br label %54
 
-30:                                               ; preds = %14
-  store i32 1, ptr %6, align 4
-  br label %32
-
-31:                                               ; preds = %14
-  store i32 2, ptr %6, align 4
-  br label %32
-
-32:                                               ; preds = %31, %30
-  %33 = load ptr, ptr %4, align 8
-  %34 = load i32, ptr %5, align 4
-  %35 = mul nsw i32 3, %34
-  %36 = add nsw i32 %35, 1
-  %37 = sext i32 %36 to i64
-  %38 = getelementptr inbounds i32, ptr %33, i64 %37
-  %39 = load i32, ptr %38, align 4
-  %40 = load ptr, ptr %3, align 8
-  %41 = load i32, ptr %5, align 4
-  %42 = mul nsw i32 3, %41
-  %43 = add nsw i32 %42, 1
-  %44 = sext i32 %43 to i64
-  %45 = getelementptr inbounds i32, ptr %40, i64 %44
-  store i32 %39, ptr %45, align 4
-  %46 = load ptr, ptr %4, align 8
-  %47 = load i32, ptr %5, align 4
-  %48 = mul nsw i32 3, %47
-  %49 = add nsw i32 %48, 2
-  %50 = sext i32 %49 to i64
-  %51 = getelementptr inbounds i32, ptr %46, i64 %50
-  %52 = load i32, ptr %51, align 4
-  %53 = load ptr, ptr %3, align 8
-  %54 = load i32, ptr %5, align 4
-  %55 = mul nsw i32 3, %54
-  %56 = add nsw i32 %55, 2
-  %57 = sext i32 %56 to i64
-  %58 = getelementptr inbounds i32, ptr %53, i64 %57
-  store i32 %52, ptr %58, align 4
-  br label %59
-
-59:                                               ; preds = %32, %2
+54:                                               ; preds = %14, %2
   ret void
 }
 
