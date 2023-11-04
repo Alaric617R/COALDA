@@ -29,6 +29,9 @@ void test_rgb_array()
   rgb_copy_array_interleaved<<<dimGrid, dimBlock>>>(device_pixel_cpy, device_pixel_src);
   cudaDeviceSynchronize();
 
+  cudaMemcpy(host_pixel_res, device_pixel_cpy, 3 * num_pixels * sizeof(int), cudaMemcpyDeviceToHost);
+  cudaDeviceSynchronize();
+
   bool success = true;
   printf("Data after device internal copy:\n");
   for (int i = 0; i < num_pixels; i++)
