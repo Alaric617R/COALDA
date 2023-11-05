@@ -10,11 +10,16 @@
 #include "llvm/IR/CFG.h"
 #include <deque>
 #include <optional>
+#include <unordered_set>
 #include <unordered_map>
+#include <string>
 
 using std::deque;
 using std::optional;
 using std::unordered_map;
+using std::unordered_set;
+using std::string;
+using std::nullopt;
 using namespace llvm;
 
 #ifndef DEBUG
@@ -50,6 +55,17 @@ using namespace llvm;
 #define sep_center(center)
 #endif
 
+#if DEBUG
+#define sep_centerBB(center, BB) \
+        for (int i = 0; i < 18; i ++) errs() << '<'; \
+        errs() << "\nBasicBlock:\t"; BB->printAsOperand(errs(),false); errs() << '\n'; \
+        errs() << center << "\n"; \
+        for (int i = 0; i < 18; i ++) errs() << '>'; \
+        errs() << '\n';
+#else
+#define sep_centerBB(center)
+#endif
+
 template<typename ...Args>
 void tLog(Args && ...args)
 {
@@ -71,7 +87,17 @@ void printInfo(bool debug, Args && ...args){
 }
 
 
+// pointer location calculation chain for pointer operand in getelementptr
+struct PtrCalcChain{
+    Value *addressBase;
+    // deque<Value*> 
+};
+// register represents an address that comes from getelementptr
+// this struct gather info for all calculation (Values) that contribute to this address
+// in scale of a basicblock, performes backward data analysis
+struct CoalAddressCalcChain{
 
+};
 
 struct SingleBBCoalAnalysisData{
     // front represents the stores with lowest instruction order (closet to entry of basicblock)
@@ -101,11 +127,21 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
     void runOnOneBB(BasicBlock* targetBB);
 
     void findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData);
+
     // only in parent BB of inst
     void findAllContribution(Instruction* inst);
 
+    // check whether this address belong getelementptr
+    // if @param addressReg is not in the same BB as @param parentStore, return nullopt
+    optional<CoalAddressCalcChain> checkValueRegAddressIsArray(Value* addressReg, StoreInst* parentStore);
 
 
+    /*** helper functions ***/
+    BasicBlock::reverse_iterator reversePos_helper(Instruction* inst);
+
+    BasicBlock::iterator         forwardPos_helper(Instruction* inst);
+
+    optional<PtrCalcChain> ptrOperandAnalysisGEP_helper(GetElementPtrInst* parentGEPInst);
 };
 }
 
@@ -125,6 +161,16 @@ extern "C" ::llvm::PassPluginLibraryInfo LLVM_ATTRIBUTE_WEAK llvmGetPassPluginIn
       );
     }
   };
+}
+
+// test function
+void testInst(BasicBlock* bb){
+  for (auto &inst : *bb){
+      if (auto alloca = dyn_cast<AllocaInst>(&inst)){
+         sep_center( *alloca->getType());
+         sep_center(*alloca->getAllocatedType());
+      }
+  }
 }
 
 
