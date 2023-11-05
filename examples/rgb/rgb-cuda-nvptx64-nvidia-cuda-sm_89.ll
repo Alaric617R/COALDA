@@ -3,14 +3,14 @@ source_filename = "rgb.cu"
 target datalayout = "e-i64:64-i128:128-v16:16-v32:32-n16:32:64"
 target triple = "nvptx64-nvidia-cuda"
 
-%struct.__cuda_builtin_blockIdx_t.1 = type { i8 }
-%struct.__cuda_builtin_blockDim_t.2 = type { i8 }
-%struct.__cuda_builtin_threadIdx_t.3 = type { i8 }
-%struct.pixel.4 = type { i32, i32, i32 }
+%struct.__cuda_builtin_blockIdx_t.2 = type { i8 }
+%struct.__cuda_builtin_blockDim_t.3 = type { i8 }
+%struct.__cuda_builtin_threadIdx_t.4 = type { i8 }
+%struct.pixel.5 = type { i32, i32, i32 }
 
-@blockIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockIdx_t.1, align 1
-@blockDim = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockDim_t.2, align 1
-@threadIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_threadIdx_t.3, align 1
+@blockIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockIdx_t.2, align 1
+@blockDim = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockDim_t.3, align 1
+@threadIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_threadIdx_t.4, align 1
 
 ; Function Attrs: convergent mustprogress noinline norecurse nounwind
 define dso_local void @_Z26rgb_copy_array_interleavedPiS_(ptr noundef %0, ptr noundef %1) #0 {
@@ -157,38 +157,38 @@ define dso_local void @_Z27rgb_copy_struct_interleavedP5pixelS0_(ptr noundef %0,
   %5 = load ptr, ptr %4, align 8
   %6 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
   %7 = zext i32 %6 to i64
-  %8 = getelementptr inbounds %struct.pixel.4, ptr %5, i64 %7
-  %9 = getelementptr inbounds %struct.pixel.4, ptr %8, i32 0, i32 0
+  %8 = getelementptr inbounds %struct.pixel.5, ptr %5, i64 %7
+  %9 = getelementptr inbounds %struct.pixel.5, ptr %8, i32 0, i32 0
   %10 = load i32, ptr %9, align 4
   %11 = load ptr, ptr %3, align 8
   %12 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
   %13 = zext i32 %12 to i64
-  %14 = getelementptr inbounds %struct.pixel.4, ptr %11, i64 %13
-  %15 = getelementptr inbounds %struct.pixel.4, ptr %14, i32 0, i32 0
+  %14 = getelementptr inbounds %struct.pixel.5, ptr %11, i64 %13
+  %15 = getelementptr inbounds %struct.pixel.5, ptr %14, i32 0, i32 0
   store i32 %10, ptr %15, align 4
   %16 = load ptr, ptr %4, align 8
   %17 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
   %18 = zext i32 %17 to i64
-  %19 = getelementptr inbounds %struct.pixel.4, ptr %16, i64 %18
-  %20 = getelementptr inbounds %struct.pixel.4, ptr %19, i32 0, i32 1
+  %19 = getelementptr inbounds %struct.pixel.5, ptr %16, i64 %18
+  %20 = getelementptr inbounds %struct.pixel.5, ptr %19, i32 0, i32 1
   %21 = load i32, ptr %20, align 4
   %22 = load ptr, ptr %3, align 8
   %23 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
   %24 = zext i32 %23 to i64
-  %25 = getelementptr inbounds %struct.pixel.4, ptr %22, i64 %24
-  %26 = getelementptr inbounds %struct.pixel.4, ptr %25, i32 0, i32 1
+  %25 = getelementptr inbounds %struct.pixel.5, ptr %22, i64 %24
+  %26 = getelementptr inbounds %struct.pixel.5, ptr %25, i32 0, i32 1
   store i32 %21, ptr %26, align 4
   %27 = load ptr, ptr %4, align 8
   %28 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
   %29 = zext i32 %28 to i64
-  %30 = getelementptr inbounds %struct.pixel.4, ptr %27, i64 %29
-  %31 = getelementptr inbounds %struct.pixel.4, ptr %30, i32 0, i32 2
+  %30 = getelementptr inbounds %struct.pixel.5, ptr %27, i64 %29
+  %31 = getelementptr inbounds %struct.pixel.5, ptr %30, i32 0, i32 2
   %32 = load i32, ptr %31, align 4
   %33 = load ptr, ptr %3, align 8
   %34 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
   %35 = zext i32 %34 to i64
-  %36 = getelementptr inbounds %struct.pixel.4, ptr %33, i64 %35
-  %37 = getelementptr inbounds %struct.pixel.4, ptr %36, i32 0, i32 2
+  %36 = getelementptr inbounds %struct.pixel.5, ptr %33, i64 %35
+  %37 = getelementptr inbounds %struct.pixel.5, ptr %36, i32 0, i32 2
   store i32 %32, ptr %37, align 4
   ret void
 }
@@ -272,11 +272,11 @@ define dso_local void @_Z21rgb_copy_struct_wholeP5pixelS0_(ptr noundef %0, ptr n
   %11 = load ptr, ptr %4, align 8
   %12 = load i32, ptr %5, align 4
   %13 = sext i32 %12 to i64
-  %14 = getelementptr inbounds %struct.pixel.4, ptr %11, i64 %13
+  %14 = getelementptr inbounds %struct.pixel.5, ptr %11, i64 %13
   %15 = load ptr, ptr %3, align 8
   %16 = load i32, ptr %5, align 4
   %17 = sext i32 %16 to i64
-  %18 = getelementptr inbounds %struct.pixel.4, ptr %15, i64 %17
+  %18 = getelementptr inbounds %struct.pixel.5, ptr %15, i64 %17
   call void @llvm.memcpy.p0.p0.i64(ptr align 4 %18, ptr align 4 %14, i64 12, i1 false)
   ret void
 }
