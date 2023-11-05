@@ -18,13 +18,11 @@ struct pixel
 __global__ void rgb_copy_array_interleaved(int *pixel_dst, int *pixel_src)
 {
   int tid = blockIdx.x * blockDim.x + threadIdx.x;
-  int tmp = 0;
-  if (tid < 10)
-  {
-    pixel_dst[3 * tid + 0] = pixel_src[3 * tid + 0]; // r
-    pixel_dst[3 * tid + 1] = pixel_src[3 * tid + 1]; // g
-    pixel_dst[3 * tid + 2] = pixel_src[3 * tid + 2]; // b
-  }
+  int disrupt = int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  pixel_dst[3 * tid + 0] = pixel_src[3 * tid + 0]; // r
+  pixel_dst[3 * tid + 1] = pixel_src[3 * tid + 1]; // g
+  pixel_dst[3 * tid + 2] = pixel_src[3 * tid + 2]; // b
+  if (disrupt > 10) disrupt = disrupt * 2;
 };
 
 // Desired, coalesced
