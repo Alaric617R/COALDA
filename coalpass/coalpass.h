@@ -8,6 +8,14 @@
 #include  <iostream>
 #include "llvm/Support/Format.h"
 #include "llvm/IR/CFG.h"
+#include <deque>
+#include <optional>
+#include <unordered_map>
+
+using std::deque;
+using std::optional;
+using std::unordered_map;
+using namespace llvm;
 
 #ifndef DEBUG
 #define DEBUG true
@@ -26,11 +34,21 @@
                   for (int i = 0; i < (num); i++) errs() << charc;\
                   errs() << '\n';
 
-#define sep_center(charc, center) \
+#define sep_center_idy(charc, center) \
         for (int i = 0; i < 18; i ++) errs() << charc; \
         errs() << '\t' << center << '\t'; \
         for (int i = 0; i < 18; i ++) errs() << charc; \
         errs() << '\n';
+
+#if DEBUG
+#define sep_center(center) \
+        for (int i = 0; i < 18; i ++) errs() << '<'; \
+        errs() << '\t' << center << '\t'; \
+        for (int i = 0; i < 18; i ++) errs() << '>'; \
+        errs() << '\n';
+#else
+#define sep_center(center)
+#endif
 
 template<typename ...Args>
 void tLog(Args && ...args)
@@ -45,11 +63,22 @@ void printBlockInfo(bool debug, BasicBlock* bb, Args && ...args){
     errs() << "Block: "; bb->printAsOperand(errs(), false); errs() << "\n";
     tLog(args...);
 }
- 
-using namespace llvm;
+
+template<typename ...Args>
+void printInfo(bool debug, Args && ...args){
+    if (!debug) return;
+    tLog(args...);
+}
 
 
-struct coalStoreInst{
+
+
+struct SingleBBCoalAnalysisData{
+    // front represents the stores with lowest instruction order (closet to entry of basicblock)
+    deque<StoreInst*> allStoreInstDeque;
+};
+
+struct CoalStoreInst{
     // store instruction that can be potentially coal-opt
     Instruction* storeInst;
 
@@ -63,9 +92,15 @@ struct coalStoreInst{
 */
 namespace coalPass{
 struct CoalPass : public PassInfoMixin<CoalPass>{
-    PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
-    void runOnOneBB(Function &F, FunctionAnalysisManager &FAM);
+    /** data **/
+    unordered_map<BasicBlock*, SingleBBCoalAnalysisData*> bbCoalDataMap;
 
+    /** methods **/
+    PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
+
+    void runOnOneBB(BasicBlock* targetBB);
+
+    void findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData);
     // only in parent BB of inst
     void findAllContribution(Instruction* inst);
 

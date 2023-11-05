@@ -1,16 +1,32 @@
 #include "coalpass.h"
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
+        sep_center(F.getName());
+        int bb_cnt = 0;
         for (auto &bb : F){
-            bb.printAsOperand(errs(), false); errs() << '\n';
-            runOnOneBB(F, FAM);
+            bb_cnt ++;
+            assert(bbCoalDataMap.find(&bb) == bbCoalDataMap.end());
+            bbCoalDataMap[&bb] = new SingleBBCoalAnalysisData;
+            runOnOneBB(&bb);
         }
-        errs() << "This is Alaric waving!\n";
+
+       
         return PreservedAnalyses::all();
 }
 
-void coalPass::CoalPass::runOnOneBB(Function &F, FunctionAnalysisManager &FAM){
+void coalPass::CoalPass::runOnOneBB(BasicBlock* targetBB){
+      SingleBBCoalAnalysisData *bbCoalAnalysisData = bbCoalDataMap[targetBB];
+      findAllStorePerBB(targetBB, bbCoalAnalysisData);
+}
 
+void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData){
+  sep_center("Function findAllStorePerBB");
+    for (Instruction &inst : *targetBB){
+        if (auto storeInst = dyn_cast<StoreInst>(&inst)){
+          printInfo(DEBUG, inst);
+          bbCoalAnalysisData->allStoreInstDeque.push_back(storeInst);
+        }
+    }
 }
 
 
@@ -20,6 +36,6 @@ void coalPass::CoalPass::findAllContribution(Instruction* inst){
     for (BasicBlock::reverse_iterator curBack = parentBB->rbegin(); curBack != parentBB->rend(); curBack ++){
         if (&(*curBack) == inst) {revStart = curBack; break;}
     }
-    for (; revStart != parentBB->rend(); revStart ++)
+    for (; revStart != parentBB->rend(); revStart ++);
 
 }
