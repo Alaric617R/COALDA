@@ -4,7 +4,7 @@ target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16
 target triple = "x86_64-pc-linux-gnu"
 
 %struct.dim3 = type { i32, i32, i32 }
-%struct.pixel = type { i32, i32, i32 }
+%struct.pixel.0 = type { i32, i32, i32 }
 
 $_ZN4dim3C2Ejjj = comdat any
 
@@ -546,12 +546,12 @@ declare void @llvm.stackrestore(ptr) #4
 
 ; Function Attrs: mustprogress noinline sspstrong uwtable
 define dso_local void @_Z15test_rgb_structv() #2 {
-  %1 = alloca [32 x %struct.pixel], align 16
-  %2 = alloca [32 x %struct.pixel], align 16
+  %1 = alloca [32 x %struct.pixel.0], align 16
+  %2 = alloca [32 x %struct.pixel.0], align 16
   %3 = alloca ptr, align 8
   %4 = alloca ptr, align 8
   %5 = alloca i32, align 4
-  %6 = alloca %struct.pixel, align 4
+  %6 = alloca %struct.pixel.0, align 4
   %7 = alloca i32, align 4
   %8 = alloca %struct.dim3, align 4
   %9 = alloca %struct.dim3, align 4
@@ -571,21 +571,21 @@ define dso_local void @_Z15test_rgb_structv() #2 {
   br i1 %18, label %19, label %35
 
 19:                                               ; preds = %16
-  %20 = getelementptr inbounds %struct.pixel, ptr %6, i32 0, i32 0
+  %20 = getelementptr inbounds %struct.pixel.0, ptr %6, i32 0, i32 0
   %21 = call i32 @rand() #9
   %22 = srem i32 %21, 256
   store i32 %22, ptr %20, align 4
-  %23 = getelementptr inbounds %struct.pixel, ptr %6, i32 0, i32 1
+  %23 = getelementptr inbounds %struct.pixel.0, ptr %6, i32 0, i32 1
   %24 = call i32 @rand() #9
   %25 = srem i32 %24, 256
   store i32 %25, ptr %23, align 4
-  %26 = getelementptr inbounds %struct.pixel, ptr %6, i32 0, i32 2
+  %26 = getelementptr inbounds %struct.pixel.0, ptr %6, i32 0, i32 2
   %27 = call i32 @rand() #9
   %28 = srem i32 %27, 256
   store i32 %28, ptr %26, align 4
   %29 = load i32, ptr %5, align 4
   %30 = sext i32 %29 to i64
-  %31 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %30
+  %31 = getelementptr inbounds [32 x %struct.pixel.0], ptr %1, i64 0, i64 %30
   call void @llvm.memcpy.p0.p0.i64(ptr align 4 %31, ptr align 4 %6, i64 12, i1 false)
   br label %32
 
@@ -609,18 +609,18 @@ define dso_local void @_Z15test_rgb_structv() #2 {
   %41 = load i32, ptr %7, align 4
   %42 = load i32, ptr %7, align 4
   %43 = sext i32 %42 to i64
-  %44 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %43
-  %45 = getelementptr inbounds %struct.pixel, ptr %44, i32 0, i32 0
+  %44 = getelementptr inbounds [32 x %struct.pixel.0], ptr %1, i64 0, i64 %43
+  %45 = getelementptr inbounds %struct.pixel.0, ptr %44, i32 0, i32 0
   %46 = load i32, ptr %45, align 4
   %47 = load i32, ptr %7, align 4
   %48 = sext i32 %47 to i64
-  %49 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %48
-  %50 = getelementptr inbounds %struct.pixel, ptr %49, i32 0, i32 1
+  %49 = getelementptr inbounds [32 x %struct.pixel.0], ptr %1, i64 0, i64 %48
+  %50 = getelementptr inbounds %struct.pixel.0, ptr %49, i32 0, i32 1
   %51 = load i32, ptr %50, align 4
   %52 = load i32, ptr %7, align 4
   %53 = sext i32 %52 to i64
-  %54 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %53
-  %55 = getelementptr inbounds %struct.pixel, ptr %54, i32 0, i32 2
+  %54 = getelementptr inbounds [32 x %struct.pixel.0], ptr %1, i64 0, i64 %53
+  %55 = getelementptr inbounds %struct.pixel.0, ptr %54, i32 0, i32 2
   %56 = load i32, ptr %55, align 4
   %57 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, i32 noundef %41, i32 noundef %46, i32 noundef %51, i32 noundef %56)
   br label %58
@@ -635,7 +635,7 @@ define dso_local void @_Z15test_rgb_structv() #2 {
   %62 = call noundef i32 @_ZL10cudaMallocI5pixelE9cudaErrorPPT_m(ptr noundef %3, i64 noundef 384)
   %63 = call noundef i32 @_ZL10cudaMallocI5pixelE9cudaErrorPPT_m(ptr noundef %4, i64 noundef 384)
   %64 = load ptr, ptr %3, align 8
-  %65 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 0
+  %65 = getelementptr inbounds [32 x %struct.pixel.0], ptr %1, i64 0, i64 0
   %66 = call i32 @cudaMemcpy(ptr noundef %64, ptr noundef %65, i64 noundef 384, i32 noundef 1)
   call void @_ZN4dim3C2Ejjj(ptr noundef nonnull align 4 dereferenceable(12) %8, i32 noundef 1, i32 noundef 1, i32 noundef 1)
   call void @_ZN4dim3C2Ejjj(ptr noundef nonnull align 4 dereferenceable(12) %9, i32 noundef 32, i32 noundef 1, i32 noundef 1)
@@ -663,7 +663,7 @@ define dso_local void @_Z15test_rgb_structv() #2 {
 
 80:                                               ; preds = %77, %61
   %81 = call i32 @cudaDeviceSynchronize()
-  %82 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 0
+  %82 = getelementptr inbounds [32 x %struct.pixel.0], ptr %2, i64 0, i64 0
   %83 = load ptr, ptr %4, align 8
   %84 = call i32 @cudaMemcpy(ptr noundef %82, ptr noundef %83, i64 noundef 384, i32 noundef 2)
   %85 = call i32 @cudaDeviceSynchronize()
@@ -681,26 +681,26 @@ define dso_local void @_Z15test_rgb_structv() #2 {
   %91 = load i32, ptr %15, align 4
   %92 = load i32, ptr %15, align 4
   %93 = sext i32 %92 to i64
-  %94 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 %93
-  %95 = getelementptr inbounds %struct.pixel, ptr %94, i32 0, i32 0
+  %94 = getelementptr inbounds [32 x %struct.pixel.0], ptr %2, i64 0, i64 %93
+  %95 = getelementptr inbounds %struct.pixel.0, ptr %94, i32 0, i32 0
   %96 = load i32, ptr %95, align 4
   %97 = load i32, ptr %15, align 4
   %98 = sext i32 %97 to i64
-  %99 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 %98
-  %100 = getelementptr inbounds %struct.pixel, ptr %99, i32 0, i32 1
+  %99 = getelementptr inbounds [32 x %struct.pixel.0], ptr %2, i64 0, i64 %98
+  %100 = getelementptr inbounds %struct.pixel.0, ptr %99, i32 0, i32 1
   %101 = load i32, ptr %100, align 4
   %102 = load i32, ptr %15, align 4
   %103 = sext i32 %102 to i64
-  %104 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 %103
-  %105 = getelementptr inbounds %struct.pixel, ptr %104, i32 0, i32 2
+  %104 = getelementptr inbounds [32 x %struct.pixel.0], ptr %2, i64 0, i64 %103
+  %105 = getelementptr inbounds %struct.pixel.0, ptr %104, i32 0, i32 2
   %106 = load i32, ptr %105, align 4
   %107 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, i32 noundef %91, i32 noundef %96, i32 noundef %101, i32 noundef %106)
   %108 = load i32, ptr %15, align 4
   %109 = sext i32 %108 to i64
-  %110 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 %109
+  %110 = getelementptr inbounds [32 x %struct.pixel.0], ptr %2, i64 0, i64 %109
   %111 = load i32, ptr %15, align 4
   %112 = sext i32 %111 to i64
-  %113 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %112
+  %113 = getelementptr inbounds [32 x %struct.pixel.0], ptr %1, i64 0, i64 %112
   %114 = call noundef zeroext i1 @_ZN5pixelneERKS_(ptr noundef nonnull align 4 dereferenceable(12) %110, ptr noundef nonnull align 4 dereferenceable(12) %113)
   br i1 %114, label %115, label %118
 
@@ -776,28 +776,28 @@ define linkonce_odr dso_local noundef zeroext i1 @_ZN5pixeleqERKS_(ptr noundef n
   store ptr %0, ptr %3, align 8
   store ptr %1, ptr %4, align 8
   %5 = load ptr, ptr %3, align 8
-  %6 = getelementptr inbounds %struct.pixel, ptr %5, i32 0, i32 0
+  %6 = getelementptr inbounds %struct.pixel.0, ptr %5, i32 0, i32 0
   %7 = load i32, ptr %6, align 4
   %8 = load ptr, ptr %4, align 8
-  %9 = getelementptr inbounds %struct.pixel, ptr %8, i32 0, i32 0
+  %9 = getelementptr inbounds %struct.pixel.0, ptr %8, i32 0, i32 0
   %10 = load i32, ptr %9, align 4
   %11 = icmp eq i32 %7, %10
   br i1 %11, label %12, label %26
 
 12:                                               ; preds = %2
-  %13 = getelementptr inbounds %struct.pixel, ptr %5, i32 0, i32 1
+  %13 = getelementptr inbounds %struct.pixel.0, ptr %5, i32 0, i32 1
   %14 = load i32, ptr %13, align 4
   %15 = load ptr, ptr %4, align 8
-  %16 = getelementptr inbounds %struct.pixel, ptr %15, i32 0, i32 1
+  %16 = getelementptr inbounds %struct.pixel.0, ptr %15, i32 0, i32 1
   %17 = load i32, ptr %16, align 4
   %18 = icmp eq i32 %14, %17
   br i1 %18, label %19, label %26
 
 19:                                               ; preds = %12
-  %20 = getelementptr inbounds %struct.pixel, ptr %5, i32 0, i32 2
+  %20 = getelementptr inbounds %struct.pixel.0, ptr %5, i32 0, i32 2
   %21 = load i32, ptr %20, align 4
   %22 = load ptr, ptr %4, align 8
-  %23 = getelementptr inbounds %struct.pixel, ptr %22, i32 0, i32 2
+  %23 = getelementptr inbounds %struct.pixel.0, ptr %22, i32 0, i32 2
   %24 = load i32, ptr %23, align 4
   %25 = icmp eq i32 %21, %24
   br label %26
