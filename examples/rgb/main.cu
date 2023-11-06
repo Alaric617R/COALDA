@@ -1,10 +1,12 @@
 #include "rgb.cu"
 #include <cstdio>
 
+#define TILE_WIDTH 32
+
 void test_rgb_array()
 {
   const dim3 dimGrid = dim3(1, 1, 1);
-  const dim3 dimBlock = dim3(32, 1, 1);
+  const dim3 dimBlock = dim3(TILE_WIDTH, 1, 1);
   int num_pixels = dimGrid.x * dimBlock.x;
   int host_pixel_src[3 * num_pixels];
   int host_pixel_res[3 * num_pixels];
