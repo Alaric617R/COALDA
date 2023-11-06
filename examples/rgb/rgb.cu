@@ -1,10 +1,3 @@
-struct pixel
-{
-  int r;
-  int g;
-  int b;
-};
-
 // Commonly used, intuitive but uncoalesced
 __global__ void rgb_copy_array_interleaved(int *pixel_dst, int *pixel_src)
 {
