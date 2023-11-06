@@ -4,13 +4,8 @@ target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16
 target triple = "x86_64-pc-linux-gnu"
 
 %struct.dim3 = type { i32, i32, i32 }
-%struct.pixel = type { i32, i32, i32 }
 
 $_ZN4dim3C2Ejjj = comdat any
-
-$_ZN5pixelneERKS_ = comdat any
-
-$_ZN5pixeleqERKS_ = comdat any
 
 @.str = private unnamed_addr constant [24 x i8] c"Host data initialized:\0A\00", align 1
 @.str.1 = private unnamed_addr constant [13 x i8] c"%d %d %d %d\0A\00", align 1
@@ -100,113 +95,43 @@ define dso_local void @_Z39__device_stub__rgb_copy_array_coalescedPiS_(ptr nound
 }
 
 ; Function Attrs: noinline norecurse sspstrong uwtable
-define dso_local void @_Z42__device_stub__rgb_copy_struct_interleavedP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
+define dso_local void @_Z41__device_stub__rgb_smem_array_interleavedPiS_i(ptr noundef %0, ptr noundef %1, i32 noundef %2) #0 {
   %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3, align 8
-  %6 = alloca %struct.dim3, align 8
-  %7 = alloca i64, align 8
-  %8 = alloca ptr, align 8
-  %9 = alloca { i64, i32 }, align 8
-  %10 = alloca { i64, i32 }, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %11 = alloca ptr, i64 2, align 16
-  %12 = getelementptr ptr, ptr %11, i32 0
-  store ptr %3, ptr %12, align 8
-  %13 = getelementptr ptr, ptr %11, i32 1
-  store ptr %4, ptr %13, align 8
-  %14 = call i32 @__cudaPopCallConfiguration(ptr %5, ptr %6, ptr %7, ptr %8)
-  %15 = load i64, ptr %7, align 8
-  %16 = load ptr, ptr %8, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %9, ptr align 8 %5, i64 12, i1 false)
-  %17 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 0
-  %18 = load i64, ptr %17, align 8
-  %19 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 1
-  %20 = load i32, ptr %19, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %10, ptr align 8 %6, i64 12, i1 false)
-  %21 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 0
-  %22 = load i64, ptr %21, align 8
-  %23 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 1
-  %24 = load i32, ptr %23, align 8
-  %25 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z42__device_stub__rgb_copy_struct_interleavedP5pixelS0_, i64 %18, i32 %20, i64 %22, i32 %24, ptr noundef %11, i64 noundef %15, ptr noundef %16)
-  br label %26
+  %5 = alloca ptr, align 8
+  %6 = alloca i32, align 4
+  %7 = alloca %struct.dim3, align 8
+  %8 = alloca %struct.dim3, align 8
+  %9 = alloca i64, align 8
+  %10 = alloca ptr, align 8
+  %11 = alloca { i64, i32 }, align 8
+  %12 = alloca { i64, i32 }, align 8
+  store ptr %0, ptr %4, align 8
+  store ptr %1, ptr %5, align 8
+  store i32 %2, ptr %6, align 4
+  %13 = alloca ptr, i64 3, align 16
+  %14 = getelementptr ptr, ptr %13, i32 0
+  store ptr %4, ptr %14, align 8
+  %15 = getelementptr ptr, ptr %13, i32 1
+  store ptr %5, ptr %15, align 8
+  %16 = getelementptr ptr, ptr %13, i32 2
+  store ptr %6, ptr %16, align 8
+  %17 = call i32 @__cudaPopCallConfiguration(ptr %7, ptr %8, ptr %9, ptr %10)
+  %18 = load i64, ptr %9, align 8
+  %19 = load ptr, ptr %10, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %11, ptr align 8 %7, i64 12, i1 false)
+  %20 = getelementptr inbounds { i64, i32 }, ptr %11, i32 0, i32 0
+  %21 = load i64, ptr %20, align 8
+  %22 = getelementptr inbounds { i64, i32 }, ptr %11, i32 0, i32 1
+  %23 = load i32, ptr %22, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %12, ptr align 8 %8, i64 12, i1 false)
+  %24 = getelementptr inbounds { i64, i32 }, ptr %12, i32 0, i32 0
+  %25 = load i64, ptr %24, align 8
+  %26 = getelementptr inbounds { i64, i32 }, ptr %12, i32 0, i32 1
+  %27 = load i32, ptr %26, align 8
+  %28 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z41__device_stub__rgb_smem_array_interleavedPiS_i, i64 %21, i32 %23, i64 %25, i32 %27, ptr noundef %13, i64 noundef %18, ptr noundef %19)
+  br label %29
 
-26:                                               ; preds = %2
-  ret void
-}
-
-; Function Attrs: noinline norecurse sspstrong uwtable
-define dso_local void @_Z40__device_stub__rgb_copy_struct_coalescedP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3, align 8
-  %6 = alloca %struct.dim3, align 8
-  %7 = alloca i64, align 8
-  %8 = alloca ptr, align 8
-  %9 = alloca { i64, i32 }, align 8
-  %10 = alloca { i64, i32 }, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %11 = alloca ptr, i64 2, align 16
-  %12 = getelementptr ptr, ptr %11, i32 0
-  store ptr %3, ptr %12, align 8
-  %13 = getelementptr ptr, ptr %11, i32 1
-  store ptr %4, ptr %13, align 8
-  %14 = call i32 @__cudaPopCallConfiguration(ptr %5, ptr %6, ptr %7, ptr %8)
-  %15 = load i64, ptr %7, align 8
-  %16 = load ptr, ptr %8, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %9, ptr align 8 %5, i64 12, i1 false)
-  %17 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 0
-  %18 = load i64, ptr %17, align 8
-  %19 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 1
-  %20 = load i32, ptr %19, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %10, ptr align 8 %6, i64 12, i1 false)
-  %21 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 0
-  %22 = load i64, ptr %21, align 8
-  %23 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 1
-  %24 = load i32, ptr %23, align 8
-  %25 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z40__device_stub__rgb_copy_struct_coalescedP5pixelS0_, i64 %18, i32 %20, i64 %22, i32 %24, ptr noundef %11, i64 noundef %15, ptr noundef %16)
-  br label %26
-
-26:                                               ; preds = %2
-  ret void
-}
-
-; Function Attrs: noinline norecurse sspstrong uwtable
-define dso_local void @_Z36__device_stub__rgb_copy_struct_wholeP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3, align 8
-  %6 = alloca %struct.dim3, align 8
-  %7 = alloca i64, align 8
-  %8 = alloca ptr, align 8
-  %9 = alloca { i64, i32 }, align 8
-  %10 = alloca { i64, i32 }, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %11 = alloca ptr, i64 2, align 16
-  %12 = getelementptr ptr, ptr %11, i32 0
-  store ptr %3, ptr %12, align 8
-  %13 = getelementptr ptr, ptr %11, i32 1
-  store ptr %4, ptr %13, align 8
-  %14 = call i32 @__cudaPopCallConfiguration(ptr %5, ptr %6, ptr %7, ptr %8)
-  %15 = load i64, ptr %7, align 8
-  %16 = load ptr, ptr %8, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %9, ptr align 8 %5, i64 12, i1 false)
-  %17 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 0
-  %18 = load i64, ptr %17, align 8
-  %19 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 1
-  %20 = load i32, ptr %19, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %10, ptr align 8 %6, i64 12, i1 false)
-  %21 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 0
-  %22 = load i64, ptr %21, align 8
-  %23 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 1
-  %24 = load i32, ptr %23, align 8
-  %25 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z36__device_stub__rgb_copy_struct_wholeP5pixelS0_, i64 %18, i32 %20, i64 %22, i32 %24, ptr noundef %11, i64 noundef %15, ptr noundef %16)
-  br label %26
-
-26:                                               ; preds = %2
+29:                                               ; preds = %3
   ret void
 }
 
@@ -243,7 +168,7 @@ define dso_local void @_Z14test_rgb_arrayv() #2 {
   %24 = zext i32 %23 to i64
   %25 = alloca i32, i64 %24, align 16
   store i64 %24, ptr %6, align 8
-  call void @srand(i32 noundef 1) #9
+  call void @srand(i32 noundef 1) #8
   store i32 0, ptr %9, align 4
   br label %26
 
@@ -254,7 +179,7 @@ define dso_local void @_Z14test_rgb_arrayv() #2 {
   br i1 %29, label %30, label %55
 
 30:                                               ; preds = %26
-  %31 = call i32 @rand() #9
+  %31 = call i32 @rand() #8
   %32 = srem i32 %31, 256
   %33 = load i32, ptr %9, align 4
   %34 = mul nsw i32 3, %33
@@ -262,7 +187,7 @@ define dso_local void @_Z14test_rgb_arrayv() #2 {
   %36 = sext i32 %35 to i64
   %37 = getelementptr inbounds i32, ptr %21, i64 %36
   store i32 %32, ptr %37, align 4
-  %38 = call i32 @rand() #9
+  %38 = call i32 @rand() #8
   %39 = srem i32 %38, 256
   %40 = load i32, ptr %9, align 4
   %41 = mul nsw i32 3, %40
@@ -270,7 +195,7 @@ define dso_local void @_Z14test_rgb_arrayv() #2 {
   %43 = sext i32 %42 to i64
   %44 = getelementptr inbounds i32, ptr %21, i64 %43
   store i32 %39, ptr %44, align 4
-  %45 = call i32 @rand() #9
+  %45 = call i32 @rand() #8
   %46 = srem i32 %45, 256
   %47 = load i32, ptr %9, align 4
   %48 = mul nsw i32 3, %47
@@ -544,267 +469,12 @@ declare i32 @cudaFree(ptr noundef) #6
 ; Function Attrs: nocallback nofree nosync nounwind willreturn
 declare void @llvm.stackrestore(ptr) #4
 
-; Function Attrs: mustprogress noinline sspstrong uwtable
-define dso_local void @_Z15test_rgb_structv() #2 {
-  %1 = alloca [32 x %struct.pixel], align 16
-  %2 = alloca [32 x %struct.pixel], align 16
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  %5 = alloca i32, align 4
-  %6 = alloca %struct.pixel, align 4
-  %7 = alloca i32, align 4
-  %8 = alloca %struct.dim3, align 4
-  %9 = alloca %struct.dim3, align 4
-  %10 = alloca %struct.dim3, align 4
-  %11 = alloca %struct.dim3, align 4
-  %12 = alloca { i64, i32 }, align 4
-  %13 = alloca { i64, i32 }, align 4
-  %14 = alloca i8, align 1
-  %15 = alloca i32, align 4
-  call void @srand(i32 noundef 1) #9
-  store i32 0, ptr %5, align 4
-  br label %16
-
-16:                                               ; preds = %32, %0
-  %17 = load i32, ptr %5, align 4
-  %18 = icmp slt i32 %17, 32
-  br i1 %18, label %19, label %35
-
-19:                                               ; preds = %16
-  %20 = getelementptr inbounds %struct.pixel, ptr %6, i32 0, i32 0
-  %21 = call i32 @rand() #9
-  %22 = srem i32 %21, 256
-  store i32 %22, ptr %20, align 4
-  %23 = getelementptr inbounds %struct.pixel, ptr %6, i32 0, i32 1
-  %24 = call i32 @rand() #9
-  %25 = srem i32 %24, 256
-  store i32 %25, ptr %23, align 4
-  %26 = getelementptr inbounds %struct.pixel, ptr %6, i32 0, i32 2
-  %27 = call i32 @rand() #9
-  %28 = srem i32 %27, 256
-  store i32 %28, ptr %26, align 4
-  %29 = load i32, ptr %5, align 4
-  %30 = sext i32 %29 to i64
-  %31 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %30
-  call void @llvm.memcpy.p0.p0.i64(ptr align 4 %31, ptr align 4 %6, i64 12, i1 false)
-  br label %32
-
-32:                                               ; preds = %19
-  %33 = load i32, ptr %5, align 4
-  %34 = add nsw i32 %33, 1
-  store i32 %34, ptr %5, align 4
-  br label %16, !llvm.loop !11
-
-35:                                               ; preds = %16
-  %36 = call i32 (ptr, ...) @printf(ptr noundef @.str)
-  store i32 0, ptr %7, align 4
-  br label %37
-
-37:                                               ; preds = %58, %35
-  %38 = load i32, ptr %7, align 4
-  %39 = icmp slt i32 %38, 32
-  br i1 %39, label %40, label %61
-
-40:                                               ; preds = %37
-  %41 = load i32, ptr %7, align 4
-  %42 = load i32, ptr %7, align 4
-  %43 = sext i32 %42 to i64
-  %44 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %43
-  %45 = getelementptr inbounds %struct.pixel, ptr %44, i32 0, i32 0
-  %46 = load i32, ptr %45, align 4
-  %47 = load i32, ptr %7, align 4
-  %48 = sext i32 %47 to i64
-  %49 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %48
-  %50 = getelementptr inbounds %struct.pixel, ptr %49, i32 0, i32 1
-  %51 = load i32, ptr %50, align 4
-  %52 = load i32, ptr %7, align 4
-  %53 = sext i32 %52 to i64
-  %54 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %53
-  %55 = getelementptr inbounds %struct.pixel, ptr %54, i32 0, i32 2
-  %56 = load i32, ptr %55, align 4
-  %57 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, i32 noundef %41, i32 noundef %46, i32 noundef %51, i32 noundef %56)
-  br label %58
-
-58:                                               ; preds = %40
-  %59 = load i32, ptr %7, align 4
-  %60 = add nsw i32 %59, 1
-  store i32 %60, ptr %7, align 4
-  br label %37, !llvm.loop !12
-
-61:                                               ; preds = %37
-  %62 = call noundef i32 @_ZL10cudaMallocI5pixelE9cudaErrorPPT_m(ptr noundef %3, i64 noundef 384)
-  %63 = call noundef i32 @_ZL10cudaMallocI5pixelE9cudaErrorPPT_m(ptr noundef %4, i64 noundef 384)
-  %64 = load ptr, ptr %3, align 8
-  %65 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 0
-  %66 = call i32 @cudaMemcpy(ptr noundef %64, ptr noundef %65, i64 noundef 384, i32 noundef 1)
-  call void @_ZN4dim3C2Ejjj(ptr noundef nonnull align 4 dereferenceable(12) %8, i32 noundef 1, i32 noundef 1, i32 noundef 1)
-  call void @_ZN4dim3C2Ejjj(ptr noundef nonnull align 4 dereferenceable(12) %9, i32 noundef 32, i32 noundef 1, i32 noundef 1)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 4 %10, ptr align 4 %8, i64 12, i1 false)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 4 %11, ptr align 4 %9, i64 12, i1 false)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 4 %12, ptr align 4 %10, i64 12, i1 false)
-  %67 = getelementptr inbounds { i64, i32 }, ptr %12, i32 0, i32 0
-  %68 = load i64, ptr %67, align 4
-  %69 = getelementptr inbounds { i64, i32 }, ptr %12, i32 0, i32 1
-  %70 = load i32, ptr %69, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 4 %13, ptr align 4 %11, i64 12, i1 false)
-  %71 = getelementptr inbounds { i64, i32 }, ptr %13, i32 0, i32 0
-  %72 = load i64, ptr %71, align 4
-  %73 = getelementptr inbounds { i64, i32 }, ptr %13, i32 0, i32 1
-  %74 = load i32, ptr %73, align 4
-  %75 = call i32 @__cudaPushCallConfiguration(i64 %68, i32 %70, i64 %72, i32 %74, i64 noundef 0, ptr noundef null)
-  %76 = icmp ne i32 %75, 0
-  br i1 %76, label %80, label %77
-
-77:                                               ; preds = %61
-  %78 = load ptr, ptr %4, align 8
-  %79 = load ptr, ptr %3, align 8
-  call void @_Z42__device_stub__rgb_copy_struct_interleavedP5pixelS0_(ptr noundef %78, ptr noundef %79)
-  br label %80
-
-80:                                               ; preds = %77, %61
-  %81 = call i32 @cudaDeviceSynchronize()
-  %82 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 0
-  %83 = load ptr, ptr %4, align 8
-  %84 = call i32 @cudaMemcpy(ptr noundef %82, ptr noundef %83, i64 noundef 384, i32 noundef 2)
-  %85 = call i32 @cudaDeviceSynchronize()
-  store i8 1, ptr %14, align 1
-  %86 = call i32 (ptr, ...) @printf(ptr noundef @.str.2)
-  store i32 0, ptr %15, align 4
-  br label %87
-
-87:                                               ; preds = %119, %80
-  %88 = load i32, ptr %15, align 4
-  %89 = icmp slt i32 %88, 32
-  br i1 %89, label %90, label %122
-
-90:                                               ; preds = %87
-  %91 = load i32, ptr %15, align 4
-  %92 = load i32, ptr %15, align 4
-  %93 = sext i32 %92 to i64
-  %94 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 %93
-  %95 = getelementptr inbounds %struct.pixel, ptr %94, i32 0, i32 0
-  %96 = load i32, ptr %95, align 4
-  %97 = load i32, ptr %15, align 4
-  %98 = sext i32 %97 to i64
-  %99 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 %98
-  %100 = getelementptr inbounds %struct.pixel, ptr %99, i32 0, i32 1
-  %101 = load i32, ptr %100, align 4
-  %102 = load i32, ptr %15, align 4
-  %103 = sext i32 %102 to i64
-  %104 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 %103
-  %105 = getelementptr inbounds %struct.pixel, ptr %104, i32 0, i32 2
-  %106 = load i32, ptr %105, align 4
-  %107 = call i32 (ptr, ...) @printf(ptr noundef @.str.1, i32 noundef %91, i32 noundef %96, i32 noundef %101, i32 noundef %106)
-  %108 = load i32, ptr %15, align 4
-  %109 = sext i32 %108 to i64
-  %110 = getelementptr inbounds [32 x %struct.pixel], ptr %2, i64 0, i64 %109
-  %111 = load i32, ptr %15, align 4
-  %112 = sext i32 %111 to i64
-  %113 = getelementptr inbounds [32 x %struct.pixel], ptr %1, i64 0, i64 %112
-  %114 = call noundef zeroext i1 @_ZN5pixelneERKS_(ptr noundef nonnull align 4 dereferenceable(12) %110, ptr noundef nonnull align 4 dereferenceable(12) %113)
-  br i1 %114, label %115, label %118
-
-115:                                              ; preds = %90
-  store i8 0, ptr %14, align 1
-  %116 = load i32, ptr %15, align 4
-  %117 = call i32 (ptr, ...) @printf(ptr noundef @.str.3, i32 noundef %116)
-  br label %118
-
-118:                                              ; preds = %115, %90
-  br label %119
-
-119:                                              ; preds = %118
-  %120 = load i32, ptr %15, align 4
-  %121 = add nsw i32 %120, 1
-  store i32 %121, ptr %15, align 4
-  br label %87, !llvm.loop !13
-
-122:                                              ; preds = %87
-  %123 = load i8, ptr %14, align 1
-  %124 = trunc i8 %123 to i1
-  br i1 %124, label %125, label %127
-
-125:                                              ; preds = %122
-  %126 = call i32 (ptr, ...) @printf(ptr noundef @.str.4)
-  br label %127
-
-127:                                              ; preds = %125, %122
-  %128 = load ptr, ptr %3, align 8
-  %129 = call i32 @cudaFree(ptr noundef %128)
-  %130 = load ptr, ptr %4, align 8
-  %131 = call i32 @cudaFree(ptr noundef %130)
-  ret void
-}
-
-; Function Attrs: mustprogress noinline sspstrong uwtable
-define internal noundef i32 @_ZL10cudaMallocI5pixelE9cudaErrorPPT_m(ptr noundef %0, i64 noundef %1) #2 {
-  %3 = alloca ptr, align 8
-  %4 = alloca i64, align 8
-  store ptr %0, ptr %3, align 8
-  store i64 %1, ptr %4, align 8
-  %5 = load ptr, ptr %3, align 8
-  %6 = load i64, ptr %4, align 8
-  %7 = call i32 @cudaMalloc(ptr noundef %5, i64 noundef %6)
-  ret i32 %7
-}
-
-; Function Attrs: mustprogress noinline sspstrong uwtable
-define linkonce_odr dso_local noundef zeroext i1 @_ZN5pixelneERKS_(ptr noundef nonnull align 4 dereferenceable(12) %0, ptr noundef nonnull align 4 dereferenceable(12) %1) #2 comdat align 2 {
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %4, align 8
-  %7 = call noundef zeroext i1 @_ZN5pixeleqERKS_(ptr noundef nonnull align 4 dereferenceable(12) %5, ptr noundef nonnull align 4 dereferenceable(12) %6)
-  %8 = xor i1 %7, true
-  ret i1 %8
-}
-
 ; Function Attrs: mustprogress noinline norecurse sspstrong uwtable
 define dso_local noundef i32 @main() #7 {
   %1 = alloca i32, align 4
   store i32 0, ptr %1, align 4
   call void @_Z14test_rgb_arrayv()
   ret i32 0
-}
-
-; Function Attrs: mustprogress noinline nounwind sspstrong uwtable
-define linkonce_odr dso_local noundef zeroext i1 @_ZN5pixeleqERKS_(ptr noundef nonnull align 4 dereferenceable(12) %0, ptr noundef nonnull align 4 dereferenceable(12) %1) #8 comdat align 2 {
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %5 = load ptr, ptr %3, align 8
-  %6 = getelementptr inbounds %struct.pixel, ptr %5, i32 0, i32 0
-  %7 = load i32, ptr %6, align 4
-  %8 = load ptr, ptr %4, align 8
-  %9 = getelementptr inbounds %struct.pixel, ptr %8, i32 0, i32 0
-  %10 = load i32, ptr %9, align 4
-  %11 = icmp eq i32 %7, %10
-  br i1 %11, label %12, label %26
-
-12:                                               ; preds = %2
-  %13 = getelementptr inbounds %struct.pixel, ptr %5, i32 0, i32 1
-  %14 = load i32, ptr %13, align 4
-  %15 = load ptr, ptr %4, align 8
-  %16 = getelementptr inbounds %struct.pixel, ptr %15, i32 0, i32 1
-  %17 = load i32, ptr %16, align 4
-  %18 = icmp eq i32 %14, %17
-  br i1 %18, label %19, label %26
-
-19:                                               ; preds = %12
-  %20 = getelementptr inbounds %struct.pixel, ptr %5, i32 0, i32 2
-  %21 = load i32, ptr %20, align 4
-  %22 = load ptr, ptr %4, align 8
-  %23 = getelementptr inbounds %struct.pixel, ptr %22, i32 0, i32 2
-  %24 = load i32, ptr %23, align 4
-  %25 = icmp eq i32 %21, %24
-  br label %26
-
-26:                                               ; preds = %19, %12, %2
-  %27 = phi i1 [ false, %12 ], [ false, %2 ], [ %25, %19 ]
-  ret i1 %27
 }
 
 declare i32 @cudaMalloc(ptr noundef, i64 noundef) #6
@@ -817,8 +487,7 @@ attributes #4 = { nocallback nofree nosync nounwind willreturn }
 attributes #5 = { nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
 attributes #6 = { "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
 attributes #7 = { mustprogress noinline norecurse sspstrong uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
-attributes #8 = { mustprogress noinline nounwind sspstrong uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
-attributes #9 = { nounwind }
+attributes #8 = { nounwind }
 
 !llvm.module.flags = !{!0, !1, !2, !3, !4, !5}
 !llvm.ident = !{!6}
@@ -834,6 +503,3 @@ attributes #9 = { nounwind }
 !8 = !{!"llvm.loop.mustprogress"}
 !9 = distinct !{!9, !8}
 !10 = distinct !{!10, !8}
-!11 = distinct !{!11, !8}
-!12 = distinct !{!12, !8}
-!13 = distinct !{!13, !8}

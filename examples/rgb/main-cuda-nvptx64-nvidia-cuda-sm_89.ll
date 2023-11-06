@@ -6,11 +6,13 @@ target triple = "nvptx64-nvidia-cuda"
 %struct.__cuda_builtin_blockIdx_t = type { i8 }
 %struct.__cuda_builtin_blockDim_t = type { i8 }
 %struct.__cuda_builtin_threadIdx_t = type { i8 }
-%struct.pixel.0 = type { i32, i32, i32 }
 
 @blockIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockIdx_t, align 1
 @blockDim = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockDim_t, align 1
 @threadIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_threadIdx_t, align 1
+@_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src = internal addrspace(3) global [99 x i32] undef, align 4
+@_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst = internal addrspace(3) global [96 x i32] undef, align 4
+@_ZZ26rgb_smem_array_interleavedPiS_iE10valid_tail = internal addrspace(3) global i8 undef, align 1
 
 ; Function Attrs: convergent mustprogress noinline norecurse nounwind
 define dso_local void @_Z26rgb_copy_array_interleavedPiS_(ptr noundef %0, ptr noundef %1) #0 {
@@ -149,158 +151,218 @@ define dso_local void @_Z24rgb_copy_array_coalescedPiS_(ptr noundef %0, ptr noun
 }
 
 ; Function Attrs: convergent mustprogress noinline norecurse nounwind
-define dso_local void @_Z27rgb_copy_struct_interleavedP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %5 = load ptr, ptr %4, align 8
-  %6 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %7 = zext i32 %6 to i64
-  %8 = getelementptr inbounds %struct.pixel.0, ptr %5, i64 %7
-  %9 = getelementptr inbounds %struct.pixel.0, ptr %8, i32 0, i32 0
-  %10 = load i32, ptr %9, align 4
-  %11 = load ptr, ptr %3, align 8
-  %12 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %13 = zext i32 %12 to i64
-  %14 = getelementptr inbounds %struct.pixel.0, ptr %11, i64 %13
-  %15 = getelementptr inbounds %struct.pixel.0, ptr %14, i32 0, i32 0
-  store i32 %10, ptr %15, align 4
-  %16 = load ptr, ptr %4, align 8
-  %17 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %18 = zext i32 %17 to i64
-  %19 = getelementptr inbounds %struct.pixel.0, ptr %16, i64 %18
-  %20 = getelementptr inbounds %struct.pixel.0, ptr %19, i32 0, i32 1
-  %21 = load i32, ptr %20, align 4
-  %22 = load ptr, ptr %3, align 8
-  %23 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %24 = zext i32 %23 to i64
-  %25 = getelementptr inbounds %struct.pixel.0, ptr %22, i64 %24
-  %26 = getelementptr inbounds %struct.pixel.0, ptr %25, i32 0, i32 1
-  store i32 %21, ptr %26, align 4
-  %27 = load ptr, ptr %4, align 8
-  %28 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %29 = zext i32 %28 to i64
-  %30 = getelementptr inbounds %struct.pixel.0, ptr %27, i64 %29
-  %31 = getelementptr inbounds %struct.pixel.0, ptr %30, i32 0, i32 2
-  %32 = load i32, ptr %31, align 4
-  %33 = load ptr, ptr %3, align 8
-  %34 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %35 = zext i32 %34 to i64
-  %36 = getelementptr inbounds %struct.pixel.0, ptr %33, i64 %35
-  %37 = getelementptr inbounds %struct.pixel.0, ptr %36, i32 0, i32 2
-  store i32 %32, ptr %37, align 4
-  ret void
-}
-
-; Function Attrs: convergent mustprogress noinline norecurse nounwind
-define dso_local void @_Z25rgb_copy_struct_coalescedP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
+define dso_local void @_Z26rgb_smem_array_interleavedPiS_i(ptr noundef %0, ptr noundef %1, i32 noundef %2) #0 {
   %4 = alloca ptr, align 8
   %5 = alloca ptr, align 8
-  %6 = alloca ptr, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %7 = load ptr, ptr %4, align 8
-  store ptr %7, ptr %5, align 8
-  %8 = load ptr, ptr %3, align 8
-  store ptr %8, ptr %6, align 8
-  %9 = load ptr, ptr %5, align 8
-  %10 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %11 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
-  %12 = mul i32 0, %11
-  %13 = add i32 %10, %12
-  %14 = zext i32 %13 to i64
-  %15 = getelementptr inbounds i32, ptr %9, i64 %14
-  %16 = load i32, ptr %15, align 4
-  %17 = load ptr, ptr %6, align 8
-  %18 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %19 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
-  %20 = mul i32 0, %19
-  %21 = add i32 %18, %20
-  %22 = zext i32 %21 to i64
-  %23 = getelementptr inbounds i32, ptr %17, i64 %22
-  store i32 %16, ptr %23, align 4
+  %6 = alloca i32, align 4
+  %7 = alloca i32, align 4
+  %8 = alloca i32, align 4
+  store ptr %0, ptr %4, align 8
+  store ptr %1, ptr %5, align 8
+  store i32 %2, ptr %6, align 4
+  %9 = call i32 @llvm.nvvm.read.ptx.sreg.ctaid.x()
+  %10 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
+  %11 = mul i32 %9, %10
+  %12 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
+  %13 = add i32 %11, %12
+  store i32 %13, ptr %7, align 4
+  %14 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
+  store i32 %14, ptr %8, align 4
+  %15 = load i32, ptr %8, align 4
+  %16 = icmp eq i32 %15, 31
+  br i1 %16, label %17, label %23
+
+17:                                               ; preds = %3
+  %18 = load i32, ptr %7, align 4
+  %19 = add nsw i32 %18, 1
+  %20 = load i32, ptr %6, align 4
+  %21 = icmp slt i32 %19, %20
+  %22 = zext i1 %21 to i8
+  store i8 %22, ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE10valid_tail to ptr), align 1
+  br label %23
+
+23:                                               ; preds = %17, %3
   %24 = load ptr, ptr %5, align 8
-  %25 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %26 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
-  %27 = mul i32 1, %26
-  %28 = add i32 %25, %27
-  %29 = zext i32 %28 to i64
-  %30 = getelementptr inbounds i32, ptr %24, i64 %29
-  %31 = load i32, ptr %30, align 4
-  %32 = load ptr, ptr %6, align 8
-  %33 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %34 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
-  %35 = mul i32 1, %34
-  %36 = add i32 %33, %35
-  %37 = zext i32 %36 to i64
-  %38 = getelementptr inbounds i32, ptr %32, i64 %37
-  store i32 %31, ptr %38, align 4
-  %39 = load ptr, ptr %5, align 8
-  %40 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %41 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
-  %42 = mul i32 2, %41
-  %43 = add i32 %40, %42
-  %44 = zext i32 %43 to i64
-  %45 = getelementptr inbounds i32, ptr %39, i64 %44
-  %46 = load i32, ptr %45, align 4
-  %47 = load ptr, ptr %6, align 8
-  %48 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %49 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
-  %50 = mul i32 2, %49
-  %51 = add i32 %48, %50
-  %52 = zext i32 %51 to i64
-  %53 = getelementptr inbounds i32, ptr %47, i64 %52
-  store i32 %46, ptr %53, align 4
+  %25 = load i32, ptr %7, align 4
+  %26 = mul nsw i32 3, %25
+  %27 = add nsw i32 %26, 0
+  %28 = sext i32 %27 to i64
+  %29 = getelementptr inbounds i32, ptr %24, i64 %28
+  %30 = load i32, ptr %29, align 4
+  %31 = load i32, ptr %8, align 4
+  %32 = mul nsw i32 3, %31
+  %33 = add nsw i32 %32, 0
+  %34 = sext i32 %33 to i64
+  %35 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %34
+  store i32 %30, ptr %35, align 4
+  %36 = load ptr, ptr %5, align 8
+  %37 = load i32, ptr %7, align 4
+  %38 = mul nsw i32 3, %37
+  %39 = add nsw i32 %38, 1
+  %40 = sext i32 %39 to i64
+  %41 = getelementptr inbounds i32, ptr %36, i64 %40
+  %42 = load i32, ptr %41, align 4
+  %43 = load i32, ptr %8, align 4
+  %44 = mul nsw i32 3, %43
+  %45 = add nsw i32 %44, 1
+  %46 = sext i32 %45 to i64
+  %47 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %46
+  store i32 %42, ptr %47, align 4
+  %48 = load ptr, ptr %5, align 8
+  %49 = load i32, ptr %7, align 4
+  %50 = mul nsw i32 3, %49
+  %51 = add nsw i32 %50, 2
+  %52 = sext i32 %51 to i64
+  %53 = getelementptr inbounds i32, ptr %48, i64 %52
+  %54 = load i32, ptr %53, align 4
+  %55 = load i32, ptr %8, align 4
+  %56 = mul nsw i32 3, %55
+  %57 = add nsw i32 %56, 2
+  %58 = sext i32 %57 to i64
+  %59 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %58
+  store i32 %54, ptr %59, align 4
+  %60 = load i8, ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE10valid_tail to ptr), align 1
+  %61 = trunc i8 %60 to i1
+  br i1 %61, label %62, label %76
+
+62:                                               ; preds = %23
+  %63 = load i32, ptr %8, align 4
+  %64 = icmp slt i32 %63, 3
+  br i1 %64, label %65, label %76
+
+65:                                               ; preds = %62
+  %66 = load ptr, ptr %5, align 8
+  %67 = load i32, ptr %8, align 4
+  %68 = add nsw i32 96, %67
+  %69 = sext i32 %68 to i64
+  %70 = getelementptr inbounds i32, ptr %66, i64 %69
+  %71 = load i32, ptr %70, align 4
+  %72 = load i32, ptr %8, align 4
+  %73 = add nsw i32 96, %72
+  %74 = sext i32 %73 to i64
+  %75 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %74
+  store i32 %71, ptr %75, align 4
+  br label %76
+
+76:                                               ; preds = %65, %62, %23
+  %77 = load i32, ptr %8, align 4
+  %78 = mul nsw i32 3, %77
+  %79 = add nsw i32 %78, 0
+  %80 = sext i32 %79 to i64
+  %81 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %80
+  %82 = load i32, ptr %81, align 4
+  %83 = load i32, ptr %8, align 4
+  %84 = add nsw i32 %83, 1
+  %85 = mul nsw i32 3, %84
+  %86 = add nsw i32 %85, 0
+  %87 = sext i32 %86 to i64
+  %88 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %87
+  %89 = load i32, ptr %88, align 4
+  %90 = add nsw i32 %82, %89
+  %91 = load i32, ptr %8, align 4
+  %92 = mul nsw i32 3, %91
+  %93 = add nsw i32 %92, 0
+  %94 = sext i32 %93 to i64
+  %95 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %94
+  store i32 %90, ptr %95, align 4
+  %96 = load i32, ptr %8, align 4
+  %97 = mul nsw i32 3, %96
+  %98 = add nsw i32 %97, 1
+  %99 = sext i32 %98 to i64
+  %100 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %99
+  %101 = load i32, ptr %100, align 4
+  %102 = load i32, ptr %8, align 4
+  %103 = add nsw i32 %102, 1
+  %104 = mul nsw i32 3, %103
+  %105 = add nsw i32 %104, 1
+  %106 = sext i32 %105 to i64
+  %107 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %106
+  %108 = load i32, ptr %107, align 4
+  %109 = add nsw i32 %101, %108
+  %110 = load i32, ptr %8, align 4
+  %111 = mul nsw i32 3, %110
+  %112 = add nsw i32 %111, 1
+  %113 = sext i32 %112 to i64
+  %114 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %113
+  store i32 %109, ptr %114, align 4
+  %115 = load i32, ptr %8, align 4
+  %116 = mul nsw i32 3, %115
+  %117 = add nsw i32 %116, 2
+  %118 = sext i32 %117 to i64
+  %119 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %118
+  %120 = load i32, ptr %119, align 4
+  %121 = load i32, ptr %8, align 4
+  %122 = add nsw i32 %121, 1
+  %123 = mul nsw i32 3, %122
+  %124 = add nsw i32 %123, 2
+  %125 = sext i32 %124 to i64
+  %126 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %125
+  %127 = load i32, ptr %126, align 4
+  %128 = add nsw i32 %120, %127
+  %129 = load i32, ptr %8, align 4
+  %130 = mul nsw i32 3, %129
+  %131 = add nsw i32 %130, 2
+  %132 = sext i32 %131 to i64
+  %133 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %132
+  store i32 %128, ptr %133, align 4
+  %134 = load i32, ptr %8, align 4
+  %135 = mul nsw i32 3, %134
+  %136 = add nsw i32 %135, 0
+  %137 = sext i32 %136 to i64
+  %138 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %137
+  %139 = load i32, ptr %138, align 4
+  %140 = load ptr, ptr %4, align 8
+  %141 = load i32, ptr %7, align 4
+  %142 = mul nsw i32 3, %141
+  %143 = add nsw i32 %142, 0
+  %144 = sext i32 %143 to i64
+  %145 = getelementptr inbounds i32, ptr %140, i64 %144
+  store i32 %139, ptr %145, align 4
+  %146 = load i32, ptr %8, align 4
+  %147 = mul nsw i32 3, %146
+  %148 = add nsw i32 %147, 1
+  %149 = sext i32 %148 to i64
+  %150 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %149
+  %151 = load i32, ptr %150, align 4
+  %152 = load ptr, ptr %4, align 8
+  %153 = load i32, ptr %7, align 4
+  %154 = mul nsw i32 3, %153
+  %155 = add nsw i32 %154, 1
+  %156 = sext i32 %155 to i64
+  %157 = getelementptr inbounds i32, ptr %152, i64 %156
+  store i32 %151, ptr %157, align 4
+  %158 = load i32, ptr %8, align 4
+  %159 = mul nsw i32 3, %158
+  %160 = add nsw i32 %159, 2
+  %161 = sext i32 %160 to i64
+  %162 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %161
+  %163 = load i32, ptr %162, align 4
+  %164 = load ptr, ptr %4, align 8
+  %165 = load i32, ptr %7, align 4
+  %166 = mul nsw i32 3, %165
+  %167 = add nsw i32 %166, 2
+  %168 = sext i32 %167 to i64
+  %169 = getelementptr inbounds i32, ptr %164, i64 %168
+  store i32 %163, ptr %169, align 4
   ret void
 }
 
-; Function Attrs: convergent mustprogress noinline norecurse nounwind
-define dso_local void @_Z21rgb_copy_struct_wholeP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  %5 = alloca i32, align 4
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %6 = call i32 @llvm.nvvm.read.ptx.sreg.ctaid.x()
-  %7 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
-  %8 = mul i32 %6, %7
-  %9 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
-  %10 = add i32 %8, %9
-  store i32 %10, ptr %5, align 4
-  %11 = load ptr, ptr %4, align 8
-  %12 = load i32, ptr %5, align 4
-  %13 = sext i32 %12 to i64
-  %14 = getelementptr inbounds %struct.pixel.0, ptr %11, i64 %13
-  %15 = load ptr, ptr %3, align 8
-  %16 = load i32, ptr %5, align 4
-  %17 = sext i32 %16 to i64
-  %18 = getelementptr inbounds %struct.pixel.0, ptr %15, i64 %17
-  call void @llvm.memcpy.p0.p0.i64(ptr align 4 %18, ptr align 4 %14, i64 12, i1 false)
-  ret void
-}
-
-; Function Attrs: nocallback nofree nounwind willreturn memory(argmem: readwrite)
-declare void @llvm.memcpy.p0.p0.i64(ptr noalias nocapture writeonly, ptr noalias nocapture readonly, i64, i1 immarg) #1
+; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
+declare i32 @llvm.nvvm.read.ptx.sreg.ctaid.x() #1
 
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare i32 @llvm.nvvm.read.ptx.sreg.ctaid.x() #2
+declare i32 @llvm.nvvm.read.ptx.sreg.ntid.x() #1
 
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare i32 @llvm.nvvm.read.ptx.sreg.ntid.x() #2
-
-; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
-declare i32 @llvm.nvvm.read.ptx.sreg.tid.x() #2
+declare i32 @llvm.nvvm.read.ptx.sreg.tid.x() #1
 
 attributes #0 = { convergent mustprogress noinline norecurse nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="sm_89" "target-features"="+ptx78,+sm_89" }
-attributes #1 = { nocallback nofree nounwind willreturn memory(argmem: readwrite) }
-attributes #2 = { nocallback nofree nosync nounwind speculatable willreturn memory(none) }
+attributes #1 = { nocallback nofree nosync nounwind speculatable willreturn memory(none) }
 
 !llvm.module.flags = !{!0, !1, !2, !3}
-!nvvm.annotations = !{!4, !5, !6, !7, !8}
-!llvm.ident = !{!9, !10}
-!nvvmir.version = !{!11}
+!nvvm.annotations = !{!4, !5, !6}
+!llvm.ident = !{!7, !8}
+!nvvmir.version = !{!9}
 
 !0 = !{i32 2, !"SDK Version", [2 x i32] [i32 11, i32 8]}
 !1 = !{i32 1, !"wchar_size", i32 4}
@@ -308,9 +370,7 @@ attributes #2 = { nocallback nofree nosync nounwind speculatable willreturn memo
 !3 = !{i32 7, !"frame-pointer", i32 2}
 !4 = !{ptr @_Z26rgb_copy_array_interleavedPiS_, !"kernel", i32 1}
 !5 = !{ptr @_Z24rgb_copy_array_coalescedPiS_, !"kernel", i32 1}
-!6 = !{ptr @_Z27rgb_copy_struct_interleavedP5pixelS0_, !"kernel", i32 1}
-!7 = !{ptr @_Z25rgb_copy_struct_coalescedP5pixelS0_, !"kernel", i32 1}
-!8 = !{ptr @_Z21rgb_copy_struct_wholeP5pixelS0_, !"kernel", i32 1}
-!9 = !{!"clang version 16.0.6"}
-!10 = !{!"clang version 3.8.0 (tags/RELEASE_380/final)"}
-!11 = !{i32 2, i32 0}
+!6 = !{ptr @_Z26rgb_smem_array_interleavedPiS_i, !"kernel", i32 1}
+!7 = !{!"clang version 16.0.6"}
+!8 = !{!"clang version 3.8.0 (tags/RELEASE_380/final)"}
+!9 = !{i32 2, i32 0}

@@ -3,14 +3,14 @@ source_filename = "rgb.cu"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
-%struct.dim3.1 = type { i32, i32, i32 }
+%struct.dim3.0 = type { i32, i32, i32 }
 
 ; Function Attrs: noinline norecurse sspstrong uwtable
 define dso_local void @_Z41__device_stub__rgb_copy_array_interleavedPiS_(ptr noundef %0, ptr noundef %1) #0 {
   %3 = alloca ptr, align 8
   %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3.1, align 8
-  %6 = alloca %struct.dim3.1, align 8
+  %5 = alloca %struct.dim3.0, align 8
+  %6 = alloca %struct.dim3.0, align 8
   %7 = alloca i64, align 8
   %8 = alloca ptr, align 8
   %9 = alloca { i64, i32 }, align 8
@@ -53,8 +53,8 @@ declare void @llvm.memcpy.p0.p0.i64(ptr noalias nocapture writeonly, ptr noalias
 define dso_local void @_Z39__device_stub__rgb_copy_array_coalescedPiS_(ptr noundef %0, ptr noundef %1) #0 {
   %3 = alloca ptr, align 8
   %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3.1, align 8
-  %6 = alloca %struct.dim3.1, align 8
+  %5 = alloca %struct.dim3.0, align 8
+  %6 = alloca %struct.dim3.0, align 8
   %7 = alloca i64, align 8
   %8 = alloca ptr, align 8
   %9 = alloca { i64, i32 }, align 8
@@ -87,113 +87,43 @@ define dso_local void @_Z39__device_stub__rgb_copy_array_coalescedPiS_(ptr nound
 }
 
 ; Function Attrs: noinline norecurse sspstrong uwtable
-define dso_local void @_Z42__device_stub__rgb_copy_struct_interleavedP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
+define dso_local void @_Z41__device_stub__rgb_smem_array_interleavedPiS_i(ptr noundef %0, ptr noundef %1, i32 noundef %2) #0 {
   %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3.1, align 8
-  %6 = alloca %struct.dim3.1, align 8
-  %7 = alloca i64, align 8
-  %8 = alloca ptr, align 8
-  %9 = alloca { i64, i32 }, align 8
-  %10 = alloca { i64, i32 }, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %11 = alloca ptr, i64 2, align 16
-  %12 = getelementptr ptr, ptr %11, i32 0
-  store ptr %3, ptr %12, align 8
-  %13 = getelementptr ptr, ptr %11, i32 1
-  store ptr %4, ptr %13, align 8
-  %14 = call i32 @__cudaPopCallConfiguration(ptr %5, ptr %6, ptr %7, ptr %8)
-  %15 = load i64, ptr %7, align 8
-  %16 = load ptr, ptr %8, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %9, ptr align 8 %5, i64 12, i1 false)
-  %17 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 0
-  %18 = load i64, ptr %17, align 8
-  %19 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 1
-  %20 = load i32, ptr %19, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %10, ptr align 8 %6, i64 12, i1 false)
-  %21 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 0
-  %22 = load i64, ptr %21, align 8
-  %23 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 1
-  %24 = load i32, ptr %23, align 8
-  %25 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z42__device_stub__rgb_copy_struct_interleavedP5pixelS0_, i64 %18, i32 %20, i64 %22, i32 %24, ptr noundef %11, i64 noundef %15, ptr noundef %16)
-  br label %26
+  %5 = alloca ptr, align 8
+  %6 = alloca i32, align 4
+  %7 = alloca %struct.dim3.0, align 8
+  %8 = alloca %struct.dim3.0, align 8
+  %9 = alloca i64, align 8
+  %10 = alloca ptr, align 8
+  %11 = alloca { i64, i32 }, align 8
+  %12 = alloca { i64, i32 }, align 8
+  store ptr %0, ptr %4, align 8
+  store ptr %1, ptr %5, align 8
+  store i32 %2, ptr %6, align 4
+  %13 = alloca ptr, i64 3, align 16
+  %14 = getelementptr ptr, ptr %13, i32 0
+  store ptr %4, ptr %14, align 8
+  %15 = getelementptr ptr, ptr %13, i32 1
+  store ptr %5, ptr %15, align 8
+  %16 = getelementptr ptr, ptr %13, i32 2
+  store ptr %6, ptr %16, align 8
+  %17 = call i32 @__cudaPopCallConfiguration(ptr %7, ptr %8, ptr %9, ptr %10)
+  %18 = load i64, ptr %9, align 8
+  %19 = load ptr, ptr %10, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %11, ptr align 8 %7, i64 12, i1 false)
+  %20 = getelementptr inbounds { i64, i32 }, ptr %11, i32 0, i32 0
+  %21 = load i64, ptr %20, align 8
+  %22 = getelementptr inbounds { i64, i32 }, ptr %11, i32 0, i32 1
+  %23 = load i32, ptr %22, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %12, ptr align 8 %8, i64 12, i1 false)
+  %24 = getelementptr inbounds { i64, i32 }, ptr %12, i32 0, i32 0
+  %25 = load i64, ptr %24, align 8
+  %26 = getelementptr inbounds { i64, i32 }, ptr %12, i32 0, i32 1
+  %27 = load i32, ptr %26, align 8
+  %28 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z41__device_stub__rgb_smem_array_interleavedPiS_i, i64 %21, i32 %23, i64 %25, i32 %27, ptr noundef %13, i64 noundef %18, ptr noundef %19)
+  br label %29
 
-26:                                               ; preds = %2
-  ret void
-}
-
-; Function Attrs: noinline norecurse sspstrong uwtable
-define dso_local void @_Z40__device_stub__rgb_copy_struct_coalescedP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3.1, align 8
-  %6 = alloca %struct.dim3.1, align 8
-  %7 = alloca i64, align 8
-  %8 = alloca ptr, align 8
-  %9 = alloca { i64, i32 }, align 8
-  %10 = alloca { i64, i32 }, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %11 = alloca ptr, i64 2, align 16
-  %12 = getelementptr ptr, ptr %11, i32 0
-  store ptr %3, ptr %12, align 8
-  %13 = getelementptr ptr, ptr %11, i32 1
-  store ptr %4, ptr %13, align 8
-  %14 = call i32 @__cudaPopCallConfiguration(ptr %5, ptr %6, ptr %7, ptr %8)
-  %15 = load i64, ptr %7, align 8
-  %16 = load ptr, ptr %8, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %9, ptr align 8 %5, i64 12, i1 false)
-  %17 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 0
-  %18 = load i64, ptr %17, align 8
-  %19 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 1
-  %20 = load i32, ptr %19, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %10, ptr align 8 %6, i64 12, i1 false)
-  %21 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 0
-  %22 = load i64, ptr %21, align 8
-  %23 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 1
-  %24 = load i32, ptr %23, align 8
-  %25 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z40__device_stub__rgb_copy_struct_coalescedP5pixelS0_, i64 %18, i32 %20, i64 %22, i32 %24, ptr noundef %11, i64 noundef %15, ptr noundef %16)
-  br label %26
-
-26:                                               ; preds = %2
-  ret void
-}
-
-; Function Attrs: noinline norecurse sspstrong uwtable
-define dso_local void @_Z36__device_stub__rgb_copy_struct_wholeP5pixelS0_(ptr noundef %0, ptr noundef %1) #0 {
-  %3 = alloca ptr, align 8
-  %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3.1, align 8
-  %6 = alloca %struct.dim3.1, align 8
-  %7 = alloca i64, align 8
-  %8 = alloca ptr, align 8
-  %9 = alloca { i64, i32 }, align 8
-  %10 = alloca { i64, i32 }, align 8
-  store ptr %0, ptr %3, align 8
-  store ptr %1, ptr %4, align 8
-  %11 = alloca ptr, i64 2, align 16
-  %12 = getelementptr ptr, ptr %11, i32 0
-  store ptr %3, ptr %12, align 8
-  %13 = getelementptr ptr, ptr %11, i32 1
-  store ptr %4, ptr %13, align 8
-  %14 = call i32 @__cudaPopCallConfiguration(ptr %5, ptr %6, ptr %7, ptr %8)
-  %15 = load i64, ptr %7, align 8
-  %16 = load ptr, ptr %8, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %9, ptr align 8 %5, i64 12, i1 false)
-  %17 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 0
-  %18 = load i64, ptr %17, align 8
-  %19 = getelementptr inbounds { i64, i32 }, ptr %9, i32 0, i32 1
-  %20 = load i32, ptr %19, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %10, ptr align 8 %6, i64 12, i1 false)
-  %21 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 0
-  %22 = load i64, ptr %21, align 8
-  %23 = getelementptr inbounds { i64, i32 }, ptr %10, i32 0, i32 1
-  %24 = load i32, ptr %23, align 8
-  %25 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z36__device_stub__rgb_copy_struct_wholeP5pixelS0_, i64 %18, i32 %20, i64 %22, i32 %24, ptr noundef %11, i64 noundef %15, ptr noundef %16)
-  br label %26
-
-26:                                               ; preds = %2
+29:                                               ; preds = %3
   ret void
 }
 

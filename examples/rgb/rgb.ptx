@@ -11,6 +11,9 @@
 .address_size 64
 
 	// .globl	_Z26rgb_copy_array_interleavedPiS_
+// _ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src has been demoted
+// _ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst has been demoted
+// _ZZ26rgb_smem_array_interleavedPiS_iE10valid_tail has been demoted
 
 .visible .entry _Z26rgb_copy_array_interleavedPiS_(
 	.param .u64 _Z26rgb_copy_array_interleavedPiS__param_0,
@@ -80,96 +83,94 @@
 	ret;
 
 }
-	// .globl	_Z27rgb_copy_struct_interleavedP5pixelS0_
-.visible .entry _Z27rgb_copy_struct_interleavedP5pixelS0_(
-	.param .u64 _Z27rgb_copy_struct_interleavedP5pixelS0__param_0,
-	.param .u64 _Z27rgb_copy_struct_interleavedP5pixelS0__param_1
+	// .globl	_Z26rgb_smem_array_interleavedPiS_i
+.visible .entry _Z26rgb_smem_array_interleavedPiS_i(
+	.param .u64 _Z26rgb_smem_array_interleavedPiS_i_param_0,
+	.param .u64 _Z26rgb_smem_array_interleavedPiS_i_param_1,
+	.param .u32 _Z26rgb_smem_array_interleavedPiS_i_param_2
 )
 {
-	.reg .b32 	%r<5>;
-	.reg .b64 	%rd<8>;
+	.reg .pred 	%p<6>;
+	.reg .b16 	%rs<6>;
+	.reg .b32 	%r<34>;
+	.reg .b64 	%rd<12>;
+	// demoted variable
+	.shared .align 4 .b8 _ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src[396];
+	// demoted variable
+	.shared .align 4 .b8 _ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst[384];
+	// demoted variable
+	.shared .align 1 .u8 _ZZ26rgb_smem_array_interleavedPiS_iE10valid_tail;
 
-
-	ld.param.u64 	%rd1, [_Z27rgb_copy_struct_interleavedP5pixelS0__param_0];
-	ld.param.u64 	%rd2, [_Z27rgb_copy_struct_interleavedP5pixelS0__param_1];
-	cvta.to.global.u64 	%rd3, %rd1;
-	cvta.to.global.u64 	%rd4, %rd2;
+	ld.param.u64 	%rd3, [_Z26rgb_smem_array_interleavedPiS_i_param_0];
+	ld.param.u64 	%rd4, [_Z26rgb_smem_array_interleavedPiS_i_param_1];
+	ld.param.u32 	%r12, [_Z26rgb_smem_array_interleavedPiS_i_param_2];
+	cvta.to.global.u64 	%rd1, %rd4;
+	mov.u32 	%r13, %ntid.x;
+	mov.u32 	%r14, %ctaid.x;
 	mov.u32 	%r1, %tid.x;
-	mul.wide.u32 	%rd5, %r1, 12;
-	add.s64 	%rd6, %rd4, %rd5;
-	ld.global.u32 	%r2, [%rd6];
-	add.s64 	%rd7, %rd3, %rd5;
-	st.global.u32 	[%rd7], %r2;
-	ld.global.u32 	%r3, [%rd6+4];
-	st.global.u32 	[%rd7+4], %r3;
-	ld.global.u32 	%r4, [%rd6+8];
-	st.global.u32 	[%rd7+8], %r4;
-	ret;
+	mad.lo.s32 	%r2, %r14, %r13, %r1;
+	setp.eq.s32 	%p1, %r1, 31;
+	@%p1 bra 	$L__BB2_2;
+	bra.uni 	$L__BB2_1;
 
-}
-	// .globl	_Z25rgb_copy_struct_coalescedP5pixelS0_
-.visible .entry _Z25rgb_copy_struct_coalescedP5pixelS0_(
-	.param .u64 _Z25rgb_copy_struct_coalescedP5pixelS0__param_0,
-	.param .u64 _Z25rgb_copy_struct_coalescedP5pixelS0__param_1
-)
-{
-	.reg .b32 	%r<8>;
-	.reg .b64 	%rd<14>;
+$L__BB2_2:
+	add.s32 	%r15, %r2, 1;
+	setp.lt.s32 	%p2, %r15, %r12;
+	selp.u16 	%rs5, 1, 0, %p2;
+	st.shared.u8 	[_ZZ26rgb_smem_array_interleavedPiS_iE10valid_tail], %rs5;
+	bra.uni 	$L__BB2_3;
 
+$L__BB2_1:
+	ld.shared.u8 	%rs5, [_ZZ26rgb_smem_array_interleavedPiS_iE10valid_tail];
 
-	ld.param.u64 	%rd1, [_Z25rgb_copy_struct_coalescedP5pixelS0__param_0];
-	ld.param.u64 	%rd2, [_Z25rgb_copy_struct_coalescedP5pixelS0__param_1];
-	cvta.to.global.u64 	%rd3, %rd1;
-	cvta.to.global.u64 	%rd4, %rd2;
-	mov.u32 	%r1, %tid.x;
-	mul.wide.u32 	%rd5, %r1, 4;
-	add.s64 	%rd6, %rd4, %rd5;
-	ld.global.u32 	%r2, [%rd6];
-	add.s64 	%rd7, %rd3, %rd5;
-	st.global.u32 	[%rd7], %r2;
-	mov.u32 	%r3, %ntid.x;
-	add.s32 	%r4, %r1, %r3;
-	mul.wide.u32 	%rd8, %r4, 4;
-	add.s64 	%rd9, %rd4, %rd8;
-	ld.global.u32 	%r5, [%rd9];
-	add.s64 	%rd10, %rd3, %rd8;
-	st.global.u32 	[%rd10], %r5;
-	add.s32 	%r6, %r4, %r3;
-	mul.wide.u32 	%rd11, %r6, 4;
-	add.s64 	%rd12, %rd4, %rd11;
-	ld.global.u32 	%r7, [%rd12];
-	add.s64 	%rd13, %rd3, %rd11;
-	st.global.u32 	[%rd13], %r7;
-	ret;
-
-}
-	// .globl	_Z21rgb_copy_struct_wholeP5pixelS0_
-.visible .entry _Z21rgb_copy_struct_wholeP5pixelS0_(
-	.param .u64 _Z21rgb_copy_struct_wholeP5pixelS0__param_0,
-	.param .u64 _Z21rgb_copy_struct_wholeP5pixelS0__param_1
-)
-{
-	.reg .b32 	%r<8>;
-	.reg .b64 	%rd<8>;
-
-
-	ld.param.u64 	%rd1, [_Z21rgb_copy_struct_wholeP5pixelS0__param_0];
-	ld.param.u64 	%rd2, [_Z21rgb_copy_struct_wholeP5pixelS0__param_1];
-	cvta.to.global.u64 	%rd3, %rd1;
-	cvta.to.global.u64 	%rd4, %rd2;
-	mov.u32 	%r1, %ctaid.x;
-	mov.u32 	%r2, %ntid.x;
-	mov.u32 	%r3, %tid.x;
-	mad.lo.s32 	%r4, %r1, %r2, %r3;
-	mul.wide.s32 	%rd5, %r4, 12;
-	add.s64 	%rd6, %rd4, %rd5;
-	ld.global.u32 	%r5, [%rd6];
+$L__BB2_3:
+	mul.lo.s32 	%r16, %r2, 3;
+	cvt.s64.s32 	%rd2, %r16;
+	mul.wide.s32 	%rd5, %r16, 4;
+	add.s64 	%rd6, %rd1, %rd5;
+	ld.global.u32 	%r33, [%rd6];
+	mul.lo.s32 	%r4, %r1, 3;
+	shl.b32 	%r17, %r4, 2;
+	mov.u32 	%r18, _ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src;
+	add.s32 	%r5, %r18, %r17;
+	st.shared.u32 	[%r5], %r33;
 	ld.global.u32 	%r6, [%rd6+4];
-	ld.global.u32 	%r7, [%rd6+8];
-	add.s64 	%rd7, %rd3, %rd5;
-	st.global.u32 	[%rd7], %r5;
-	st.global.u32 	[%rd7+4], %r6;
-	st.global.u32 	[%rd7+8], %r7;
+	st.shared.u32 	[%r5+4], %r6;
+	ld.global.u32 	%r32, [%rd6+8];
+	st.shared.u32 	[%r5+8], %r32;
+	setp.gt.s32 	%p3, %r1, 2;
+	and.b16  	%rs4, %rs5, 255;
+	setp.eq.s16 	%p4, %rs4, 0;
+	or.pred  	%p5, %p3, %p4;
+	@%p5 bra 	$L__BB2_5;
+
+	mul.wide.s32 	%rd7, %r1, 4;
+	add.s64 	%rd8, %rd1, %rd7;
+	ld.global.u32 	%r19, [%rd8+384];
+	shl.b32 	%r20, %r1, 2;
+	add.s32 	%r22, %r18, %r20;
+	st.shared.u32 	[%r22+384], %r19;
+	ld.shared.u32 	%r33, [%r5];
+	ld.shared.u32 	%r32, [%r5+8];
+
+$L__BB2_5:
+	mov.u32 	%r24, _ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst;
+	add.s32 	%r25, %r24, %r17;
+	ld.shared.u32 	%r26, [%r25+12];
+	add.s32 	%r27, %r26, %r33;
+	st.shared.u32 	[%r25], %r27;
+	ld.shared.u32 	%r28, [%r25+16];
+	add.s32 	%r29, %r28, %r6;
+	st.shared.u32 	[%r25+4], %r29;
+	ld.shared.u32 	%r30, [%r25+20];
+	add.s32 	%r31, %r30, %r32;
+	st.shared.u32 	[%r25+8], %r31;
+	cvta.to.global.u64 	%rd9, %rd3;
+	shl.b64 	%rd10, %rd2, 2;
+	add.s64 	%rd11, %rd9, %rd10;
+	st.global.u32 	[%rd11], %r33;
+	st.global.u32 	[%rd11+4], %r6;
+	st.global.u32 	[%rd11+8], %r32;
 	ret;
 
 }
