@@ -1,8 +1,6 @@
 #include "rgb.cu"
 #include <cstdio>
 
-#define TILE_WIDTH 32
-
 void test_rgb_array()
 {
   const dim3 dimGrid = dim3(1, 1, 1);
