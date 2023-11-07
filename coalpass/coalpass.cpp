@@ -1,5 +1,13 @@
 #include "coalpass.h"
-
+/** Patches **/
+void printAllOp(Instruction* inst){
+        sep_center("Operand list");
+        errs() << "Inst:\t" << *inst <<'\n';
+    for (auto i=inst->op_begin(); i != inst->op_end(); i++){
+        errs() << *i->get() << '\n';
+    }
+    sep_center("End operand list");
+}
 void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData){
     bool debug = !DEBUG;
     sep_centerBB("Function findAllStorePerBB", targetBB);
@@ -31,11 +39,34 @@ PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &
             bb_cnt ++;
             assert(bbCoalDataMap.find(&bb) == bbCoalDataMap.end());
             bbCoalDataMap[&bb] = new SingleBBCoalAnalysisData;
+
             // runOnOneBB(&bb);
-            testGEPPointerAlias(&bb, FAM, F);
+            // testGEPPointerAlias(&bb, FAM, F);
             // break;
             // testInst(&bb);
             // break;
+
+            for (auto& inst:bb){
+                if (auto sext = dyn_cast<SExtInst>(&inst)){
+                    // printInfo(DEBUG, *sext, "\toperand0", sext->getOperand(0) );
+
+                    // for (auto i = sext->op_begin(); i != sext->op_end(); i++)
+                    //     printInfo(DEBUG, *sext, "\toperand", *i->get());
+                }
+                else if (AddOperator* addinst = dyn_cast<AddOperator>(&inst)){
+                    // printInfo(DEBUG, *addinst, "is instruction?\t", isa<Instruction>(addinst));
+                    // printAllOp(&inst);
+                }
+                else if (LoadInst* load = dyn_cast<LoadInst>(&inst)){
+                }
+                else if (AllocaInst* allcoa = dyn_cast<AllocaInst>(&inst)){
+                    // printAllOp(allcoa);
+                }
+                else if (CallInst* call = dyn_cast<CallInst>(&inst)){
+                    printInfo(DEBUG, "callInst:\t", *call, "arg:\t", call->getArgOperand(0));
+                }
+                else printInfo(DEBUG, inst.getOpcodeName());
+            }
         }
 
        
@@ -119,24 +150,7 @@ void coalPass::CoalPass::findAllContribution(Instruction* inst){
 
 /*** helper functions ***/
 
-// return the reverse iterator to the parent basicblock of inst that matches its position
-BasicBlock::reverse_iterator coalPass::CoalPass::reversePos_helper(Instruction* inst){
-        BasicBlock *parentBB = inst->getParent();
-        BasicBlock::reverse_iterator revStart = parentBB->rend();
-        for (BasicBlock::reverse_iterator curBack = parentBB->rbegin(); curBack != parentBB->rend(); curBack++){
-            if (&(*curBack) == inst) {revStart=curBack; break;}
-        }
-        return revStart;
-}
 
-BasicBlock::iterator         coalPass::CoalPass::forwardPos_helper(Instruction* inst){
-        BasicBlock *parentBB = inst->getParent();
-        BasicBlock::iterator fwdStart = parentBB->end();
-        for (BasicBlock::iterator i = parentBB->begin(); i != parentBB->end(); i++){
-            if (&(*i) == inst) {fwdStart=i; break;}
-        }
-        return fwdStart;
-}
 
 optional<PtrCalcChain> coalPass::CoalPass::ptrOperandAnalysisGEP_helper(GetElementPtrInst* parentGEPInst){
         /*** Backward Data Analysis FSM

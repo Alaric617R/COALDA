@@ -1,3 +1,5 @@
+#ifndef COALPASS_H
+#define COALPASS_H
 #include "llvm/Analysis/BlockFrequencyInfo.h"
 #include "llvm/Analysis/BranchProbabilityInfo.h"
 #include "llvm/IR/PassManager.h"
@@ -16,6 +18,8 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <string>
+
+#include "coalMemOp.h"
 
 using std::deque;
 using std::optional;
@@ -141,9 +145,7 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
 
 
     /*** helper functions ***/
-    BasicBlock::reverse_iterator reversePos_helper(Instruction* inst);
 
-    BasicBlock::iterator         forwardPos_helper(Instruction* inst);
 
     optional<PtrCalcChain> ptrOperandAnalysisGEP_helper(GetElementPtrInst* parentGEPInst);
 
@@ -205,3 +207,4 @@ void testGEPPointerAlias(BasicBlock* bb, FunctionAnalysisManager &FAM, Function&
 
 
 
+#endif
