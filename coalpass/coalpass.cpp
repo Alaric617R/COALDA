@@ -1,36 +1,5 @@
 #include "coalpass.h"
 
-PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
-        if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
-        sep_center(F.getName());
-        int bb_cnt = 0;
-        for (auto &bb : F){
-            bb_cnt ++;
-            assert(bbCoalDataMap.find(&bb) == bbCoalDataMap.end());
-            bbCoalDataMap[&bb] = new SingleBBCoalAnalysisData;
-            runOnOneBB(&bb);
-            break;
-            // testInst(&bb);
-            // break;
-        }
-
-       
-        return PreservedAnalyses::all();
-}
-
-void coalPass::CoalPass::runOnOneBB(BasicBlock* targetBB){
-      SingleBBCoalAnalysisData *bbCoalAnalysisData = bbCoalDataMap[targetBB];
-      findAllStorePerBB(targetBB, bbCoalAnalysisData);
-      // for every store in this basicblock, check it's dest and src address. If both coming from getelementptr and offset related to TID, then this store can be coalesced
-      for (StoreInst *storeInstCand : bbCoalAnalysisData->allStoreInstDeque){
-          // check value operand
-          Value *storeValueOperand = storeInstCand->getValueOperand();
-          checkValueRegAddressIsArray(storeValueOperand, storeInstCand);
-          // check pointer operand
-
-      }
-}
-
 void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData){
     bool debug = !DEBUG;
     sep_centerBB("Function findAllStorePerBB", targetBB);
@@ -53,13 +22,49 @@ void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAna
     }
 }
 
+
+PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
+        if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
+        sep_center(F.getName());
+        int bb_cnt = 0;
+        for (auto &bb : F){
+            bb_cnt ++;
+            assert(bbCoalDataMap.find(&bb) == bbCoalDataMap.end());
+            bbCoalDataMap[&bb] = new SingleBBCoalAnalysisData;
+            // runOnOneBB(&bb);
+            testGEPPointerAlias(&bb, FAM, F);
+            // break;
+            // testInst(&bb);
+            // break;
+        }
+
+       
+        return PreservedAnalyses::all();
+}
+
+void coalPass::CoalPass::runOnOneBB(BasicBlock* targetBB){
+      SingleBBCoalAnalysisData *bbCoalAnalysisData = bbCoalDataMap[targetBB];
+      findAllStorePerBB(targetBB, bbCoalAnalysisData);
+      // for every store in this basicblock, check it's dest and src address. If both coming from getelementptr and offset related to TID, then this store can be coalesced
+      for (StoreInst *storeInstCand : bbCoalAnalysisData->allStoreInstDeque){
+          // check value operand
+          Value *storeValueOperand = storeInstCand->getValueOperand();
+          checkValueRegAddressIsArray(storeValueOperand, storeInstCand);
+          // check pointer operand
+
+      }
+}
+
+
+
  optional<CoalAddressCalcChain> coalPass::CoalPass::checkValueRegAddressIsArray(Value* addressReg, StoreInst* parentStore){
     bool debug = DEBUG;
-    printInfo(debug, "parent store:\t", *parentStore);
-    printInfo(debug, "Value Address Reg Inst:\t", *addressReg);
+    // printInfo(debug, "parent store:\t", *parentStore);
+    // printInfo(debug, "Value Address Reg Inst:\t", *addressReg);
 
      /** simplicity: if addressReg is not loadInst, disgard this coal chance **/
-    if (!isa<LoadInst>(addressReg)) return nullopt;
+    // if (!isa<LoadInst>(addressReg)) return nullopt;
+
     CoalAddressCalcChain addressCalcAnalysisData;
     BasicBlock *parentBB = parentStore->getParent();
     /// TODO: if addressReg is Argument : return nullopt b/c it can't be getelemtptr
@@ -87,8 +92,13 @@ void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAna
                 operand->print(llvm::outs());
                 llvm::outs() << "\n";
             }
+            /// TODO: analyse ptr operand of GEP
             printInfo(debug, "Pointer operand:\t", *valueOpGetElemPtrInst->getPointerOperand());
-            ptrOperandAnalysisGEP_helper(valueOpGetElemPtrInst);
+            // if ptr operand is not Instruction, we're done
+            if (auto ptrOpInst = dyn_cast<Instruction>(valueOpGetElemPtrInst->getPointerOperand())){
+                findAllContributorInstFIFO_helper(ptrOpInst);  
+            }
+            // ptrOperandAnalysisGEP_helper(valueOpGetElemPtrInst);
 
         } else return nullopt;
     }
@@ -142,7 +152,7 @@ optional<PtrCalcChain> coalPass::CoalPass::ptrOperandAnalysisGEP_helper(GetEleme
         if (isa<Argument>(initPtrOpGEP)){
             ptrCalcData.addressBase = initPtrOpGEP;
         }
-        if (auto initPtrOpGEPInst = dyn_cast<Instruction>(initPtrOpGEP)){
+        else if (auto initPtrOpGEPInst = dyn_cast<Instruction>(initPtrOpGEP)){
             Value *curBBLocation = initPtrOpGEP;
             Value *nextBBLocation = nullptr;
             int iterCnt = 0;
@@ -195,4 +205,85 @@ optional<PtrCalcChain> coalPass::CoalPass::ptrOperandAnalysisGEP_helper(GetEleme
         }
         return nullopt;
  
+}
+
+deque<Instruction*> coalPass::CoalPass::findAllContributorInstFIFO_helper(Instruction* rootInst){
+    bool debug = DEBUG;
+    BasicBlock *parentBB = rootInst->getParent();
+    deque<Value*> dependenceValueLeftDeque;
+    unordered_set<Value*> allDependenceSet;
+    Instruction *curInst = rootInst;
+    if (debug){
+        sep_center("findAllContributorInstFIFO_helper");
+        errs() << "rootInst:\t" << *rootInst << '\n';
+    }
+    bool changed;
+    do{ 
+        changed = false;
+        // add all source operand to the deque
+        // printInfo(debug, "curInst:\t", *curInst);
+        
+        /// TODO: if it's alloca inst, find all stores that modifies this ptr location
+        if (AllocaInst* alloca = dyn_cast<AllocaInst>(curInst)){
+            // printInfo(debug, "found alloca:\t", *alloca);
+            for (BasicBlock::iterator fwdStart = forwardPos_helper(alloca); fwdStart != forwardPos_helper(rootInst); fwdStart++){
+                if (StoreInst* storeCand = dyn_cast<StoreInst>(&*fwdStart)){
+                    if (storeCand->getPointerOperand() == alloca){
+                        // printInfo(debug, "this store:\t", *storeCand, "\tmodifies:\t", *alloca);
+                        dependenceValueLeftDeque.push_back(storeCand);
+                        allDependenceSet.insert(storeCand);
+                    }
+                }
+            }
+        }
+        for (auto op_iter = curInst->op_begin(); op_iter != curInst->op_end(); op_iter++){
+            Value *srcOp = op_iter->get();
+            if (allDependenceSet.find(srcOp) == allDependenceSet.end()){
+                dependenceValueLeftDeque.push_back(srcOp);
+                allDependenceSet.insert(srcOp);
+                // printInfo(debug, "added src:\t", *srcOp);
+            }
+        }
+        // pop deque to find new dependence for the front Instruction. Update curInst ptr
+        Value* nextVal;
+        do{
+            nextVal = dependenceValueLeftDeque.front();
+            // printInfo(debug, "nextVal:\t", *nextVal);
+            if (Instruction* nextInst = dyn_cast<Instruction>(nextVal)){
+                curInst = nextInst;
+                changed = true;
+                // printInfo(debug, "nextVal is Inst!");
+            }
+            dependenceValueLeftDeque.pop_front();
+        }while(!isa<Instruction>(nextVal) && !dependenceValueLeftDeque.empty());
+
+
+    }while(!dependenceValueLeftDeque.empty() || changed);
+
+    // clear Set, eliminate those not in the range and those not of type Instruction
+    unordered_set<Instruction*> dependentInstSetFiltered;  
+    for (auto depValue : allDependenceSet){
+        bool keep = false;
+        if (Instruction* depInst = dyn_cast<Instruction>(depValue)){
+            if (depInst->comesBefore(rootInst)) {
+                dependentInstSetFiltered.insert(depInst);
+            }
+        }
+    }
+
+    // go through all Instruction from begin to rootInst, find contributing Inst
+    deque<Instruction*> contributorFIFODeque;
+    for (BasicBlock::iterator inst_iter = parentBB->begin(); inst_iter != forwardPos_helper(rootInst); inst_iter ++){
+        if (dependentInstSetFiltered.find(&*inst_iter) != dependentInstSetFiltered.end()){
+            contributorFIFODeque.push_back(&*inst_iter);
+        }
+    }
+    if (debug){
+        sep_center_idy('-', "dependence");
+        for (auto inst : contributorFIFODeque){
+            errs() << *inst << '\n';
+        }
+        sep_center_idy('-', "end");
+    }
+    return contributorFIFODeque;
 }

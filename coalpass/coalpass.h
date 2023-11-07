@@ -4,6 +4,9 @@
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/Analysis/AliasAnalysis.h"
+#include "llvm/Analysis/AliasSetTracker.h"
+#include "llvm/Pass.h"
 
 #include  <iostream>
 #include "llvm/Support/Format.h"
@@ -90,7 +93,8 @@ void printInfo(bool debug, Args && ...args){
 // pointer location calculation chain for pointer operand in getelementptr
 struct PtrCalcChain{
     Value *addressBase;
-    // deque<Value*> 
+    // all that contributes to the formation of address. The front stores Value that closest to entry point of BB
+    deque<Value*> fifoInstContributorDeque;
 };
 // register represents an address that comes from getelementptr
 // this struct gather info for all calculation (Values) that contribute to this address
@@ -142,6 +146,9 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
     BasicBlock::iterator         forwardPos_helper(Instruction* inst);
 
     optional<PtrCalcChain> ptrOperandAnalysisGEP_helper(GetElementPtrInst* parentGEPInst);
+
+    
+    deque<Instruction*> findAllContributorInstFIFO_helper(Instruction* rootInst);
 };
 }
 
@@ -173,6 +180,28 @@ void testInst(BasicBlock* bb){
   }
 }
 
+void testGEPPointerAlias(BasicBlock* bb, FunctionAnalysisManager &FAM, Function& F){
+  // find first two GEP
+  deque<GetElementPtrInst*> geps;
+  // BatchAAResults baResult;
+  // AliasSetTracker ast;
+  auto &aa = FAM.getResult<AAManager>(F);
+  int i = 0;
+  for (auto &inst : *bb){
+     if (auto gep = dyn_cast<GetElementPtrInst>(&inst)){
+          geps.push_back(gep);
+     }
+  }
+  while (!geps.empty()){
+    GetElementPtrInst* front = geps.front();
+    geps.pop_front();
+    for (auto other : geps){
+      sep_center("Alias Analysis");
+      printInfo(DEBUG, *front, '\n', *other, '\n', aa.alias(front->getPointerOperand(), other->getPointerOperand()));
+    }
+  }
+
+}
 
 
 
