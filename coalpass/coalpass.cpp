@@ -8,9 +8,9 @@ void printAllOp(Instruction* inst){
     }
     sep_center("End operand list");
 }
-void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData){
+void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData){
     bool debug = !DEBUG;
-    sep_centerBB("Function findAllStorePerBB", targetBB);
+    sep_centerBB("Function findAllLoadAndStorePerBB", targetBB);
     for (Instruction &inst : *targetBB){
         if (auto storeInst = dyn_cast<StoreInst>(&inst)){
           printInfo(debug, *storeInst);
@@ -18,6 +18,9 @@ void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAna
           // if (isa<Argument>(storeInst->getValueOperand())) errs() << *storeInst->getValueOperand() <<'\n';
           printInfo(debug, "Value operand:\t", *storeInst->getValueOperand());
           printInfo(debug, "Ptr operand:\t", *storeInst->getPointerOperand());
+        }
+        else if (auto loadInst = dyn_cast<LoadInst>(&inst)){
+            bbCoalAnalysisData->allLoadInstDeque.push_back(loadInst);
         }
         // if (isa<GetElementPtrInst>(&inst)){
         //     sep_center_idy('#', inst);
@@ -32,8 +35,8 @@ void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAna
 
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
-        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
-        if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+        if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
+        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
 
         sep_center(F.getName());
         int bb_cnt = 0;
@@ -42,40 +45,41 @@ PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &
             assert(bbCoalDataMap.find(&bb) == bbCoalDataMap.end());
             bbCoalDataMap[&bb] = new SingleBBCoalAnalysisData;
 
-            // runOnOneBB(&bb);
+            runOnOneBB(&bb);
             // testGEPPointerAlias(&bb, FAM, F);
             // break;
             // testInst(&bb);
             // break;
 
-            for (auto& inst:bb){
-                if (auto sext = dyn_cast<SExtInst>(&inst)){
-                    // printInfo(DEBUG, *sext, "\toperand0", sext->getOperand(0) );
+            // for (auto& inst:bb){
+            //     if (auto sext = dyn_cast<SExtInst>(&inst)){
+            //         // printInfo(DEBUG, *sext, "\toperand0", sext->getOperand(0) );
 
-                    // for (auto i = sext->op_begin(); i != sext->op_end(); i++)
-                    //     printInfo(DEBUG, *sext, "\toperand", *i->get());
-                }
-                else if (AddOperator* addinst = dyn_cast<AddOperator>(&inst)){
-                    // printInfo(DEBUG, *addinst, "is instruction?\t", isa<Instruction>(addinst));
-                    // printAllOp(&inst);
-                }
-                else if (LoadInst* load = dyn_cast<LoadInst>(&inst)){
-                }
-                else if (AllocaInst* allcoa = dyn_cast<AllocaInst>(&inst)){
-                    // printAllOp(allcoa);
-                }
-                else if (CallInst* call = dyn_cast<CallInst>(&inst)){
-                    // printInfo(DEBUG, "callInst:\t", *call, "arg:\t", call->getCalledFunction()->getName());
-                }
-                else if (GetElementPtrInst* GEP = dyn_cast<GetElementPtrInst>(&inst)){
-                    printAllOp(GEP);
-                    if (GEP->getNumOperands() == 3){
-                        printInfo(DEBUG, "gep's second argument\t" , *GEP->getOperand(1),"\tType\t", dyn_cast<ConstantInt>(GEP->getOperand(1))->isZero());
-                    }                    
-                    // printInfo(DEBUG, *GEP, "\tnumber of operands:\t", GEP->getNumOperands(), "\t", *GEP->getOperand(GEP->getNumOperands()-1));
-                }
-                else printInfo(DEBUG, inst.getOpcodeName());
-            }
+            //         // for (auto i = sext->op_begin(); i != sext->op_end(); i++)
+            //         //     printInfo(DEBUG, *sext, "\toperand", *i->get());
+            //     }
+            //     else if (AddOperator* addinst = dyn_cast<AddOperator>(&inst)){
+            //         // printInfo(DEBUG, *addinst, "is instruction?\t", isa<Instruction>(addinst));
+            //         // printAllOp(&inst);
+            //     }
+            //     else if (LoadInst* load = dyn_cast<LoadInst>(&inst)){
+            //     }
+            //     else if (AllocaInst* allcoa = dyn_cast<AllocaInst>(&inst)){
+            //         // printAllOp(allcoa);
+            //     }
+            //     else if (CallInst* call = dyn_cast<CallInst>(&inst)){
+            //         // printInfo(DEBUG, "callInst:\t", *call, "arg:\t", call->getCalledFunction()->getName());
+            //     }
+            //     else if (GetElementPtrInst* GEP = dyn_cast<GetElementPtrInst>(&inst)){
+            //         printAllOp(GEP);
+            //         if (GEP->getNumOperands() == 3){
+            //             printInfo(DEBUG, "gep's second argument\t" , *GEP->getOperand(1),"\tType\t", dyn_cast<ConstantInt>(GEP->getOperand(1))->isZero());
+            //         }                    
+            //         // printInfo(DEBUG, *GEP, "\tnumber of operands:\t", GEP->getNumOperands(), "\t", *GEP->getOperand(GEP->getNumOperands()-1));
+            //     }
+            //     else printInfo(DEBUG, inst.getOpcodeName());
+            // }
+
         }
 
        
@@ -84,15 +88,19 @@ PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &
 
 void coalPass::CoalPass::runOnOneBB(BasicBlock* targetBB){
       SingleBBCoalAnalysisData *bbCoalAnalysisData = bbCoalDataMap[targetBB];
-      findAllStorePerBB(targetBB, bbCoalAnalysisData);
-      // for every store in this basicblock, check it's dest and src address. If both coming from getelementptr and offset related to TID, then this store can be coalesced
-      for (StoreInst *storeInstCand : bbCoalAnalysisData->allStoreInstDeque){
-          // check value operand
-          Value *storeValueOperand = storeInstCand->getValueOperand();
-          checkValueRegAddressIsArray(storeValueOperand, storeInstCand);
-          // check pointer operand
-
+      findAllLoadAndStorePerBB(targetBB, bbCoalAnalysisData);
+      /// TODO: analysis all Loads
+      for (auto loadInstCand : bbCoalAnalysisData->allLoadInstDeque){
+        createCoalLoadOrNo(loadInstCand);
       }
+      // for every store in this basicblock, check it's dest and src address. If both coming from getelementptr and offset related to TID, then this store can be coalesced
+    //   for (StoreInst *storeInstCand : bbCoalAnalysisData->allStoreInstDeque){
+    //       // check value operand
+    //       Value *storeValueOperand = storeInstCand->getValueOperand();
+    //       checkValueRegAddressIsArray(storeValueOperand, storeInstCand);
+    //       // check pointer operand
+
+    //   }
 }
 
 

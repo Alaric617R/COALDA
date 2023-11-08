@@ -20,6 +20,7 @@
 #include <string>
 
 #include "coalMemOp.h"
+#include "debugLog.h"
 
 using std::deque;
 using std::optional;
@@ -29,69 +30,6 @@ using std::string;
 using std::nullopt;
 using namespace llvm;
 
-#ifndef DEBUG
-#define DEBUG true
-#endif
-
-#define log_debug(expr, fmt, ...)  \
-                  if ((expr)) \
-                      errs() << llvm::format(fmt"\n", ## __VA_ARGS__ )
-
-#define log_debug_bb(expr, bbInfo, fmt, ...) \
-                  if ((expr)) {  \
-                    (bbInfo);    \
-                  errs() << '\t'; errs() << llvm::format(fmt"\n", ## __VA_ARGS__ );}
-
-#define seperator(num, charc) \
-                  for (int i = 0; i < (num); i++) errs() << charc;\
-                  errs() << '\n';
-
-#define sep_center_idy(charc, center) \
-        for (int i = 0; i < 18; i ++) errs() << charc; \
-        errs() << '\t' << center << '\t'; \
-        for (int i = 0; i < 18; i ++) errs() << charc; \
-        errs() << '\n';
-
-#if DEBUG
-#define sep_center(center) \
-        for (int i = 0; i < 18; i ++) errs() << '<'; \
-        errs() << '\t' << center << '\t'; \
-        for (int i = 0; i < 18; i ++) errs() << '>'; \
-        errs() << '\n';
-#else
-#define sep_center(center)
-#endif
-
-#if DEBUG
-#define sep_centerBB(center, BB) \
-        for (int i = 0; i < 18; i ++) errs() << '<'; \
-        errs() << "\nBasicBlock:\t"; BB->printAsOperand(errs(),false); errs() << '\n'; \
-        errs() << center << "\n"; \
-        for (int i = 0; i < 18; i ++) errs() << '>'; \
-        errs() << '\n';
-#else
-#define sep_centerBB(center)
-#endif
-
-template<typename ...Args>
-void tLog(Args && ...args)
-{
-    (errs() << ... << args);
-    errs() << '\n';
-}
-
-template<typename ...Args>
-void printBlockInfo(bool debug, BasicBlock* bb, Args && ...args){
-    if (!debug) return;
-    errs() << "Block: "; bb->printAsOperand(errs(), false); errs() << "\n";
-    tLog(args...);
-}
-
-template<typename ...Args>
-void printInfo(bool debug, Args && ...args){
-    if (!debug) return;
-    tLog(args...);
-}
 
 
 // pointer location calculation chain for pointer operand in getelementptr
@@ -110,6 +48,7 @@ struct CoalAddressCalcChain{
 struct SingleBBCoalAnalysisData{
     // front represents the stores with lowest instruction order (closet to entry of basicblock)
     deque<StoreInst*> allStoreInstDeque;
+    deque<LoadInst*> allLoadInstDeque;
 };
 
 struct CoalStoreInst{
@@ -134,7 +73,7 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
 
     void runOnOneBB(BasicBlock* targetBB);
 
-    void findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData);
+    void findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData);
 
     // only in parent BB of inst
     void findAllContribution(Instruction* inst);
