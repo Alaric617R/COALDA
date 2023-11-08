@@ -14,13 +14,43 @@ unordered_set<const char*> OffsetAllowedOpcodeFSM{
      "call",
 };
 
+// local helpers
+optional<GEPWrapper> calcGEPCoalCandidate(GetElementPtrInst* gepInst){
+    if (gepInst->getNumOperands() == 2) {
+        return std::make_optional(GEPWrapper{.GEP = gepInst, 
+                                             .PointerOp = gepInst->getPointerOperand(), 
+                                             .OffsetOp = gepInst->getOperand(1)
+                                             });
+    }
+    // else the second argument should be zero
+    else if (gepInst->getNumOperands() == 3 ){
+        if (auto constInt = dyn_cast<ConstantInt>(gepInst->getOperand(1))){
+            if (constInt->isZero()){
+                return std::make_optional(GEPWrapper{.GEP = gepInst, 
+                                        .PointerOp = gepInst->getPointerOperand(), 
+                                        .OffsetOp = gepInst->getOperand(2)
+                                        });
+            }
+        }
+    }
+    return nullopt;
+}
 
 optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst){
     /// @note if this load is not from GEP, cannot be Coaled
     if (isa<GetElementPtrInst>(loadCandInst->getPointerOperand())) return nullopt;
     GetElementPtrInst* loadAddrGEPInst = dyn_cast<GetElementPtrInst>(loadCandInst->getPointerOperand());
+    /** allowed two types of GEP
+     * 1. only one-dimensional offset. E.G, %17 = getelementptr inbounds i32, ptr %11, i64 %16
+     * 2. twp-dimensional offset, but with GPU shared memory so the first one will be zero. E.G,   %129 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %128
+     * */ 
+    GEPWrapper loadAddrGEPWrapper;
+    if (calcGEPCoalCandidate(loadAddrGEPInst).has_value()) return nullopt;
+    else loadAddrGEPWrapper = std::move(calcGEPCoalCandidate(loadAddrGEPInst).value());
     /// TODO: build offset calculation tree
-
+    Value* offsetOp = loadAddrGEPWrapper.OffsetOp;
+    CalcTreeNode* root = new CalcTreeNode;
+    CalcTreeNode::setupCalcTreeNode(root, offsetOp, nullptr);
     /// TODO: extract GEP pointer Op source dependence tree
 
 
@@ -34,6 +64,7 @@ bool computeOffsetDepTree(CalcTreeNode* root){
     assert(root->inst != nullptr);
     /// TODO: recursion termination condition
     if (!isa<Instruction>(root->inst)) return false;
+    // or instruction type is callInst or Un-interested type
     /// TODO: FSM of different instructions
     bool ret_flag = false;
     // unary: sext
@@ -87,9 +118,17 @@ bool computeOffsetDepTree(CalcTreeNode* root){
         }
         return ret_flag;
     }
-    // Terminate point: callInst
+    // Terminate point: callInst (no children)
     else if (CallInst* callInst = dyn_cast<CallInst>(root->inst)){
-
+        if (callInst->getCalledFunction()->getName().str() == "llvm.nvvm.read.ptx.sreg.tid.x"){
+            ret_flag = true;
+        }
+        else ret_flag = false;
+        return ret_flag;
+    }
+    // don't bother to deal with other type of instructions
+    else {
+        return false;
     }
 
 

@@ -36,6 +36,7 @@ struct OffsetEquation{
 
 };
 
+
 struct CalcTreeNode{
     Value* inst;
     // since SSA and we're only in same basic block, parent node should only be one
@@ -44,6 +45,12 @@ struct CalcTreeNode{
     OffsetEquation nodeExpression;
     static bool opcodeInFSM(Value* inst);
     static void setupCalcTreeNode(CalcTreeNode* curNode, Value* inst, CalcTreeNode* parentNode);
+};
+
+struct GEPWrapper{
+    GetElementPtrInst* GEP;
+    Value*  PointerOp;
+    Value*  OffsetOp;
 };
 
 // class of LoadInst that can be coalesced

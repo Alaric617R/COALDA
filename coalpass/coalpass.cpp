@@ -2,7 +2,7 @@
 /** Patches **/
 void printAllOp(Instruction* inst){
         sep_center("Operand list");
-        errs() << "Inst:\t" << *inst <<'\n';
+        errs() << "Inst:\t" << *inst << "\thas " << inst->getNumOperands() << " operands" <<'\n';
     for (auto i=inst->op_begin(); i != inst->op_end(); i++){
         errs() << *i->get() << '\n';
     }
@@ -32,7 +32,9 @@ void coalPass::CoalPass::findAllStorePerBB(BasicBlock* targetBB, SingleBBCoalAna
 
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
-        if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
+        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
+        if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+
         sep_center(F.getName());
         int bb_cnt = 0;
         for (auto &bb : F){
@@ -63,7 +65,14 @@ PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &
                     // printAllOp(allcoa);
                 }
                 else if (CallInst* call = dyn_cast<CallInst>(&inst)){
-                    printInfo(DEBUG, "callInst:\t", *call, "arg:\t", call->getArgOperand(0));
+                    // printInfo(DEBUG, "callInst:\t", *call, "arg:\t", call->getCalledFunction()->getName());
+                }
+                else if (GetElementPtrInst* GEP = dyn_cast<GetElementPtrInst>(&inst)){
+                    printAllOp(GEP);
+                    if (GEP->getNumOperands() == 3){
+                        printInfo(DEBUG, "gep's second argument\t" , *GEP->getOperand(1),"\tType\t", dyn_cast<ConstantInt>(GEP->getOperand(1))->isZero());
+                    }                    
+                    // printInfo(DEBUG, *GEP, "\tnumber of operands:\t", GEP->getNumOperands(), "\t", *GEP->getOperand(GEP->getNumOperands()-1));
                 }
                 else printInfo(DEBUG, inst.getOpcodeName());
             }
