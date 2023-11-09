@@ -1,5 +1,5 @@
-#ifndef COAL_LOAD_H
-#define COAL_LOAD_H
+#ifndef COAL_MEM_OP_H
+#define COAL_MEM_OP_H
 
 #include "llvm/Analysis/BlockFrequencyInfo.h"
 #include "llvm/Analysis/BranchProbabilityInfo.h"
@@ -46,7 +46,9 @@ public:
     // shared_ptr<CoalMemExprAST> parent = nullptr;
 
     virtual ~CoalMemExprAST() = default;
-    virtual string str() = 0;
+    virtual string str() {
+        return "Base CoalMemExprAST";
+    }
     /**
      * transform an expression to add connected components by applying distribution rule
      * e.g, 3 *(a * b+ d) + c => 3*a*b + 3*d + c
@@ -63,7 +65,7 @@ private:
     void exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAST* addChild, bool isLeftChild);
 
 public:
-    void distributiveTransform();
+    static shared_ptr<CoalMemExprAST> distributiveTransform(shared_ptr<CoalMemExprAST> root);
     BinaryExprAST(CoalMemBinaryASTToken_t _op, shared_ptr<CoalMemExprAST> _lhs, shared_ptr<CoalMemExprAST> _rhs): op{_op}, lhs{_lhs}, rhs{_rhs}{
         lhs->parent = shared_ptr<BinaryExprAST>(this);
         rhs->parent = shared_ptr<BinaryExprAST>(this);
@@ -208,6 +210,7 @@ bool computeValueDependenceTree(CalcTreeNode* root);
 BasicBlock::reverse_iterator reversePos_helper(Instruction* inst);
 
 BasicBlock::iterator         forwardPos_helper(Instruction* inst);
+
 
 
 

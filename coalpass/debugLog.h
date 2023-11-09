@@ -9,6 +9,7 @@
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/Analysis/AliasSetTracker.h"
 #include "llvm/Pass.h"
+#include "coalMemOp.h"
 
 #include  <iostream>
 #include "llvm/Support/Format.h"
@@ -18,6 +19,8 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <string>
+#include <memory>
+using namespace std;
 
 
 using std::deque;
@@ -91,5 +94,7 @@ void printInfo(bool debug, Args && ...args){
     if (!debug) return;
     tLog(args...);
 }
+
+
 
 #endif

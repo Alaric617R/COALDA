@@ -5,3 +5,5 @@ PATH2LIB="/home/arch/Desktop/EECS583_Project/build/coalpass/CoalPass.so"        
 PASS=coal
 
 opt -load-pass-plugin="${PATH2LIB}" -passes="${PASS}" rgb-cuda-nvptx64-nvidia-cuda-sm_89.bc -o rgb-cuda-nvptx64-nvidia-cuda-sm_89_out.bc
+
+# r -load-pass-plugin=/home/arch/Desktop/EECS583_Project/build/coalpass/CoalPass.so -passes=coal /home/arch/Desktop/EECS583_Project/examples/rgb/rgb-cuda-nvptx64-nvidia-cuda-sm_89.bc

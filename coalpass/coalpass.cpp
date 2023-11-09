@@ -1,4 +1,23 @@
 #include "coalpass.h"
+
+//** Debug test functions **//
+void testASTDistExpansion(){
+    // (1+2) * (3+4)
+    auto const1 = make_shared<ConstIntExprAST>(1);
+    auto const2 = make_shared<ConstIntExprAST>(2);
+    auto const3 = make_shared<ConstIntExprAST>(3);
+    auto const4 = make_shared<ConstIntExprAST>(4);
+
+    auto add1 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, const1, const2);
+    auto add2 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, const3, const4);
+    auto mult = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, add1, add2);
+    errs() << "before dist:\t" << mult->str() << '\n';
+    auto after = BinaryExprAST::distributiveTransform(mult);
+    // errs() << "after dist:\t" << BinaryExprAST::distributiveTransform(mult)->str() << '\n';
+    errs() << "after dist:\t" << after->str() << '\n';
+
+}
+
 /** Patches **/
 void printAllOp(Instruction* inst){
         sep_center("Operand list");
@@ -37,6 +56,9 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
         if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
         // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+
+        testASTDistExpansion();
+        return PreservedAnalyses::all();
 
         sep_center(F.getName());
         int bb_cnt = 0;
