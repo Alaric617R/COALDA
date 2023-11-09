@@ -37,21 +37,60 @@ extern unordered_set<const char*> OffsetAllowedOpcodeFSM;
 
 enum class CoalMemBinaryASTToken_t: uint8_t {Mult, Add};
 enum class CoalMemPrototyeASTToken_t: uint8_t {ThreadIndex, BlockDim, BlockIndex, TID};
-/**
- * AST for CoalMemory formula:
- * Stride * (ThreadIdx | TID) + StrideOffset
- * 1. @param Stride: constant. Size of packet struct in words. In rgb, it's three (R,G,B)
- * 2. @param ThreadIdx: flag that this memory operation is in parallel
- * 3. @param TID: ThreadIdx + BlockDim * BlockIndex (present if has multiple thread blocks)
- * 4. @param StrideOffset: The particular sub-field a single load/store that tries to access (<= @param Stride)
-*/
+enum class CoalMemConstExprASTToken_t : uint8_t {Argument};
+
+class BinaryExprAST;
 class CoalMemExprAST{
 public:
+    shared_ptr<BinaryExprAST> parent = nullptr;
+    // shared_ptr<CoalMemExprAST> parent = nullptr;
+
     virtual ~CoalMemExprAST() = default;
     virtual string str() = 0;
+    /**
+     * transform an expression to add connected components by applying distribution rule
+     * e.g, 3 *(a * b+ d) + c => 3*a*b + 3*d + c
+     * The good part of this method is that after this transformation, mul will only have Const and mul itself as child node
+    */
+    
 };
 
-class PrototypeExprAST : public CoalMemExprAST {
+
+class BinaryExprAST : public CoalMemExprAST{
+private:
+    CoalMemBinaryASTToken_t op;
+    shared_ptr<CoalMemExprAST> lhs, rhs;
+    void exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAST* addChild, bool isLeftChild);
+
+public:
+    void distributiveTransform();
+    BinaryExprAST(CoalMemBinaryASTToken_t _op, shared_ptr<CoalMemExprAST> _lhs, shared_ptr<CoalMemExprAST> _rhs): op{_op}, lhs{_lhs}, rhs{_rhs}{
+        lhs->parent = shared_ptr<BinaryExprAST>(this);
+        rhs->parent = shared_ptr<BinaryExprAST>(this);
+    }
+    string str() override {
+        switch (op)
+        {
+            case CoalMemBinaryASTToken_t::Add:
+                return  "(" + lhs->str() + " + " + rhs->str() + ")";
+            case CoalMemBinaryASTToken_t::Mult:
+                return  "(" + lhs->str() + " * " + rhs->str() + ")";
+            default:
+                return "BinaryOp:\t?";
+        //     return "BinaryOp:\t?";
+        }
+    }
+};
+
+class ConstExprAST : public CoalMemExprAST {
+public:
+    ConstExprAST() = default;
+    string str() override {
+        return "ConstExprAST";
+    }
+};
+
+class PrototypeExprAST : public ConstExprAST {
 private:
     CoalMemPrototyeASTToken_t token;
 public:
@@ -69,48 +108,30 @@ public:
                 return string("TID"); 
             default:
                 return string("Prototype:?");
-        // case CoalMemPrototyeASTToken_t::ThreadIndex:
-        //     return string("Prototype:\tThreadIndex");
-        // case CoalMemPrototyeASTToken_t::BlockDim:
-        //     return string("Prototype: BlockDim");
-        // case CoalMemPrototyeASTToken_t::BlockIndex:
-        //     return string("Prototype:\tBlockIndex");
-        // case CoalMemPrototyeASTToken_t::TID:
-        //     return string("Prototype: TID"); 
         // default:
         //     return string("Prototype:?");
         }
     }
 };
-
-class BinaryExprAST : public CoalMemExprAST{
+/**
+ * Argument passed from entry of function (register value with no dependence in function scope)
+*/
+class ConstArgExprAST : public CoalMemExprAST {
 private:
-    CoalMemBinaryASTToken_t op;
-    shared_ptr<CoalMemExprAST> lhs, rhs;
+    CoalMemConstExprASTToken_t token;
+    Argument* argument;
 public:
-    BinaryExprAST(CoalMemBinaryASTToken_t _op, shared_ptr<CoalMemExprAST> _lhs, shared_ptr<CoalMemExprAST> _rhs): op{_op}, lhs{_lhs}, rhs{_rhs}{}
+    ConstArgExprAST(CoalMemConstExprASTToken_t _token, Argument* _argument) : token{_token}, argument{_argument}{}
     string str() override {
-        switch (op)
+        switch (token)
         {
-            case CoalMemBinaryASTToken_t::Add:
-                return  "(" + lhs->str() + " + " + rhs->str() + ")";
-            case CoalMemBinaryASTToken_t::Mult:
-                return  "(" + lhs->str() + " * " + rhs->str() + ")";
-            default:
-                return "BinaryOp:\t?";
-        // case CoalMemBinaryASTToken_t::Add:
-        //     return "BinaryOp:\t" + lhs->str() + " + " + rhs->str();
-        // case CoalMemBinaryASTToken_t::Mult:
-        //     return "BinaryOp:\t" + lhs->str() + " * " + rhs->str();
-        // default:
-        //     return "BinaryOp:\t?";
+        case CoalMemConstExprASTToken_t::Argument:
+            return "Arg " + argument->getName().str();
+        default:
+            return "Arg ?";
         }
     }
 };
-
-class ConstExprAST : public CoalMemExprAST {
-};
-
 class ConstIntExprAST : public ConstExprAST {
 private:
     int value;
@@ -146,6 +167,22 @@ struct GEPWrapper{
     Value*  OffsetOp;
 };
 
+/**
+ * AST for CoalMemory formula:
+ * Stride * (ThreadIdx | TID) + StrideOffset
+ * 1. @param Stride: constant. Size of packet struct in words. In rgb, it's three (R,G,B)
+ * 2. @param ThreadIdx: flag that this memory operation is in parallel
+ * 3. @param TID: ThreadIdx + BlockDim * BlockIndex (present if has multiple thread blocks)
+ * 4. @param StrideOffset: The particular sub-field a single load/store that tries to access (<= @param Stride)
+*/
+struct ViableOffsetEquation{
+    CoalMemExprAST* originalExpr;
+    int stride;
+    /// @brief  offset <= stride - 1
+    int offset;
+    /// TID or ThreadIdx alone
+    bool batchedTID;
+};
 // class of LoadInst that can be coalesced
 struct CoalLoad{
 // data
@@ -164,7 +201,7 @@ optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst);
  * Return false if no TID related field is found.
  * Return true still possibly means cannot coalesce (such as alloca inst didn't get squashed)
 */
-bool computeOffsetDepTree(CalcTreeNode* root);
+bool computeValueDependenceTree(CalcTreeNode* root);
 
 
 /** helpers **/

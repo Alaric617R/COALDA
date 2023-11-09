@@ -72,21 +72,35 @@ optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst){
     GEPWrapper loadAddrGEPWrapper;
     if (!calcGEPCoalCandidate(loadAddrGEPInst).has_value()) return nullopt;
     else loadAddrGEPWrapper = std::move(calcGEPCoalCandidate(loadAddrGEPInst).value());
+
     /// TODO: build offset calculation tree
     Value* offsetOp = loadAddrGEPWrapper.OffsetOp;
-    CalcTreeNode* root = new CalcTreeNode;
-    CalcTreeNode::setupCalcTreeNode(root, offsetOp, nullptr);
-    if (!computeOffsetDepTree(root)){
+    CalcTreeNode* offsetCalcRoot = new CalcTreeNode;
+    CalcTreeNode::setupCalcTreeNode(offsetCalcRoot, offsetOp, nullptr);
+    if (!computeValueDependenceTree(offsetCalcRoot)){
         printInfo(debug, *loadAddrGEPInst, "\t is impossible to be coalesced.");
         return nullopt;
     }
-    
-    
     /// TODO: calculate offset AST expression
-    CalcTreeNode::calcOffsetEquation(root);
+    CalcTreeNode::calcOffsetEquation(offsetCalcRoot);
     printInfo(debug, "Source GEP:\t", *loadAddrGEPInst);
-    if (debug) root->prettyPrint();
+    if (auto binaryOp = dynamic_cast<BinaryExprAST*>(offsetCalcRoot->nodeExpression.expr.get())){
+        binaryOp->distributiveTransform();
+        if (debug) errs() << binaryOp->str() << '\n';
+    }
+    // if (debug) offsetCalcRoot->prettyPrint();
+
     /// TODO: extract GEP pointer Op source dependence tree
+    Value* ptrOp = loadAddrGEPWrapper.PointerOp;
+    CalcTreeNode* ptrOpCalcRoot = new CalcTreeNode;
+    CalcTreeNode::setupCalcTreeNode(ptrOpCalcRoot, ptrOp, nullptr);
+    computeValueDependenceTree(ptrOpCalcRoot);
+    /// TODO: find ptr Op source expression
+    CalcTreeNode::calcOffsetEquation(ptrOpCalcRoot);
+    // printInfo(debug, "Source GEP:\t", *loadAddrGEPInst);
+    // if (debug) ptrOpCalcRoot->prettyPrint();
+
+
 
     return nullopt;
 }
@@ -95,10 +109,11 @@ optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst){
 // 1. filling inst
 // 2. set parent to Null
 /// @return true if this offset is related parallel structure (can be coalesced)
-bool computeOffsetDepTree(CalcTreeNode* root){
+bool computeValueDependenceTree(CalcTreeNode* root){
     assert(root->inst != nullptr);
     /// TODO: recursion termination condition
-    if (!isa<Instruction>(root->inst)) return false;
+    /// @note: Can be Argument
+    // if (!isa<Instruction>(root->inst)) return false; 
     // or instruction type is callInst or Un-interested type
     /// TODO: FSM of different instructions
     bool ret_flag = false;
@@ -107,7 +122,7 @@ bool computeOffsetDepTree(CalcTreeNode* root){
         CalcTreeNode* sextChildNode = new CalcTreeNode;
         CalcTreeNode::setupCalcTreeNode(sextChildNode, sextInst->getOperand(0), root);
         root->childNodesSet.insert(sextChildNode);
-        return false || computeOffsetDepTree(sextChildNode);
+        return false || computeValueDependenceTree(sextChildNode);
     }
     // binary: add, mul
     else if(isa<AddOperator>(root->inst) || isa<MulOperator>(root->inst)){
@@ -118,7 +133,7 @@ bool computeOffsetDepTree(CalcTreeNode* root){
             CalcTreeNode* binaryChildNode = new CalcTreeNode;
             CalcTreeNode::setupCalcTreeNode(binaryChildNode, op_iter->get(), root);
             root->childNodesSet.insert(binaryChildNode);
-            ret_flag = ret_flag || computeOffsetDepTree(binaryChildNode);
+            ret_flag = ret_flag || computeValueDependenceTree(binaryChildNode);
         }
         return ret_flag;
     }
@@ -127,7 +142,7 @@ bool computeOffsetDepTree(CalcTreeNode* root){
         CalcTreeNode* loadChildNode = new CalcTreeNode;
         CalcTreeNode::setupCalcTreeNode(loadChildNode, loadInst->getPointerOperand(), root);
         root->childNodesSet.insert(loadChildNode);
-        return false || computeOffsetDepTree(loadChildNode);
+        return false || computeValueDependenceTree(loadChildNode);
     }
     // memory: alloca. No children, need to squash to nearest store
     else if (AllocaInst* allocaInst = dyn_cast<AllocaInst>(root->inst)){
@@ -145,7 +160,7 @@ bool computeOffsetDepTree(CalcTreeNode* root){
                     CalcTreeNode* storeValueChildNode = new CalcTreeNode;
                     CalcTreeNode::setupCalcTreeNode(storeValueChildNode, storeCand->getValueOperand(), root->parentNode);
                     root->parentNode->childNodesSet.insert(storeValueChildNode);
-                    ret_flag = computeOffsetDepTree(storeValueChildNode);
+                    ret_flag = computeValueDependenceTree(storeValueChildNode);
                     delete root;
                     break;
                 }
@@ -160,6 +175,9 @@ bool computeOffsetDepTree(CalcTreeNode* root){
         }
         else ret_flag = false;
         return ret_flag;
+    }
+    else if (Argument *arg = dyn_cast<Argument>(root->inst)){
+        return false;
     }
     // don't bother to deal with other type of instructions
     else {
@@ -215,6 +233,11 @@ void CalcTreeNode::calcOffsetEquation(CalcTreeNode* root){
             else assert(0 && string("Unsupported called function:\t" + callInstExpr->getCalledFunction()->getName().str()).c_str());
             root->nodeExpression.expr = std::make_shared<PrototypeExprAST>(protoToken);
         }
+        // terminator: Argument.
+        else if (Argument *arg = dyn_cast<Argument>(root->inst)){
+            assert(root->childNodesSet.size() == 0 && "Argument type should have no child node!");
+            root->nodeExpression.expr = std::make_shared<ConstArgExprAST>(CoalMemConstExprASTToken_t::Argument, arg);
+        }
         // other type of instructions are treated as unknown
         else {
             errs() << *root->inst << "\t is not supported!\n";
@@ -223,6 +246,55 @@ void CalcTreeNode::calcOffsetEquation(CalcTreeNode* root){
     }
 }
 
+/** AST non-trivial method**/
+
+void BinaryExprAST::exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAST* addChild, bool isLeftChild){
+    assert( (isLeftChild && multParent->lhs.get() == addChild)  || ( !isLeftChild && multParent->rhs.get() == addChild));
+    shared_ptr<CoalMemExprAST> addNodeLHS = addChild->lhs;
+    shared_ptr<CoalMemExprAST> addNodeRHS = addChild->rhs;
+    shared_ptr<CoalMemExprAST> multChildToKeep = (isLeftChild) ? multParent->rhs : multParent->lhs;
+    // clone a new mult, with add RHS
+    BinaryExprAST* rightClonedMultExpr = new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, addNodeRHS, multChildToKeep);
+    // modify current mult, the other child
+    if (isLeftChild){
+        multParent->rhs = addNodeLHS;
+    }
+    else {
+        multParent->lhs = addNodeLHS;
+    }
+    // substitude add node with two mults
+    addChild->lhs = shared_ptr<BinaryExprAST>(multParent);
+    addChild->rhs = shared_ptr<BinaryExprAST>(rightClonedMultExpr);
+    // reset parent ptr
+    addChild->parent = multParent->parent;
+    multParent->parent = shared_ptr<BinaryExprAST>(addChild);
+    rightClonedMultExpr->parent = shared_ptr<BinaryExprAST>(addChild);
+
+};
+void BinaryExprAST::distributiveTransform(){
+    bool debug = DEBUG;
+    // terminator: constExpr
+    ConstExprAST* constExpr = dynamic_cast<ConstExprAST*>(this);
+    if (constExpr) return;
+    // binary operator: interesting stuff
+    BinaryExprAST* curNodeBinaryExpr = dynamic_cast<BinaryExprAST*>(this);
+    if (curNodeBinaryExpr){
+        /// TODO: preorder traversal, first left child
+        BinaryExprAST* lhsBinaryOp = dynamic_cast<BinaryExprAST*>(curNodeBinaryExpr->lhs.get());
+        bool isCurMult = (curNodeBinaryExpr->op == CoalMemBinaryASTToken_t::Mult);
+        if (isCurMult && lhsBinaryOp && lhsBinaryOp->op == CoalMemBinaryASTToken_t::Add){
+            this->exchangeAddMultNodes(curNodeBinaryExpr, lhsBinaryOp, true);
+            lhsBinaryOp->distributiveTransform();
+        }
+        BinaryExprAST* rhsBinaryOp = dynamic_cast<BinaryExprAST*>(curNodeBinaryExpr->rhs.get());
+        if (isCurMult && rhsBinaryOp && rhsBinaryOp->op == CoalMemBinaryASTToken_t::Add){
+            this->exchangeAddMultNodes(curNodeBinaryExpr, rhsBinaryOp, true);
+            rhsBinaryOp->distributiveTransform();
+        }
+    }
+
+
+}
 
 // helper
 
@@ -271,3 +343,4 @@ BasicBlock::iterator         forwardPos_helper(Instruction* inst){
         }
         return fwdStart;
 }
+
