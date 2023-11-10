@@ -85,9 +85,13 @@ optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst){
     CalcTreeNode::calcOffsetEquation(offsetCalcRoot);
     printInfo(debug, "Source GEP:\t", *loadAddrGEPInst);
     if (auto binaryOp = dynamic_cast<BinaryExprAST*>(offsetCalcRoot->nodeExpression.expr.get())){
-        // offsetCalcRoot->nodeExpression.expr =  BinaryExprAST::distributiveTransform(shared_ptr<CoalMemExprAST>(binaryOp));
-        // if (debug) errs() << offsetCalcRoot->nodeExpression.expr->str() << '\n';
+        /// TODO: apply distributive rule and make all multiply children of any add
+        BinaryExprAST* distributiveForm;
+        
+        /// TODO: construct @param ViableOffsetEquation by traversing  distributive form
+        deque<shared_ptr<CoalMemExprAST>> subExprsDeque = BinaryExprAST::extractMultFromDistForm(std::shared_ptr<BinaryExprAST>(distributiveForm));
     }
+    /** @note if it's not binary, we don't consider it to be coalescable b/c it should be itself coalesced **/
     // if (debug) offsetCalcRoot->prettyPrint();
 
     /// TODO: extract GEP pointer Op source dependence tree
@@ -431,5 +435,108 @@ BasicBlock::iterator         forwardPos_helper(Instruction* inst){
             if (&(*i) == inst) {fwdStart=i; break;}
         }
         return fwdStart;
+}
+
+optional<deque<shared_ptr<CoalMemExprAST>>> BinaryExprAST::expandNodes() const {
+        deque<shared_ptr<CoalMemExprAST>> result;
+        deque<shared_ptr<CoalMemExprAST>> nodesToExpand;
+        nodesToExpand.push_back(make_shared<CoalMemExprAST>(*this));
+        while(!nodesToExpand.empty()){
+            auto front = nodesToExpand.front();
+            nodesToExpand.pop_front();
+            if (auto binaryOp = dynamic_cast<BinaryExprAST*>(front.get())){
+                if (binaryOp->op == CoalMemBinaryASTToken_t::Add) {
+                    errs() << "Cannot expand on ADD!\n";
+                    return nullopt;
+                }
+                nodesToExpand.push_back(binaryOp->lhs);
+                nodesToExpand.push_back(binaryOp->rhs);
+            }
+            else if (auto constOp = dynamic_cast<ConstExprAST*>(front.get())){
+                result.push_back(front);
+            }
+            else assert(false && "Unknown expression!");
+        }
+        return result;
+    }
+deque<shared_ptr<CoalMemExprAST>> BinaryExprAST::extractMultFromDistForm(shared_ptr<BinaryExprAST> root_add){
+    deque<shared_ptr<CoalMemExprAST>> result;
+    deque<shared_ptr<CoalMemExprAST>> exprNodes;
+    exprNodes.push_back(root_add);
+    while (!exprNodes.empty()){
+        auto frontNode = exprNodes.front();
+        exprNodes.pop_front();
+        if (auto binaryNode = dynamic_cast<BinaryExprAST*>(frontNode.get())){
+            if (binaryNode->type() == CoalMemBinaryASTToken_t::Add){
+                exprNodes.push_back(binaryNode->lhs);
+                exprNodes.push_back(binaryNode->rhs);
+            }
+            else{
+                // mult expr
+                result.push_back(frontNode);
+            }
+        }
+        // const expr
+        else {
+            result.push_back(frontNode);
+        }
+    }
+    return result;
+}
+
+optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprAST>> exprsDeque){
+    ViableOffsetEquation offsetEquation;
+    bool threadIdParsed = false;
+    bool globalTIDParsed = false;
+    bool StrideOffsetParsed = false;
+    int strideFromLocalThreadID = -1;
+    int strideFromTID = -2;
+    int curOffset = 0;
+    for (auto expr : exprsDeque){
+        if (BinaryExprAST* binaryOp = dynamic_cast<BinaryExprAST*>(expr.get())){
+            assert( binaryOp->type() == CoalMemBinaryASTToken_t::Mult && "In parsing for ViableOffsetEquation, no ADD is expected!");
+            auto unitExprs = binaryOp->expandNodes();
+            assert(unitExprs.has_value() && "This multiply is not fully distributed upon!");
+            auto Exprs = unitExprs.value();
+            /// TODO: find if this contains threadId related
+            int constMultResult = 1;
+            bool isThreadIdBlock = false;
+            // because we expect to see both BlockDim and BlockIndex
+            std::pair<int,int> isGloabalTIDBlock = std::make_pair(0, 0);
+            for (auto expr : Exprs){
+                if (auto protoOp = dynamic_cast<PrototypeExprAST*>(expr.get())){
+                    if (protoOp->get_token() == CoalMemPrototyeASTToken_t::ThreadIndex) isThreadIdBlock = true;
+                    else if (protoOp->get_token() == CoalMemPrototyeASTToken_t::BlockDim) isGloabalTIDBlock.first += 1;
+                    else if (protoOp->get_token() == CoalMemPrototyeASTToken_t::BlockIndex) isGloabalTIDBlock.second += 1;
+                }
+                else if (auto constOp = dynamic_cast<ConstIntExprAST*>(expr.get()))  constMultResult *= constOp->get_value();
+                else assert(false && "leaf expression cannot be any other type!");
+            }
+            if ( !threadIdParsed && isThreadIdBlock && isGloabalTIDBlock.first == 0 && isGloabalTIDBlock.second == 0){
+                threadIdParsed = true;
+                strideFromLocalThreadID = constMultResult;
+                if (strideFromLocalThreadID == 1) return nullopt;
+            } 
+            else if (!globalTIDParsed && !isThreadIdBlock && isGloabalTIDBlock.first == 1 && isGloabalTIDBlock.second == 1){
+                globalTIDParsed = true;
+                strideFromTID = constMultResult;
+            }
+            else if (!isThreadIdBlock && isGloabalTIDBlock.first == 0 && isGloabalTIDBlock.second == 0){
+                curOffset += constMultResult;
+            }
+            else return nullopt;
+        }
+    }
+    // stride from local threadId should be same of global threadId
+    if (strideFromLocalThreadID != strideFromTID) return nullopt;
+    // no threadId, no parallellism
+    if (!threadIdParsed) return nullopt;
+
+    offsetEquation.batchedTID = globalTIDParsed;
+    offsetEquation.offset = curOffset;
+    offsetEquation.stride = strideFromLocalThreadID;
+    
+    return offsetEquation;
+
 }
 

@@ -54,12 +54,40 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
     }
 }
 
+void coalPass::CoalPass::unit_test(){
+    // construct 3 * threadId + 3 * blockDim * blockIdx + 1
+
+    auto const3 = make_shared<ConstIntExprAST>(3);
+    // auto t3 = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, std::make_shared<ConstIntExprAST>(new ConstIntExprAST(3)), std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::ThreadIndex))));
+
+    // auto bb = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::BlockDim)), std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::BlockIndex))));
+
+    // auto bb3 = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, std::make_shared<ConstIntExprAST>(new ConstIntExprAST(3)), bb ));
+
+    // auto add1 = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Add, t3, bb3));
+
+    // auto addTot = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Add, add1, std::make_shared<ConstIntExprAST>(new ConstIntExprAST(2))));
+
+    // errs() << addTot->str() << '\n';
+
+    // auto exprs = addTot->extractMultFromDistForm(addTot);
+
+    // auto vo = ViableOffsetEquation::constructFromOffsetExprOrNo(exprs);
+
+    // if (vo.has_value()){
+    //     printInfo(DEBUG, "stride:\t", vo.value().stride, "\nGlobalTID:\t", vo.value().batchedTID, "\nOffset:\t", vo.value().offset);
+    // }
+    // else{
+    //     errs() << "Alaric failed!\n";
+    // }
+
+}
+
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
         if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
         // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
-
-        testASTDistExpansion();
+        unit_test();
         return PreservedAnalyses::all();
 
         sep_center(F.getName());

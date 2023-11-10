@@ -58,7 +58,7 @@ public:
     
 };
 
-
+class ConstExprAST;
 class BinaryExprAST : public CoalMemExprAST{
 private:
     CoalMemBinaryASTToken_t op;
@@ -68,6 +68,7 @@ private:
 public:
     static shared_ptr<BinaryExprAST> distributiveTransform(shared_ptr<BinaryExprAST> root);
     // static shared_ptr<CoalMemExprAST> distributiveTransform(shared_ptr<CoalMemExprAST> root);
+    static deque<shared_ptr<CoalMemExprAST>> extractMultFromDistForm(shared_ptr<BinaryExprAST> root_add);
     BinaryExprAST(CoalMemBinaryASTToken_t _op, shared_ptr<CoalMemExprAST> _lhs, shared_ptr<CoalMemExprAST> _rhs): op{_op}, lhs{_lhs}, rhs{_rhs}{
         // lhs->parent = shared_ptr<BinaryExprAST>(this);
         // rhs->parent = shared_ptr<BinaryExprAST>(this);
@@ -84,6 +85,10 @@ public:
         //     return "BinaryOp:\t?";
         }
     }
+
+    CoalMemBinaryASTToken_t type() const {return this->op;}
+
+    optional<deque<shared_ptr<CoalMemExprAST>>> expandNodes() const;
 };
 
 class ConstExprAST : public CoalMemExprAST {
@@ -99,6 +104,7 @@ private:
     CoalMemPrototyeASTToken_t token;
 public:
     PrototypeExprAST(CoalMemPrototyeASTToken_t _token): token{_token}{}
+    CoalMemPrototyeASTToken_t get_token() const {return token;}
     string str() override {
         switch (token)
         {
@@ -120,7 +126,7 @@ public:
 /**
  * Argument passed from entry of function (register value with no dependence in function scope)
 */
-class ConstArgExprAST : public CoalMemExprAST {
+class ConstArgExprAST : public ConstExprAST {
 private:
     CoalMemConstExprASTToken_t token;
     Argument* argument;
@@ -144,6 +150,7 @@ public:
     string str() override {
         return std::to_string(value);
     }
+    int get_value() const {return value;}
 };
 
 
@@ -180,13 +187,17 @@ struct GEPWrapper{
  * 4. @param StrideOffset: The particular sub-field a single load/store that tries to access (<= @param Stride)
 */
 struct ViableOffsetEquation{
-    CoalMemExprAST* originalExpr;
+
     int stride;
     /// @brief  offset <= stride - 1
     int offset;
     /// TID or ThreadIdx alone
     bool batchedTID;
+
+    /// invariant of @param exprsDeque: has been applied distributive rule: no add operand
+    static optional<ViableOffsetEquation> constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprAST>> exprsDeque);
 };
+
 // class of LoadInst that can be coalesced
 struct CoalLoad{
 // data
@@ -212,6 +223,7 @@ bool computeValueDependenceTree(CalcTreeNode* root);
 BasicBlock::reverse_iterator reversePos_helper(Instruction* inst);
 
 BasicBlock::iterator         forwardPos_helper(Instruction* inst);
+
 
 
 
