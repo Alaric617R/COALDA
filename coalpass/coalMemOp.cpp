@@ -270,66 +270,10 @@ void BinaryExprAST::exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAS
     addChild->lhs = shared_ptr<BinaryExprAST>(multParent);
     addChild->rhs = shared_ptr<BinaryExprAST>(rightClonedMultExpr);
 };
-// shared_ptr<CoalMemExprAST> BinaryExprAST::distributiveTransform(shared_ptr<CoalMemExprAST> root){
-//     bool debug = DEBUG;
-//     // terminator: constExpr
-//     ConstExprAST* constExpr = dynamic_cast<ConstExprAST*>(root.get());
-//     if (constExpr != nullptr) return root;
-//     // binary operator: interesting stuff
-//     BinaryExprAST* curNodeBinaryExpr = dynamic_cast<BinaryExprAST*>(root.get());
-//     if (curNodeBinaryExpr != nullptr){
-//         bool isCurMult = (curNodeBinaryExpr->op == CoalMemBinaryASTToken_t::Mult);
-//         /// TODO: preorder traversal, first left child
-//         BinaryExprAST* lhsBinaryOp = dynamic_cast<BinaryExprAST*>(curNodeBinaryExpr->lhs.get());
-//         BinaryExprAST* rhsBinaryOp = dynamic_cast<BinaryExprAST*>(curNodeBinaryExpr->rhs.get());
-//         bool leftFixdown = (isCurMult && lhsBinaryOp != nullptr && lhsBinaryOp->op == CoalMemBinaryASTToken_t::Add);
-//         bool rightFixDown = (isCurMult && rhsBinaryOp != nullptr && rhsBinaryOp->op == CoalMemBinaryASTToken_t::Add);
-//         /// TODO: find (b+c) * a pattern
-//         if (leftFixdown){
-//             shared_ptr<CoalMemExprAST>   a = curNodeBinaryExpr->rhs;
-//             shared_ptr<CoalMemExprAST>   b = lhsBinaryOp->lhs;
-//             shared_ptr<CoalMemExprAST>   c = lhsBinaryOp->rhs;
-//             /// TODO: construct a*b + a*c
-//             shared_ptr<CoalMemExprAST>  ab = std::make_shared<CoalMemExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Mult, a, b));
-//             shared_ptr<CoalMemExprAST>  ac = std::make_shared<CoalMemExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Mult, a, c));
-            
-//             // expanded form
-//             shared_ptr<CoalMemExprAST>  expansion = std::make_shared<CoalMemExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Add, ab, ac));
-//             std::cout << expansion->str() << endl << flush;
-//             return distributiveTransform(expansion);
-//         }
-//         /// TODO: find a * (b+c) pattern
-//         else if (rightFixDown){
-//             shared_ptr<CoalMemExprAST>   a = curNodeBinaryExpr->lhs;
-//             shared_ptr<CoalMemExprAST>   b = rhsBinaryOp->lhs;
-//             shared_ptr<CoalMemExprAST>   c = rhsBinaryOp->rhs;
-//             /// TODO: construct a*b + a*c
-//             shared_ptr<CoalMemExprAST>  ab = std::make_shared<CoalMemExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Mult, a, b));
-//             shared_ptr<CoalMemExprAST>  ac = std::make_shared<CoalMemExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Mult, a, c));
-            
-//             // expanded form
-//             shared_ptr<CoalMemExprAST>  expansion = std::make_shared<CoalMemExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Add, ab, ac));
-//             printInfo(debug, expansion->str());
-//             return distributiveTransform(expansion);
-//         }
 
-//         if (curNodeBinaryExpr->lhs != nullptr){
-//             curNodeBinaryExpr->lhs = distributiveTransform(curNodeBinaryExpr->lhs);
-//         }
-//         if (curNodeBinaryExpr->rhs != nullptr){
-//             curNodeBinaryExpr->rhs = distributiveTransform(curNodeBinaryExpr->rhs);
-//         }
-        
-        
-
-        
-//     }
-//     return root;
-
-// }
 
 shared_ptr<BinaryExprAST> BinaryExprAST::distributiveTransform(shared_ptr<BinaryExprAST> root){
-    bool debug = DEBUG;
+    bool debug = !DEBUG;
     // terminator: constExpr
     ConstExprAST* constExpr = dynamic_cast<ConstExprAST*>(root.get());
     if (constExpr != nullptr) return root;
@@ -348,11 +292,11 @@ shared_ptr<BinaryExprAST> BinaryExprAST::distributiveTransform(shared_ptr<Binary
             shared_ptr<CoalMemExprAST>   b = lhsBinaryOp->lhs;
             shared_ptr<CoalMemExprAST>   c = lhsBinaryOp->rhs;
             /// TODO: construct a*b + a*c
-            shared_ptr<BinaryExprAST>  ab = std::make_shared<BinaryExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Mult, a, b));
-            shared_ptr<BinaryExprAST>  ac = std::make_shared<BinaryExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Mult, a, c));
+            shared_ptr<BinaryExprAST>  ab = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, b);
+            shared_ptr<BinaryExprAST>  ac = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, c);
             
             // expanded form
-            shared_ptr<BinaryExprAST>  expansion = std::make_shared<BinaryExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Add, ab, ac));
+            shared_ptr<BinaryExprAST>  expansion = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, ab, ac);
             printInfo(debug, "left:\t" , expansion->str());
             return distributiveTransform(expansion);
         }
@@ -362,23 +306,21 @@ shared_ptr<BinaryExprAST> BinaryExprAST::distributiveTransform(shared_ptr<Binary
             shared_ptr<CoalMemExprAST>   b = rhsBinaryOp->lhs;
             shared_ptr<CoalMemExprAST>   c = rhsBinaryOp->rhs;
             /// TODO: construct a*b + a*c
-            shared_ptr<BinaryExprAST>  ab = std::make_shared<BinaryExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Mult, a, b));
-            shared_ptr<BinaryExprAST>  ac = std::make_shared<BinaryExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Mult, a, c));
+            shared_ptr<BinaryExprAST>  ab = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, b);
+            shared_ptr<BinaryExprAST>  ac = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, c);
             
             // expanded form
-            shared_ptr<BinaryExprAST>  expansion = std::make_shared<BinaryExprAST>(BinaryExprAST(CoalMemBinaryASTToken_t::Add, ab, ac));
+            shared_ptr<BinaryExprAST>  expansion = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, ab, ac);
             printInfo(debug, "right:\t", expansion->str());
             return distributiveTransform(expansion);
         }
 
         if (lhsBinaryOp != nullptr){
-            curNodeBinaryExpr->lhs = distributiveTransform(shared_ptr<BinaryExprAST>(lhsBinaryOp));
+            curNodeBinaryExpr->lhs = distributiveTransform(make_shared<BinaryExprAST>(*lhsBinaryOp));
         }
         if (rhsBinaryOp != nullptr){
-            curNodeBinaryExpr->rhs = distributiveTransform(shared_ptr<BinaryExprAST>(rhsBinaryOp));
+            curNodeBinaryExpr->rhs = distributiveTransform(make_shared<BinaryExprAST>(*rhsBinaryOp));
         }
-        
-        
     }
     return root;
 

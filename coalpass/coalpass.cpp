@@ -1,16 +1,20 @@
 #include "coalpass.h"
 
 //** Debug test functions **//
-void testASTDistExpansion(){
-    // (1+2) * (3+4)
+void coalPass::CoalPass::unit_test_distributive_transform(){
+    
     auto const1 = make_shared<ConstIntExprAST>(1);
     auto const2 = make_shared<ConstIntExprAST>(2);
     auto const3 = make_shared<ConstIntExprAST>(3);
     auto const4 = make_shared<ConstIntExprAST>(4);
+    auto const5 = make_shared<ConstIntExprAST>(5);
 
+    // test 1 (1+2) * (3*4)
     auto add1 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, const1, const2);
     auto add2 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, const3, const4);
     auto mult = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, add1, add2);
+
+
     errs() << "before dist:\t" << mult->str() << '\n';
     auto after = BinaryExprAST::distributiveTransform(mult);
     // errs() << "after dist:\t" << BinaryExprAST::distributiveTransform(mult)->str() << '\n';
@@ -18,6 +22,18 @@ void testASTDistExpansion(){
         errs() << "after dist:\t" << bn->str() << '\n';
     else errs() << "no!\n";
 
+    // test2 (1*2 + 3) * 4 + 5
+    auto mul12 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, const1, const2);
+    auto add1m2a3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, mul12, const3);
+    auto mul = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, add1m2a3, const4);
+    auto addTot = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, mul, const5);
+
+    errs() << "before dist:\t" << addTot->str() << '\n';
+    after = BinaryExprAST::distributiveTransform(addTot);
+    // errs() << "after dist:\t" << BinaryExprAST::distributiveTransform(mult)->str() << '\n';
+    if (auto bn = dynamic_cast<BinaryExprAST*>(after.get()))
+        errs() << "after dist:\t" << bn->str() << '\n';
+    else errs() << "no!\n";
 }
 
 /** Patches **/
@@ -54,7 +70,7 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
     }
 }
 
-void coalPass::CoalPass::unit_test(){
+void coalPass::CoalPass::unit_test_ViableOffsetEquation_construction(){
 
 
     // construct 3 * threadId + 3 * blockDim * blockIdx + 1
@@ -79,16 +95,6 @@ void coalPass::CoalPass::unit_test(){
 
     auto addTot = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, add1, const1);
 
-    // auto t3 = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, std::make_shared<ConstIntExprAST>(new ConstIntExprAST(3)), std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::ThreadIndex))));
-
-    // auto bb = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::BlockDim)), std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::BlockIndex))));
-
-    // auto bb3 = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, std::make_shared<ConstIntExprAST>(new ConstIntExprAST(3)), bb ));
-
-    // auto add1 = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Add, t3, bb3));
-
-    // auto addTot = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Add, add1, std::make_shared<ConstIntExprAST>(new ConstIntExprAST(2))));
-
     errs() << addTot->str() << '\n';
 
     auto exprs = addTot->extractMultFromDistForm(addTot);
@@ -110,7 +116,8 @@ void coalPass::CoalPass::unit_test(){
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
         if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
         // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
-        unit_test();
+        // unit_test_ViableOffsetEquation_construction();
+        unit_test_distributive_transform();
         return PreservedAnalyses::all();
 
         sep_center(F.getName());

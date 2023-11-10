@@ -53,7 +53,6 @@ private:
 
 public:
     static shared_ptr<BinaryExprAST> distributiveTransform(shared_ptr<BinaryExprAST> root);
-    // static shared_ptr<CoalMemExprAST> distributiveTransform(shared_ptr<CoalMemExprAST> root);
     static deque<shared_ptr<CoalMemExprAST>> extractMultFromDistForm(shared_ptr<BinaryExprAST> root_add);
     BinaryExprAST(CoalMemBinaryASTToken_t _op, shared_ptr<CoalMemExprAST> _lhs, shared_ptr<CoalMemExprAST> _rhs): op{_op}, lhs{_lhs}, rhs{_rhs}{
         // lhs->parent = shared_ptr<BinaryExprAST>(this);

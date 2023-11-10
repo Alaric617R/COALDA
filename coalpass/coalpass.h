@@ -91,7 +91,13 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
     
     deque<Instruction*> findAllContributorInstFIFO_helper(Instruction* rootInst);
 
-    void unit_test();
+
+    /** test cases **/
+    #if DEBUG
+    void unit_test_ViableOffsetEquation_construction();
+
+    void unit_test_distributive_transform();
+    #endif
 };
 }
 
