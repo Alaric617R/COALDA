@@ -55,6 +55,8 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
 }
 
 void coalPass::CoalPass::unit_test(){
+
+
     // construct 3 * threadId + 3 * blockDim * blockIdx + 1
 
     auto const3 = make_shared<ConstIntExprAST>(3);
@@ -63,6 +65,9 @@ void coalPass::CoalPass::unit_test(){
     auto threadIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::ThreadIndex);
     auto blockIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockIndex);
     auto blockDim = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockDim);
+
+    CoalMemExprAST* base = dynamic_cast<CoalMemExprAST*>(blockDim.get());
+
 
     auto t3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, threadIdx, const3);
 

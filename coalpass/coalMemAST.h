@@ -44,7 +44,7 @@ public:
     
 };
 
-class ConstExprAST;
+
 class BinaryExprAST : public CoalMemExprAST{
 private:
     CoalMemBinaryASTToken_t op;
@@ -74,7 +74,7 @@ public:
 
     CoalMemBinaryASTToken_t type() const {return this->op;}
 
-    optional<deque<shared_ptr<CoalMemExprAST>>> expandNodes() const;
+    static optional<deque<shared_ptr<CoalMemExprAST>>> expandNodes(shared_ptr<BinaryExprAST> root_expr) ;
 };
 
 class ConstExprAST : public CoalMemExprAST {
@@ -109,6 +109,7 @@ public:
         }
     }
 };
+
 /**
  * Argument passed from entry of function (register value with no dependence in function scope)
 */
@@ -128,6 +129,8 @@ public:
         }
     }
 };
+
+
 class ConstIntExprAST : public ConstExprAST {
 private:
     int value;

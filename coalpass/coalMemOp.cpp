@@ -269,11 +269,6 @@ void BinaryExprAST::exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAS
     // substitude add node with two mults
     addChild->lhs = shared_ptr<BinaryExprAST>(multParent);
     addChild->rhs = shared_ptr<BinaryExprAST>(rightClonedMultExpr);
-    // reset parent ptr
-    addChild->parent = multParent->parent;
-    multParent->parent = shared_ptr<BinaryExprAST>(addChild);
-    rightClonedMultExpr->parent = shared_ptr<BinaryExprAST>(addChild);
-
 };
 // shared_ptr<CoalMemExprAST> BinaryExprAST::distributiveTransform(shared_ptr<CoalMemExprAST> root){
 //     bool debug = DEBUG;
@@ -439,6 +434,7 @@ BasicBlock::iterator         forwardPos_helper(Instruction* inst){
 
 
 optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprAST>> exprsDeque){
+    bool debug = DEBUG;
     ViableOffsetEquation offsetEquation;
     bool threadIdParsed = false;
     bool globalTIDParsed = false;
@@ -447,9 +443,10 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
     int strideFromTID = -2;
     int curOffset = 0;
     for (auto expr : exprsDeque){
+        printInfo(debug, "inspecting:\t", expr->str());
         if (BinaryExprAST* binaryOp = dynamic_cast<BinaryExprAST*>(expr.get())){
             assert( binaryOp->type() == CoalMemBinaryASTToken_t::Mult && "In parsing for ViableOffsetEquation, no ADD is expected!");
-            auto unitExprs = binaryOp->expandNodes();
+            auto unitExprs = BinaryExprAST::expandNodes(std::make_shared<BinaryExprAST>(*binaryOp));
             assert(unitExprs.has_value() && "This multiply is not fully distributed upon!");
             auto Exprs = unitExprs.value();
             /// TODO: find if this contains threadId related
@@ -457,13 +454,14 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
             bool isThreadIdBlock = false;
             // because we expect to see both BlockDim and BlockIndex
             std::pair<int,int> isGloabalTIDBlock = std::make_pair(0, 0);
-            for (auto expr : Exprs){
-                if (auto protoOp = dynamic_cast<PrototypeExprAST*>(expr.get())){
+            for (auto sub_expr : Exprs){
+                
+                if (auto protoOp = dynamic_cast<PrototypeExprAST*>(sub_expr.get())){
                     if (protoOp->get_token() == CoalMemPrototyeASTToken_t::ThreadIndex) isThreadIdBlock = true;
                     else if (protoOp->get_token() == CoalMemPrototyeASTToken_t::BlockDim) isGloabalTIDBlock.first += 1;
                     else if (protoOp->get_token() == CoalMemPrototyeASTToken_t::BlockIndex) isGloabalTIDBlock.second += 1;
                 }
-                else if (auto constOp = dynamic_cast<ConstIntExprAST*>(expr.get()))  constMultResult *= constOp->get_value();
+                else if (auto constOp = dynamic_cast<ConstIntExprAST*>(sub_expr.get()))  constMultResult *= constOp->get_value();
                 else assert(false && "leaf expression cannot be any other type!");
             }
             if ( !threadIdParsed && isThreadIdBlock && isGloabalTIDBlock.first == 0 && isGloabalTIDBlock.second == 0){
@@ -479,6 +477,12 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
                 curOffset += constMultResult;
             }
             else return nullopt;
+        }
+        else if (ConstIntExprAST* constOp = dynamic_cast<ConstIntExprAST*>(expr.get())){
+            curOffset += constOp->get_value();
+        }
+        else {
+            return nullopt;
         }
     }
     // stride from local threadId should be same of global threadId

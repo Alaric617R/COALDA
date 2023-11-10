@@ -1,9 +1,9 @@
 #include "coalMemAST.h"
 
-optional<deque<shared_ptr<CoalMemExprAST>>> BinaryExprAST::expandNodes() const {
+optional<deque<shared_ptr<CoalMemExprAST>>> BinaryExprAST::expandNodes(shared_ptr<BinaryExprAST> root_expr)  {
         deque<shared_ptr<CoalMemExprAST>> result;
         deque<shared_ptr<CoalMemExprAST>> nodesToExpand;
-        nodesToExpand.push_back(make_shared<CoalMemExprAST>(*this));
+        nodesToExpand.push_back(root_expr);
         while(!nodesToExpand.empty()){
             auto front = nodesToExpand.front();
             nodesToExpand.pop_front();

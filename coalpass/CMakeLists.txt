@@ -1,1 +1,1 @@
-add_llvm_pass_plugin(CoalPass coalpass.cpp coalMemOp.cpp)
+add_llvm_pass_plugin(CoalPass coalpass.cpp coalMemOp.cpp coalMemAST.cpp)
