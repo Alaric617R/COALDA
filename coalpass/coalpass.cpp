@@ -58,6 +58,22 @@ void coalPass::CoalPass::unit_test(){
     // construct 3 * threadId + 3 * blockDim * blockIdx + 1
 
     auto const3 = make_shared<ConstIntExprAST>(3);
+    auto const1 = make_shared<ConstIntExprAST>(1);
+
+    auto threadIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::ThreadIndex);
+    auto blockIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockIndex);
+    auto blockDim = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockDim);
+
+    auto t3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, threadIdx, const3);
+
+    auto bb = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, blockDim, blockIdx);
+
+    auto bb3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, bb , const3);
+
+    auto add1 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, bb3, t3);
+
+    auto addTot = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, add1, const1);
+
     // auto t3 = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, std::make_shared<ConstIntExprAST>(new ConstIntExprAST(3)), std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::ThreadIndex))));
 
     // auto bb = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::BlockDim)), std::make_shared<PrototypeExprAST>(new PrototypeExprAST(CoalMemPrototyeASTToken_t::BlockIndex))));
@@ -68,18 +84,20 @@ void coalPass::CoalPass::unit_test(){
 
     // auto addTot = std::make_shared<BinaryExprAST>(new BinaryExprAST(CoalMemBinaryASTToken_t::Add, add1, std::make_shared<ConstIntExprAST>(new ConstIntExprAST(2))));
 
-    // errs() << addTot->str() << '\n';
+    errs() << addTot->str() << '\n';
 
-    // auto exprs = addTot->extractMultFromDistForm(addTot);
+    auto exprs = addTot->extractMultFromDistForm(addTot);
 
-    // auto vo = ViableOffsetEquation::constructFromOffsetExprOrNo(exprs);
+    for (auto e : exprs) errs() << e->str() << '\n';
 
-    // if (vo.has_value()){
-    //     printInfo(DEBUG, "stride:\t", vo.value().stride, "\nGlobalTID:\t", vo.value().batchedTID, "\nOffset:\t", vo.value().offset);
-    // }
-    // else{
-    //     errs() << "Alaric failed!\n";
-    // }
+    auto vo = ViableOffsetEquation::constructFromOffsetExprOrNo(exprs);
+
+    if (vo.has_value()){
+        printInfo(DEBUG, "stride:\t", vo.value().stride, "\nGlobalTID:\t", vo.value().batchedTID, "\nOffset:\t", vo.value().offset);
+    }
+    else{
+        errs() << "Alaric failed!\n";
+    }
 
 }
 

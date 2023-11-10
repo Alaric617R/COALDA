@@ -9,11 +9,11 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/Analysis/AliasSetTracker.h"
+#include "llvm/Support/Format.h"
+#include "llvm/IR/CFG.h"
 #include "llvm/Pass.h"
 
 #include  <iostream>
-#include "llvm/Support/Format.h"
-#include "llvm/IR/CFG.h"
 #include <deque>
 #include <optional>
 #include <unordered_set>
@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "debugLog.h"
+#include "coalMemAST.h"
 
 using std::deque;
 using std::unique_ptr;
@@ -35,123 +36,6 @@ using namespace llvm;
 
 extern unordered_set<const char*> OffsetAllowedOpcodeFSM;
 
-enum class CoalMemBinaryASTToken_t: uint8_t {Mult, Add};
-enum class CoalMemPrototyeASTToken_t: uint8_t {ThreadIndex, BlockDim, BlockIndex, TID};
-enum class CoalMemConstExprASTToken_t : uint8_t {Argument};
-
-class BinaryExprAST;
-class CoalMemExprAST{
-public:
-    shared_ptr<BinaryExprAST> parent = nullptr;
-    // shared_ptr<CoalMemExprAST> parent = nullptr;
-
-    virtual ~CoalMemExprAST() = default;
-    // virtual string str() = 0;
-    virtual string str() {
-        return "Base CoalMemExprAST";
-    }
-    /**
-     * transform an expression to add connected components by applying distribution rule
-     * e.g, 3 *(a * b+ d) + c => 3*a*b + 3*d + c
-     * The good part of this method is that after this transformation, mul will only have Const and mul itself as child node
-    */
-    
-};
-
-class ConstExprAST;
-class BinaryExprAST : public CoalMemExprAST{
-private:
-    CoalMemBinaryASTToken_t op;
-    shared_ptr<CoalMemExprAST> lhs, rhs;
-    void exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAST* addChild, bool isLeftChild);
-
-public:
-    static shared_ptr<BinaryExprAST> distributiveTransform(shared_ptr<BinaryExprAST> root);
-    // static shared_ptr<CoalMemExprAST> distributiveTransform(shared_ptr<CoalMemExprAST> root);
-    static deque<shared_ptr<CoalMemExprAST>> extractMultFromDistForm(shared_ptr<BinaryExprAST> root_add);
-    BinaryExprAST(CoalMemBinaryASTToken_t _op, shared_ptr<CoalMemExprAST> _lhs, shared_ptr<CoalMemExprAST> _rhs): op{_op}, lhs{_lhs}, rhs{_rhs}{
-        // lhs->parent = shared_ptr<BinaryExprAST>(this);
-        // rhs->parent = shared_ptr<BinaryExprAST>(this);
-    }
-    string str() override {
-        switch (op)
-        {
-            case CoalMemBinaryASTToken_t::Add:
-                return  "(" + lhs->str() + " + " + rhs->str() + ")";
-            case CoalMemBinaryASTToken_t::Mult:
-                return  "(" + lhs->str() + " * " + rhs->str() + ")";
-            default:
-                return "BinaryOp:\t?";
-        //     return "BinaryOp:\t?";
-        }
-    }
-
-    CoalMemBinaryASTToken_t type() const {return this->op;}
-
-    optional<deque<shared_ptr<CoalMemExprAST>>> expandNodes() const;
-};
-
-class ConstExprAST : public CoalMemExprAST {
-public:
-    ConstExprAST() = default;
-    string str() override {
-        return "ConstExprAST";
-    }
-};
-
-class PrototypeExprAST : public ConstExprAST {
-private:
-    CoalMemPrototyeASTToken_t token;
-public:
-    PrototypeExprAST(CoalMemPrototyeASTToken_t _token): token{_token}{}
-    CoalMemPrototyeASTToken_t get_token() const {return token;}
-    string str() override {
-        switch (token)
-        {
-            case CoalMemPrototyeASTToken_t::ThreadIndex:
-                return string("ThreadIndex");
-            case CoalMemPrototyeASTToken_t::BlockDim:
-                return string("BlockDim");
-            case CoalMemPrototyeASTToken_t::BlockIndex:
-                return string("BlockIndex");
-            case CoalMemPrototyeASTToken_t::TID:
-                return string("TID"); 
-            default:
-                return string("Prototype:?");
-        // default:
-        //     return string("Prototype:?");
-        }
-    }
-};
-/**
- * Argument passed from entry of function (register value with no dependence in function scope)
-*/
-class ConstArgExprAST : public ConstExprAST {
-private:
-    CoalMemConstExprASTToken_t token;
-    Argument* argument;
-public:
-    ConstArgExprAST(CoalMemConstExprASTToken_t _token, Argument* _argument) : token{_token}, argument{_argument}{}
-    string str() override {
-        switch (token)
-        {
-        case CoalMemConstExprASTToken_t::Argument:
-            return "Arg " + argument->getName().str();
-        default:
-            return "Arg ?";
-        }
-    }
-};
-class ConstIntExprAST : public ConstExprAST {
-private:
-    int value;
-public:
-    ConstIntExprAST(int _value): value{_value}{}
-    string str() override {
-        return std::to_string(value);
-    }
-    int get_value() const {return value;}
-};
 
 
 struct OffsetEquation{
