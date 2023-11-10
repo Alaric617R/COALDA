@@ -14,7 +14,9 @@ void testASTDistExpansion(){
     errs() << "before dist:\t" << mult->str() << '\n';
     auto after = BinaryExprAST::distributiveTransform(mult);
     // errs() << "after dist:\t" << BinaryExprAST::distributiveTransform(mult)->str() << '\n';
-    errs() << "after dist:\t" << after->str() << '\n';
+    if (auto bn = dynamic_cast<BinaryExprAST*>(after.get()))
+        errs() << "after dist:\t" << bn->str() << '\n';
+    else errs() << "no!\n";
 
 }
 
