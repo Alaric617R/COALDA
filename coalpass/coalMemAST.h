@@ -18,6 +18,8 @@
 #include <string>
 #include <memory>
 
+#include "debugLog.h"
+
 using namespace std;
 using namespace llvm;
 
@@ -25,7 +27,7 @@ enum class CoalMemBinaryASTToken_t: uint8_t {Mult, Add};
 enum class CoalMemPrototyeASTToken_t: uint8_t {ThreadIndex, BlockDim, BlockIndex, TID};
 enum class CoalMemConstExprASTToken_t : uint8_t {Argument};
 
-class BinaryExprAST;
+// class BinaryExprAST;
 class CoalMemExprAST{
 public:
     // shared_ptr<BinaryExprAST> parent = nullptr;
@@ -53,7 +55,7 @@ private:
 
 public:
     static shared_ptr<BinaryExprAST> distributiveTransform(shared_ptr<BinaryExprAST> root);
-    static deque<shared_ptr<CoalMemExprAST>> extractMultFromDistForm(shared_ptr<BinaryExprAST> root_add);
+    static deque<shared_ptr<CoalMemExprAST>> extractSubMultExprsFromDistForm(shared_ptr<BinaryExprAST> root_add);
     BinaryExprAST(CoalMemBinaryASTToken_t _op, shared_ptr<CoalMemExprAST> _lhs, shared_ptr<CoalMemExprAST> _rhs): op{_op}, lhs{_lhs}, rhs{_rhs}{
         // lhs->parent = shared_ptr<BinaryExprAST>(this);
         // rhs->parent = shared_ptr<BinaryExprAST>(this);

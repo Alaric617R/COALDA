@@ -36,6 +36,48 @@ void coalPass::CoalPass::unit_test_distributive_transform(){
     else errs() << "no!\n";
 }
 
+void coalPass::CoalPass::unit_test_ViableOffsetEquation_construction(){
+
+
+    // construct 3 * threadId + 3 * blockDim * blockIdx + 1
+
+    auto const3 = make_shared<ConstIntExprAST>(3);
+    auto const1 = make_shared<ConstIntExprAST>(1);
+
+    auto threadIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::ThreadIndex);
+    auto blockIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockIndex);
+    auto blockDim = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockDim);
+
+    CoalMemExprAST* base = dynamic_cast<CoalMemExprAST*>(blockDim.get());
+
+
+    auto t3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, threadIdx, const3);
+
+    auto bb = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, blockDim, blockIdx);
+
+    auto bb3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, bb , const3);
+
+    auto add1 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, bb3, t3);
+
+    auto addTot = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, add1, const1);
+
+    errs() << addTot->str() << '\n';
+
+    auto exprs = addTot->extractSubMultExprsFromDistForm(addTot);
+
+    for (auto e : exprs) errs() << e->str() << '\n';
+
+    auto vo = ViableOffsetEquation::constructFromOffsetExprOrNo(exprs);
+
+    if (vo.has_value()){
+        printInfo(DEBUG, "stride:\t", vo.value().stride, "\nGlobalTID:\t", vo.value().batchedTID, "\nOffset:\t", vo.value().offset);
+    }
+    else{
+        errs() << "Alaric failed!\n";
+    }
+
+}
+
 /** Patches **/
 void printAllOp(Instruction* inst){
         sep_center("Operand list");
@@ -70,55 +112,15 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
     }
 }
 
-void coalPass::CoalPass::unit_test_ViableOffsetEquation_construction(){
 
-
-    // construct 3 * threadId + 3 * blockDim * blockIdx + 1
-
-    auto const3 = make_shared<ConstIntExprAST>(3);
-    auto const1 = make_shared<ConstIntExprAST>(1);
-
-    auto threadIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::ThreadIndex);
-    auto blockIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockIndex);
-    auto blockDim = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockDim);
-
-    CoalMemExprAST* base = dynamic_cast<CoalMemExprAST*>(blockDim.get());
-
-
-    auto t3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, threadIdx, const3);
-
-    auto bb = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, blockDim, blockIdx);
-
-    auto bb3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, bb , const3);
-
-    auto add1 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, bb3, t3);
-
-    auto addTot = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, add1, const1);
-
-    errs() << addTot->str() << '\n';
-
-    auto exprs = addTot->extractMultFromDistForm(addTot);
-
-    for (auto e : exprs) errs() << e->str() << '\n';
-
-    auto vo = ViableOffsetEquation::constructFromOffsetExprOrNo(exprs);
-
-    if (vo.has_value()){
-        printInfo(DEBUG, "stride:\t", vo.value().stride, "\nGlobalTID:\t", vo.value().batchedTID, "\nOffset:\t", vo.value().offset);
-    }
-    else{
-        errs() << "Alaric failed!\n";
-    }
-
-}
 
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
         if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
         // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
         // unit_test_ViableOffsetEquation_construction();
-        unit_test_distributive_transform();
-        return PreservedAnalyses::all();
+        // unit_test_distributive_transform();
+        // return PreservedAnalyses::all();
 
         sep_center(F.getName());
         int bb_cnt = 0;
@@ -127,40 +129,40 @@ PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &
             assert(bbCoalDataMap.find(&bb) == bbCoalDataMap.end());
             bbCoalDataMap[&bb] = new SingleBBCoalAnalysisData;
 
-            runOnOneBB(&bb);
+            // runOnOneBB(&bb);
             // testGEPPointerAlias(&bb, FAM, F);
             // break;
             // testInst(&bb);
             // break;
 
-            // for (auto& inst:bb){
-            //     if (auto sext = dyn_cast<SExtInst>(&inst)){
-            //         // printInfo(DEBUG, *sext, "\toperand0", sext->getOperand(0) );
+            for (auto& inst:bb){
+                // if (auto sext = dyn_cast<SExtInst>(&inst)){
+                //     // printInfo(DEBUG, *sext, "\toperand0", sext->getOperand(0) );
 
-            //         // for (auto i = sext->op_begin(); i != sext->op_end(); i++)
-            //         //     printInfo(DEBUG, *sext, "\toperand", *i->get());
-            //     }
-            //     else if (AddOperator* addinst = dyn_cast<AddOperator>(&inst)){
-            //         // printInfo(DEBUG, *addinst, "is instruction?\t", isa<Instruction>(addinst));
-            //         // printAllOp(&inst);
-            //     }
-            //     else if (LoadInst* load = dyn_cast<LoadInst>(&inst)){
-            //     }
-            //     else if (AllocaInst* allcoa = dyn_cast<AllocaInst>(&inst)){
-            //         // printAllOp(allcoa);
-            //     }
-            //     else if (CallInst* call = dyn_cast<CallInst>(&inst)){
-            //         // printInfo(DEBUG, "callInst:\t", *call, "arg:\t", call->getCalledFunction()->getName());
-            //     }
-            //     else if (GetElementPtrInst* GEP = dyn_cast<GetElementPtrInst>(&inst)){
-            //         printAllOp(GEP);
-            //         if (GEP->getNumOperands() == 3){
-            //             printInfo(DEBUG, "gep's second argument\t" , *GEP->getOperand(1),"\tType\t", dyn_cast<ConstantInt>(GEP->getOperand(1))->isZero());
-            //         }                    
-            //         // printInfo(DEBUG, *GEP, "\tnumber of operands:\t", GEP->getNumOperands(), "\t", *GEP->getOperand(GEP->getNumOperands()-1));
-            //     }
-            //     else printInfo(DEBUG, inst.getOpcodeName());
-            // }
+                //     // for (auto i = sext->op_begin(); i != sext->op_end(); i++)
+                //     //     printInfo(DEBUG, *sext, "\toperand", *i->get());
+                // }
+                // else if (AddOperator* addinst = dyn_cast<AddOperator>(&inst)){
+                //     // printInfo(DEBUG, *addinst, "is instruction?\t", isa<Instruction>(addinst));
+                //     // printAllOp(&inst);
+                // }
+                // else if (LoadInst* load = dyn_cast<LoadInst>(&inst)){
+                // }
+                // else if (AllocaInst* allcoa = dyn_cast<AllocaInst>(&inst)){
+                //     // printAllOp(allcoa);
+                // }
+                // else if (CallInst* call = dyn_cast<CallInst>(&inst)){
+                //     // printInfo(DEBUG, "callInst:\t", *call, "arg:\t", call->getCalledFunction()->getName());
+                // }
+                if (GetElementPtrInst* GEP = dyn_cast<GetElementPtrInst>(&inst)){
+                    printAllOp(GEP);
+                    if (GEP->getNumOperands() == 3){
+                        printInfo(DEBUG, "gep's second argument\t" , *GEP->getOperand(1),"\tType\t", dyn_cast<ConstantInt>(GEP->getOperand(1))->isZero());
+                    }                    
+                    // printInfo(DEBUG, *GEP, "\tnumber of operands:\t", GEP->getNumOperands(), "\t", *GEP->getOperand(GEP->getNumOperands()-1));
+                }
+                // else printInfo(DEBUG, inst.getOpcodeName());
+            }
 
         }
 

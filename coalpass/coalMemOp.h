@@ -86,6 +86,8 @@ struct ViableOffsetEquation{
 struct CoalLoad{
 // data
     LoadInst* origLoadInst;
+    /// offset of pointer operand
+    ViableOffsetEquation offsetEquation;
 
 
 public:
@@ -102,6 +104,14 @@ optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst);
 */
 bool computeValueDependenceTree(CalcTreeNode* root);
 
+/**
+ * Return true if this pointer address is derived from:
+ * 1. Argument that is passed to the function
+ * 2. Alloca
+ * 3. shared memory
+ * 4. global variable ( @note Now doesn't support)
+*/
+bool computerSrcPtrDependenceTree(CalcTreeNode* root);
 
 /** helpers **/
 BasicBlock::reverse_iterator reversePos_helper(Instruction* inst);

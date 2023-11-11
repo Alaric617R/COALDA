@@ -62,6 +62,17 @@ void prettyPrintCalcTreeNodeHelper(const string& prefix, const CalcTreeNode* nod
 
 optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst){
     bool debug = DEBUG;
+    CoalLoad coalLoadResult;
+    /** @attention: if this load is not meant for store only, then cannot be coalesced
+     *  @remark if this load is meant for calculation, we cannot make sure the computation is uniform across that piece of memory
+     *  @brief find the def-use chain of this load and make sure there are only stores and loads
+    */
+    for (auto user : loadCandInst->users()){
+        if ( (!isa<LoadInst>(user)) && !(isa<StoreInst>(user))) {
+            printInfo(debug, "this load has user:\t", *user, "\tcannot be Coaled.");
+            return nullopt;
+        }
+    }
     /// @note if this load is not from GEP, cannot be Coaled
     if (!isa<GetElementPtrInst>(loadCandInst->getPointerOperand())) return nullopt;
     GetElementPtrInst* loadAddrGEPInst = dyn_cast<GetElementPtrInst>(loadCandInst->getPointerOperand());
@@ -86,13 +97,18 @@ optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst){
     printInfo(debug, "Source GEP:\t", *loadAddrGEPInst);
     if (auto binaryOp = dynamic_cast<BinaryExprAST*>(offsetCalcRoot->nodeExpression.expr.get())){
         /// TODO: apply distributive rule and make all multiply children of any add
-        BinaryExprAST* distributiveForm;
+        shared_ptr<BinaryExprAST> distributiveForm = BinaryExprAST::distributiveTransform(make_shared<BinaryExprAST>(*binaryOp));
         
-        /// TODO: construct @param ViableOffsetEquation by traversing  distributive form
-        deque<shared_ptr<CoalMemExprAST>> subExprsDeque = BinaryExprAST::extractMultFromDistForm(std::shared_ptr<BinaryExprAST>(distributiveForm));
+        /// TODO: construct @param ViableOffsetEquation by traversing distributive form
+        deque<shared_ptr<CoalMemExprAST>> subExprsDeque = BinaryExprAST::extractSubMultExprsFromDistForm(distributiveForm);
+        auto potentialEqCand = ViableOffsetEquation::constructFromOffsetExprOrNo(subExprsDeque);
+
+        /// TODO: check if the above contains value. If not, this load cannot be coalesced
+        if (!potentialEqCand.has_value()) return nullopt;
+        coalLoadResult.offsetEquation = potentialEqCand.value();
     }
     /** @note if it's not binary, we don't consider it to be coalescable b/c it should be itself coalesced **/
-    // if (debug) offsetCalcRoot->prettyPrint();
+    else return nullopt;
 
     /// TODO: extract GEP pointer Op source dependence tree
     Value* ptrOp = loadAddrGEPWrapper.PointerOp;
@@ -109,6 +125,75 @@ optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst){
     return nullopt;
 }
 
+bool computerSrcPtrDependenceTree(CalcTreeNode* root){
+    assert(root->inst != nullptr);
+    bool ret_flag = true;
+    // unary: sext
+    if (SExtInst* sextInst = dyn_cast<SExtInst>(root->inst)){
+        CalcTreeNode* sextChildNode = new CalcTreeNode;
+        CalcTreeNode::setupCalcTreeNode(sextChildNode, sextInst->getOperand(0), root);
+        root->childNodesSet.insert(sextChildNode);
+        return computerSrcPtrDependenceTree(sextChildNode);
+    }
+    // binary: add, mul
+    else if(isa<AddOperator>(root->inst) || isa<MulOperator>(root->inst) ){
+        return false;
+    }
+    // unary: load
+    else if (LoadInst* loadInst = dyn_cast<LoadInst>(root->inst)){
+        CalcTreeNode* loadChildNode = new CalcTreeNode;
+        CalcTreeNode::setupCalcTreeNode(loadChildNode, loadInst->getPointerOperand(), root);
+        root->childNodesSet.insert(loadChildNode);
+        return  computerSrcPtrDependenceTree(loadChildNode);
+    }
+    // memory: alloca. No children, can be pointer source address directly if no store in between is found
+    /// @note We're assuming that alloca can only be child of LoadInst
+    else if (AllocaInst* allocaInst = dyn_cast<AllocaInst>(root->inst)){
+        bool storeFound = false;
+        assert(isa<LoadInst>(root->parentNode->inst) && "parent of alloca is not load in computing source ptr for LoadInst!");
+        // find nearest store in reverse order
+        for (BasicBlock::reverse_iterator revStart = reversePos_helper(dyn_cast<Instruction>(root->parentNode->inst));
+                                          revStart != reversePos_helper(allocaInst); 
+                                          revStart ++){
+            if (StoreInst* storeCand = dyn_cast<StoreInst>(&*revStart)){
+                // if this store modify this alloca ptr, squash the alloca node and substitude with the Value operand of store
+                if (storeCand->getPointerOperand() == allocaInst){
+                    storeFound = true;
+                    root->parentNode->childNodesSet.erase(root);
+                    // create new child node for the parent, targeting this store's Value operand
+                    CalcTreeNode* storeValueChildNode = new CalcTreeNode;
+                    CalcTreeNode::setupCalcTreeNode(storeValueChildNode, storeCand->getValueOperand(), root->parentNode);
+                    root->parentNode->childNodesSet.insert(storeValueChildNode);
+                    ret_flag = computerSrcPtrDependenceTree(storeValueChildNode);
+                    delete root;
+                    break;
+                }
+            }
+        }
+        // alloca inst as end point
+        if (storeFound) ret_flag = true;
+        return ret_flag;
+    }
+    // Terminate point: callInst (no children)
+    else if (CallInst* callInst = dyn_cast<CallInst>(root->inst)){
+        if (callInst->getCalledFunction()->getName().str() == "llvm.nvvm.read.ptx.sreg.tid.x"){
+            ret_flag = true;
+        }
+        else ret_flag = false;
+        return ret_flag;
+    }
+    else if (Argument *arg = dyn_cast<Argument>(root->inst)){
+        return false;
+    }
+    // don't bother to deal with other type of instructions
+    else {
+        return false;
+    }
+
+
+
+
+}
 // function caller should initialize root node by:
 // 1. filling inst
 // 2. set parent to Null
@@ -272,59 +357,7 @@ void BinaryExprAST::exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAS
 };
 
 
-shared_ptr<BinaryExprAST> BinaryExprAST::distributiveTransform(shared_ptr<BinaryExprAST> root){
-    bool debug = !DEBUG;
-    // terminator: constExpr
-    ConstExprAST* constExpr = dynamic_cast<ConstExprAST*>(root.get());
-    if (constExpr != nullptr) return root;
-    // binary operator: interesting stuff
-    BinaryExprAST* curNodeBinaryExpr = dynamic_cast<BinaryExprAST*>(root.get());
-    if (curNodeBinaryExpr != nullptr){
-        bool isCurMult = (curNodeBinaryExpr->op == CoalMemBinaryASTToken_t::Mult);
-        /// TODO: preorder traversal, first left child
-        BinaryExprAST* lhsBinaryOp = dynamic_cast<BinaryExprAST*>(curNodeBinaryExpr->lhs.get());
-        BinaryExprAST* rhsBinaryOp = dynamic_cast<BinaryExprAST*>(curNodeBinaryExpr->rhs.get());
-        bool leftFixdown = (isCurMult && lhsBinaryOp != nullptr && lhsBinaryOp->op == CoalMemBinaryASTToken_t::Add);
-        bool rightFixDown = (isCurMult && rhsBinaryOp != nullptr && rhsBinaryOp->op == CoalMemBinaryASTToken_t::Add);
-        /// TODO: find (b+c) * a pattern
-        if (leftFixdown){
-            shared_ptr<CoalMemExprAST>   a = curNodeBinaryExpr->rhs;
-            shared_ptr<CoalMemExprAST>   b = lhsBinaryOp->lhs;
-            shared_ptr<CoalMemExprAST>   c = lhsBinaryOp->rhs;
-            /// TODO: construct a*b + a*c
-            shared_ptr<BinaryExprAST>  ab = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, b);
-            shared_ptr<BinaryExprAST>  ac = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, c);
-            
-            // expanded form
-            shared_ptr<BinaryExprAST>  expansion = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, ab, ac);
-            printInfo(debug, "left:\t" , expansion->str());
-            return distributiveTransform(expansion);
-        }
-        /// TODO: find a * (b+c) pattern
-        else if (rightFixDown){
-            shared_ptr<CoalMemExprAST>   a = curNodeBinaryExpr->lhs;
-            shared_ptr<CoalMemExprAST>   b = rhsBinaryOp->lhs;
-            shared_ptr<CoalMemExprAST>   c = rhsBinaryOp->rhs;
-            /// TODO: construct a*b + a*c
-            shared_ptr<BinaryExprAST>  ab = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, b);
-            shared_ptr<BinaryExprAST>  ac = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, c);
-            
-            // expanded form
-            shared_ptr<BinaryExprAST>  expansion = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Add, ab, ac);
-            printInfo(debug, "right:\t", expansion->str());
-            return distributiveTransform(expansion);
-        }
 
-        if (lhsBinaryOp != nullptr){
-            curNodeBinaryExpr->lhs = distributiveTransform(make_shared<BinaryExprAST>(*lhsBinaryOp));
-        }
-        if (rhsBinaryOp != nullptr){
-            curNodeBinaryExpr->rhs = distributiveTransform(make_shared<BinaryExprAST>(*rhsBinaryOp));
-        }
-    }
-    return root;
-
-}
 
 // helper
 
