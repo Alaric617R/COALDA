@@ -82,8 +82,13 @@ void coalPass::CoalPass::unit_test_ViableOffsetEquation_construction(){
 void printAllOp(Instruction* inst){
         sep_center("Operand list");
         errs() << "Inst:\t" << *inst << "\thas " << inst->getNumOperands() << " operands" <<'\n';
+    int idx = 1;
     for (auto i=inst->op_begin(); i != inst->op_end(); i++){
-        errs() << *i->get() << '\n';
+        if (auto inst = dyn_cast<AddrSpaceCastInst>(i->get())){
+            errs() << "[#" << idx++ << "]\t" << *i->get() << "\topcode:\t" << inst->getOpcodeName()  << '\n';
+        }
+        else
+            errs() << "[#" << idx++ << "]\t" << *i->get() << "\ttype:\t" << *i->get()->getType() << '\n';
     }
     sep_center("End operand list");
 }
@@ -116,12 +121,17 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
 
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
-        if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
-        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
+        if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
         // unit_test_ViableOffsetEquation_construction();
         // unit_test_distributive_transform();
         // return PreservedAnalyses::all();
 
+
+        /// TODO: if function contains any loop, skip this function
+        LoopAnalysis::Result &loopAnaResult = FAM.getResult<LoopAnalysis>(F);
+        if (!loopAnaResult.empty()) return PreservedAnalyses::all();
+        
         sep_center(F.getName());
         int bb_cnt = 0;
         for (auto &bb : F){
@@ -129,7 +139,7 @@ PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &
             assert(bbCoalDataMap.find(&bb) == bbCoalDataMap.end());
             bbCoalDataMap[&bb] = new SingleBBCoalAnalysisData;
 
-            // runOnOneBB(&bb);
+            runOnOneBB(&bb);
             // testGEPPointerAlias(&bb, FAM, F);
             // break;
             // testInst(&bb);
@@ -154,13 +164,34 @@ PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &
                 // else if (CallInst* call = dyn_cast<CallInst>(&inst)){
                 //     // printInfo(DEBUG, "callInst:\t", *call, "arg:\t", call->getCalledFunction()->getName());
                 // }
-                if (GetElementPtrInst* GEP = dyn_cast<GetElementPtrInst>(&inst)){
-                    printAllOp(GEP);
-                    if (GEP->getNumOperands() == 3){
-                        printInfo(DEBUG, "gep's second argument\t" , *GEP->getOperand(1),"\tType\t", dyn_cast<ConstantInt>(GEP->getOperand(1))->isZero());
-                    }                    
-                    // printInfo(DEBUG, *GEP, "\tnumber of operands:\t", GEP->getNumOperands(), "\t", *GEP->getOperand(GEP->getNumOperands()-1));
-                }
+                // if (GetElementPtrInst* GEP = dyn_cast<GetElementPtrInst>(&inst)){
+                //     // printAllOp(GEP);
+                //     if (GEP->getNumOperands() == 3){
+                //         printAllOp(GEP);
+                //         auto ptrOp = GEP->getPointerOperand();
+                //         errs() << *ptrOp << '\n';
+                //         if (auto addrop = dyn_cast<AddrSpaceCastOperator>(ptrOp)){
+                //             errs() << *addrop->getPointerOperand() << '\n';
+                //             auto addopPtr = addrop->getPointerOperand();
+                //             errs() << addopPtr->getName() << '\n';
+                //             // if (isa<Instruction>(addopPtr)) errs() << "inst\n";
+                //             // else if (isa<Constant>(addopPtr)) errs() << "const\n";
+                //             // if (isa<GlobalValue>(addopPtr)) errs() << "global\n";
+                //             // else if(isa<ConstantExpr>(addopPtr)) errs() << "const expr\n";
+                //             if (auto glob = dyn_cast<GlobalValue>(addopPtr)){
+                //                 errs() << "addr space:\t" << glob->getAddressSpace() << '\n';
+                //                 errs() << "visibility:\t" << glob->getVisibility() << '\n';
+                //             }
+                            
+                //         }
+                //         // errs() << *ptrOp << '\n';
+                //         // if (isa<Operator>(ptrOp)) errs() << "operator\n";
+                //         // else if (isa<Constant>(ptrOp)) errs() << "constant\n";
+                //         // else if (isa<Argument>(ptrOp)) errs() << "argument\n";
+                //         // printInfo(DEBUG, "gep's second argument\t" , *GEP->getOperand(1),"\tType\t", dyn_cast<ConstantInt>(GEP->getOperand(1))->isZero());
+                //     }                    
+                //     // printInfo(DEBUG, *GEP, "\tnumber of operands:\t", GEP->getNumOperands(), "\t", *GEP->getOperand(GEP->getNumOperands()-1));
+                // }
                 // else printInfo(DEBUG, inst.getOpcodeName());
             }
 
@@ -175,7 +206,8 @@ void coalPass::CoalPass::runOnOneBB(BasicBlock* targetBB){
       findAllLoadAndStorePerBB(targetBB, bbCoalAnalysisData);
       /// TODO: analysis all Loads
       for (auto loadInstCand : bbCoalAnalysisData->allLoadInstDeque){
-        createCoalLoadOrNo(loadInstCand);
+        auto res = CoalLoad::createCoalLoadOrNo(loadInstCand);
+        if (res.has_value()) res.value().print();
       }
       // for every store in this basicblock, check it's dest and src address. If both coming from getelementptr and offset related to TID, then this store can be coalesced
     //   for (StoreInst *storeInstCand : bbCoalAnalysisData->allStoreInstDeque){

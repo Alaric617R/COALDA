@@ -53,6 +53,7 @@ struct CalcTreeNode{
     static void setupCalcTreeNode(CalcTreeNode* curNode, Value* inst, CalcTreeNode* parentNode);
     static void freeTreeNodes(CalcTreeNode* root_to_free);
     static void calcOffsetEquation(CalcTreeNode* root);
+    static void calcPtrSrc(CalcTreeNode* root);
     void prettyPrint();
 };
 
@@ -88,15 +89,22 @@ struct CoalLoad{
     LoadInst* origLoadInst;
     /// offset of pointer operand
     ViableOffsetEquation offsetEquation;
+    /// pointer source
+    ConstArgExprAST srcPtrExpr = ConstArgExprAST(CoalMemConstExprASTToken_t::None, nullptr);
 
+    void print(){
+        string tid_str;
+        if (offsetEquation.batchedTID) tid_str = "GlobalTID";
+        else tid_str = "LocalThreadIdx";
+        errs() << *origLoadInst << "\thas potential to be coalesced.\n";
+        errs() << "Ptr Source" << srcPtrExpr.str() << "\t" << *srcPtrExpr.getArg() << '\n';
+        errs() << format("Ptr Offset: [Stride = %d]\t[StrideOffset = %d]\t[%s]\n", offsetEquation.stride, offsetEquation.offset, tid_str.c_str());
+    }
+    /// if the passed in LoadInst can be coalesced, return CoalLoad struct. Else, nullopt
+    static optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst);
 
-public:
-    /**/
-    static bool isLoadCoalescable(LoadInst* loadCand);
 };
 
-// if the passed in LoadInst can be coalesced, return CoalLoad struct. Else, nullopt
-optional<CoalLoad> createCoalLoadOrNo(LoadInst* loadCandInst);
 
 /**
  * Return false if no TID related field is found.

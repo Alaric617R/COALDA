@@ -25,7 +25,7 @@ using namespace llvm;
 
 enum class CoalMemBinaryASTToken_t: uint8_t {Mult, Add};
 enum class CoalMemPrototyeASTToken_t: uint8_t {ThreadIndex, BlockDim, BlockIndex, TID};
-enum class CoalMemConstExprASTToken_t : uint8_t {Argument};
+enum class CoalMemConstExprASTToken_t : uint8_t {None, Argument, GlobalVariable, Alloca};
 
 // class BinaryExprAST;
 class CoalMemExprAST{
@@ -117,16 +117,21 @@ public:
 class ConstArgExprAST : public ConstExprAST {
 private:
     CoalMemConstExprASTToken_t token;
-    Argument* argument;
+    Value* argument;
 public:
-    ConstArgExprAST(CoalMemConstExprASTToken_t _token, Argument* _argument) : token{_token}, argument{_argument}{}
+    ConstArgExprAST(CoalMemConstExprASTToken_t _token, Value* _argument) : token{_token}, argument{_argument}{}
+    Value* const getArg() const {return argument;}
     string str() override {
         switch (token)
         {
         case CoalMemConstExprASTToken_t::Argument:
-            return "Arg " + argument->getName().str();
+            return "Arg " + dyn_cast<Argument>(argument)->getName().str();
+        case CoalMemConstExprASTToken_t::GlobalVariable:
+            return "Global " + dyn_cast<GlobalValue>(argument)->getName().str();
+        case CoalMemConstExprASTToken_t::Alloca:
+            return string("Aloca ") + dyn_cast<AllocaInst>(argument)->getOpcodeName();
         default:
-            return "Arg ?";
+            return "None!";
         }
     }
 };
