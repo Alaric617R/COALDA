@@ -75,6 +75,7 @@ https://docs.nvidia.com/cuda/cuda-binary-utilities/index.html
 https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#using-separate-compilation-in-cuda
 ### Identify Uncoalesced Patterns
 https://www.cis.upenn.edu/~alur/Cav17.pdf
+
 https://github.com/upenn-acg/gpudrano-static-analysis_v1.0
 
 ### Benchmark for Performance Testing
