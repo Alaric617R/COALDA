@@ -79,12 +79,23 @@ struct ViableOffsetEquation{
     /// TID or ThreadIdx alone
     bool batchedTID;
 
+    string str() const{
+        string tid = (batchedTID) ? "TID" : "TheadIdx";
+        return std::to_string(stride) + " * " + tid + " + " + std::to_string(offset);
+    }
     /// invariant of @param exprsDeque: has been applied distributive rule: no add operand
     static optional<ViableOffsetEquation> constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprAST>> exprsDeque);
     friend bool operator==(const ViableOffsetEquation& lhs, const ViableOffsetEquation& rhs);
+    friend bool operator!=(const ViableOffsetEquation& lhs, const ViableOffsetEquation& rhs);
 };
 
 
+struct CoalPointerOpAnalysisResult{
+    /// offset of pointer operand
+    ViableOffsetEquation offsetEquation;
+    /// pointer source
+    ConstArgExprAST srcPtrExpr = ConstArgExprAST(CoalMemConstExprASTToken_t::None, nullptr);
+};
 
 // class of LoadInst that can be coalesced
 struct CoalLoad{
@@ -95,12 +106,18 @@ struct CoalLoad{
     /// pointer source
     ConstArgExprAST srcPtrExpr = ConstArgExprAST(CoalMemConstExprASTToken_t::None, nullptr);
 
+    string str(){
+        string tid_str;
+        if (offsetEquation.batchedTID) tid_str = "GlobalTID";
+        else tid_str = "LocalThreadIdx";
+        return string_format("Ptr Source: [%s]\tPtr Offset: [Stride = %d]\t[StrideOffset = %d]\t[%s]\n", srcPtrExpr.str().c_str(), offsetEquation.stride, offsetEquation.offset, tid_str.c_str());
+    }
     void print(){
         string tid_str;
         if (offsetEquation.batchedTID) tid_str = "GlobalTID";
         else tid_str = "LocalThreadIdx";
         errs() << *origLoadInst << "\thas potential to be coalesced.\n";
-        errs() << "Ptr Source" << srcPtrExpr.str() << "\t" << *srcPtrExpr.getArg() << '\n';
+        errs() << "Ptr Source: [" << srcPtrExpr.str() << "]\t" << *srcPtrExpr.getArg() << '\n';
         errs() << format("Ptr Offset: [Stride = %d]\t[StrideOffset = %d]\t[%s]\n", offsetEquation.stride, offsetEquation.offset, tid_str.c_str());
     }
     /// if the passed in LoadInst can be coalesced, return CoalLoad struct. Else, nullopt
@@ -113,16 +130,26 @@ struct CoalLoad{
  *   2. ptr operand must be able to be transferred to ViableOffsetEquation
  *   3. equation for value op and ptr op must be the same
  */
-
 struct CoalStore{
 // data
     StoreInst* origStoreInst;
     /// value operand
     CoalLoad valOpCoalLoad;
     /// ptr operand
-    ConstArgExprAST storeSrcPtrExpr = ConstArgExprAST(CoalMemConstExprASTToken_t::None, nullptr);
+    CoalPointerOpAnalysisResult storeSrcPtrExpr;
 
 /// method
+    void print(){
+        string tid_str;
+        if (storeSrcPtrExpr.offsetEquation.batchedTID) tid_str = "GlobalTID";
+        else tid_str = "LocalThreadIdx";
+        errs() << *origStoreInst << "\thas potential to be coalesced.\n";
+        errs() << "Value Source from Load:\t" << valOpCoalLoad.str() << '\n';
+        errs() << "Ptr Dest of Store:\n";
+        errs() << "Ptr Source: [" << storeSrcPtrExpr.srcPtrExpr.str() << "]\t" << *storeSrcPtrExpr.srcPtrExpr.getArg() << '\n';
+        errs() << format("Ptr Offset: [Stride = %d]\t[StrideOffset = %d]\t[%s]\n", storeSrcPtrExpr.offsetEquation.stride, storeSrcPtrExpr.offsetEquation.offset, tid_str.c_str());
+    }
+
     static optional<CoalStore> createCoalStoreOrNo(StoreInst* storeCandInst);
 };
 
@@ -140,14 +167,9 @@ bool computeValueDependenceTree(CalcTreeNode* root);
  * 3. shared memory
  * 4. global variable ( @note Now doesn't support)
 */
-bool computerSrcPtrDependenceTree(CalcTreeNode* root);
+bool computeSrcPtrDependenceTree(CalcTreeNode* root);
 
-struct CoalPointerOpAnalysisResult{
-    /// offset of pointer operand
-    ViableOffsetEquation offsetEquation;
-    /// pointer source
-    ConstArgExprAST srcPtrExpr = ConstArgExprAST(CoalMemConstExprASTToken_t::None, nullptr);
-};
+
 /**
  * This method can be used both in CoalLoad ans CoalStore, when comes to analyse their pointer operand.
  * 1. Determine if @param ptrOperand is from GEP

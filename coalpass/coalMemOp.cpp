@@ -61,24 +61,45 @@ void prettyPrintCalcTreeNodeHelper(const string& prefix, const CalcTreeNode* nod
 }
 
 optional<CoalStore> CoalStore::createCoalStoreOrNo(StoreInst* storeCandInst){
+    bool debug = DEBUG;
+    printInfo(debug, "Inspecting Store:\t", *storeCandInst);
+
     CoalStore coalStoreResult;
     coalStoreResult.origStoreInst = storeCandInst;
 
-    /// TODO: analys value operand, must be CoalLoad
+    /// TODO: analyse store value operand, must be CoalLoad
     if (LoadInst* valueOpLoadInst = dyn_cast<LoadInst>(storeCandInst->getValueOperand())){
         optional<CoalLoad> optionalLoad = CoalLoad::createCoalLoadOrNo(valueOpLoadInst);
-        if (optionalLoad.has_value()) coalStoreResult.valOpCoalLoad = std::move(optionalLoad.value());
-        else return nullopt;
-    } else return nullopt;
+        if (optionalLoad.has_value()) coalStoreResult.valOpCoalLoad = optionalLoad.value();
+        else {printInfo(debug, "Cannot create CoalLoad.") ; return nullopt;}
+    } else {printInfo(debug, "Store value operand is not LoadInst"); return nullopt;}
 
-    /// @note: reaching this point, coalStoreResult.valOpCoalLoad has been filled
-    /// TODO: anaylse pointer operand
+    printInfo(debug, "store value op resolved after createCoalLoadOrNo.");
+
+    /// @note: reaching this point, coalStoreResult.valOpCoalLoad, coalStoreResult.origStoreInst have been filled
+    /// TODO: anaylse store pointer operand
     optional<CoalPointerOpAnalysisResult> CPAresult = analysePointerOperand(storeCandInst->getPointerOperand());
-    if (!CPAresult.has_value()) return nullopt;
+    if (!CPAresult.has_value()){printInfo(debug, "Store pointer operand fails.") ; return nullopt;}
+    coalStoreResult.storeSrcPtrExpr = CPAresult.value();
+
+    printInfo(debug, "store pointer op resolved.");
 
     /// TODO: check if equation of pointer source an value operand are the same
-    /// @note: consider variant for shared memory
-    coalStoreResult.
+    /// TODO: consider variant case for shared memory
+    if ((coalStoreResult.valOpCoalLoad.srcPtrExpr.getExprType() == CoalMemConstExprASTToken_t::GlobalVariable) || (coalStoreResult.storeSrcPtrExpr.srcPtrExpr.getExprType() == CoalMemConstExprASTToken_t::GlobalVariable)){
+        /// TODO: change this line!!!
+        return coalStoreResult; 
+    }
+
+    /// TODO: normal case, where equation for value op and ptr op should be the same
+    else{
+        if (coalStoreResult.valOpCoalLoad.offsetEquation != coalStoreResult.storeSrcPtrExpr.offsetEquation) {
+            printInfo(debug, *storeCandInst, "\thas different canonical expression equations of value op and ptr op!\nValue Op: [", 
+            coalStoreResult.valOpCoalLoad.offsetEquation.str(), "]\tPtr Op:[", coalStoreResult.storeSrcPtrExpr.offsetEquation.str(), "]");
+            return nullopt;
+        }
+    }
+    return coalStoreResult;
 }
 optional<CoalLoad> CoalLoad::createCoalLoadOrNo(LoadInst* loadCandInst){
     
@@ -110,8 +131,11 @@ optional<CoalLoad> CoalLoad::createCoalLoadOrNo(LoadInst* loadCandInst){
 
 }
 
-bool computerSrcPtrDependenceTree(CalcTreeNode* root){
+bool computeSrcPtrDependenceTree(CalcTreeNode* root){
+    bool debug = DEBUG;
+
     assert(root->inst != nullptr);
+    printInfo(debug, "computeSrcPtrDependenceTree Root: ", *root->inst);
     bool ret_flag = true;
     // terminator: global variable, e.g,  ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr)
     if (AddrSpaceCastOperator* addrCastOp = dyn_cast<AddrSpaceCastOperator>(root->inst)){
@@ -125,41 +149,65 @@ bool computerSrcPtrDependenceTree(CalcTreeNode* root){
         CalcTreeNode* sextChildNode = new CalcTreeNode;
         CalcTreeNode::setupCalcTreeNode(sextChildNode, sextInst->getOperand(0), root);
         root->childNodesSet.insert(sextChildNode);
-        return computerSrcPtrDependenceTree(sextChildNode);
+        return computeSrcPtrDependenceTree(sextChildNode);
     }
     // unary: load
     else if (LoadInst* loadInst = dyn_cast<LoadInst>(root->inst)){
         CalcTreeNode* loadChildNode = new CalcTreeNode;
         CalcTreeNode::setupCalcTreeNode(loadChildNode, loadInst->getPointerOperand(), root);
         root->childNodesSet.insert(loadChildNode);
-        return  computerSrcPtrDependenceTree(loadChildNode);
+        return  computeSrcPtrDependenceTree(loadChildNode);
     }
     // memory: alloca. No children, can be pointer source address directly if no store in between is found
     /// @note We're assuming that alloca can only be child of LoadInst
     else if (AllocaInst* allocaInst = dyn_cast<AllocaInst>(root->inst)){
         bool storeFound = false;
         assert(isa<LoadInst>(root->parentNode->inst) && "parent of alloca is not load in computing source ptr for LoadInst!");
-        // find nearest store in reverse order
-        for (BasicBlock::reverse_iterator revStart = reversePos_helper(dyn_cast<Instruction>(root->parentNode->inst));
-                                          revStart != reversePos_helper(allocaInst); 
-                                          revStart ++){
-            if (StoreInst* storeCand = dyn_cast<StoreInst>(&*revStart)){
-                // if this store modify this alloca ptr, squash the alloca node and substitude with the Value operand of store
-                if (storeCand->getPointerOperand() == allocaInst){
-                    storeFound = true;
-                    root->parentNode->childNodesSet.erase(root);
-                    // create new child node for the parent, targeting this store's Value operand
-                    CalcTreeNode* storeValueChildNode = new CalcTreeNode;
-                    CalcTreeNode::setupCalcTreeNode(storeValueChildNode, storeCand->getValueOperand(), root->parentNode);
-                    root->parentNode->childNodesSet.insert(storeValueChildNode);
-                    ret_flag = computerSrcPtrDependenceTree(storeValueChildNode);
-                    delete root;
-                    break;
+        // find nearest store in reverse order, if in SAME BB
+        if (allocaInst->getParent() == dyn_cast<Instruction>(root->parentNode->inst)->getParent()){
+            for (BasicBlock::reverse_iterator revStart = reversePos_helper(dyn_cast<Instruction>(root->parentNode->inst));
+                                            revStart != reversePos_helper(allocaInst); 
+                                            revStart ++){
+                                                // errs() << "going through:\t" << (*revStart) << '\n';
+                if (StoreInst* storeCand = dyn_cast<StoreInst>(&*revStart)){
+                    // if this store modify this alloca ptr, squash the alloca node and substitude with the Value operand of store
+                    if (storeCand->getPointerOperand() == allocaInst){
+                        storeFound = true;
+                        root->parentNode->childNodesSet.erase(root);
+                        // create new child node for the parent, targeting this store's Value operand
+                        CalcTreeNode* storeValueChildNode = new CalcTreeNode;
+                        CalcTreeNode::setupCalcTreeNode(storeValueChildNode, storeCand->getValueOperand(), root->parentNode);
+                        root->parentNode->childNodesSet.insert(storeValueChildNode);
+                        ret_flag = computeSrcPtrDependenceTree(storeValueChildNode);
+                        delete root;
+                        break;
+                    }
                 }
             }
         }
+        else{
+            // order of user if from back of the function to front. Need early break
+            for (auto ee : allocaInst->users()) {
+                if (StoreInst* storeCand = dyn_cast<StoreInst>(ee)){
+                    // if this store modify this alloca ptr, squash the alloca node and substitude with the Value operand of store
+                    if (storeCand->getPointerOperand() == allocaInst){
+                        storeFound = true;
+                        root->parentNode->childNodesSet.erase(root);
+                        // create new child node for the parent, targeting this store's Value operand
+                        CalcTreeNode* storeValueChildNode = new CalcTreeNode;
+                        CalcTreeNode::setupCalcTreeNode(storeValueChildNode, storeCand->getValueOperand(), root->parentNode);
+                        root->parentNode->childNodesSet.insert(storeValueChildNode);
+                        ret_flag = computeSrcPtrDependenceTree(storeValueChildNode);
+                        delete root;
+                        break;
+                    }
+                }
+            }
+        }
+
+
         // alloca inst as end point
-        if (storeFound) ret_flag = true;
+        if (!storeFound) ret_flag = true;
         return ret_flag;
     }
     // addr of array may stored in Argument
@@ -259,47 +307,25 @@ bool computeValueDependenceTree(CalcTreeNode* root){
         assert(root->parentNode != nullptr);
         assert(isa<Instruction>(root->inst));
         assert(isa<Instruction>(root->parentNode->inst) && "Parent of alloca must be Instruction!");
-        // find nearest store in reverse order, if in SAME BB
-        if (allocaInst->getParent() == dyn_cast<Instruction>(root->parentNode->inst)->getParent()){
-            for (BasicBlock::reverse_iterator revStart = reversePos_helper(dyn_cast<Instruction>(root->parentNode->inst));
-                                            revStart != reversePos_helper(allocaInst); 
-                                            revStart ++){
-                                                errs() << "going through:\t" << (*revStart) << '\n';
-                if (StoreInst* storeCand = dyn_cast<StoreInst>(&*revStart)){
-                    // if this store modify this alloca ptr, squash the alloca node and substitude with the Value operand of store
-                    if (storeCand->getPointerOperand() == allocaInst){
-                        root->parentNode->childNodesSet.erase(root);
-                        // create new child node for the parent, targeting this store's Value operand
-                        CalcTreeNode* storeValueChildNode = new CalcTreeNode;
-                        CalcTreeNode::setupCalcTreeNode(storeValueChildNode, storeCand->getValueOperand(), root->parentNode);
-                        root->parentNode->childNodesSet.insert(storeValueChildNode);
-                        ret_flag = computeValueDependenceTree(storeValueChildNode);
-                        delete root;
-                        break;
-                    }
+        bool found_flag = false;
+        // order of user if from back of the function to front. Need early break
+        for (auto ee : allocaInst->users()) {
+            if (StoreInst* storeCand = dyn_cast<StoreInst>(ee)){
+                // if this store modify this alloca ptr, squash the alloca node and substitude with the Value operand of store
+                if (storeCand->getPointerOperand() == allocaInst){
+                    found_flag = true;
+                    root->parentNode->childNodesSet.erase(root);
+                    // create new child node for the parent, targeting this store's Value operand
+                    CalcTreeNode* storeValueChildNode = new CalcTreeNode;
+                    CalcTreeNode::setupCalcTreeNode(storeValueChildNode, storeCand->getValueOperand(), root->parentNode);
+                    root->parentNode->childNodesSet.insert(storeValueChildNode);
+                    ret_flag = computeValueDependenceTree(storeValueChildNode);
+                    delete root;
+                    break;
                 }
             }
         }
-        else{
-            // order of user if from back of the function to front. Need early break
-            for (auto ee : allocaInst->users()) {
-                if (StoreInst* storeCand = dyn_cast<StoreInst>(ee)){
-                    // if this store modify this alloca ptr, squash the alloca node and substitude with the Value operand of store
-                    if (storeCand->getPointerOperand() == allocaInst){
-                        root->parentNode->childNodesSet.erase(root);
-                        // create new child node for the parent, targeting this store's Value operand
-                        CalcTreeNode* storeValueChildNode = new CalcTreeNode;
-                        CalcTreeNode::setupCalcTreeNode(storeValueChildNode, storeCand->getValueOperand(), root->parentNode);
-                        root->parentNode->childNodesSet.insert(storeValueChildNode);
-                        ret_flag = computeValueDependenceTree(storeValueChildNode);
-                        delete root;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return ret_flag;
+        return ret_flag && found_flag;
     }
     // Terminate point: callInst (no children)
     else if (CallInst* callInst = dyn_cast<CallInst>(root->inst)){
@@ -409,6 +435,10 @@ bool operator==(const ViableOffsetEquation& lhs, const ViableOffsetEquation& rhs
     return (lhs.stride == rhs.stride && lhs.offset == rhs.offset && lhs.batchedTID == rhs.batchedTID);
 }
 
+bool operator!=(const ViableOffsetEquation& lhs, const ViableOffsetEquation& rhs){
+    return (lhs.stride != rhs.stride || lhs.offset != rhs.offset || lhs.batchedTID != rhs.batchedTID);
+}
+
 bool CalcTreeNode::opcodeInFSM(Value* inst){
     
     if(!isa<Instruction>(inst)) return false;
@@ -465,8 +495,13 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
     int strideFromLocalThreadID = -1;
     int strideFromTID = -2;
     int curOffset = 0;
+    if (debug){
+        sep_center("all exprs:");
+        for (auto expr : exprsDeque) { printInfo(debug, expr->str());}
+        sep_center("all exprs end");
+    }
     for (auto expr : exprsDeque){
-        printInfo(debug, "inspecting:\t", expr->str());
+        
         if (BinaryExprAST* binaryOp = dynamic_cast<BinaryExprAST*>(expr.get())){
             assert( binaryOp->type() == CoalMemBinaryASTToken_t::Mult && "In parsing for ViableOffsetEquation, no ADD is expected!");
             auto unitExprs = BinaryExprAST::expandNodes(std::make_shared<BinaryExprAST>(*binaryOp));
@@ -478,13 +513,13 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
             // because we expect to see both BlockDim and BlockIndex
             std::pair<int,int> isGloabalTIDBlock = std::make_pair(0, 0);
             for (auto sub_expr : Exprs){
-                
+                printInfo(debug, "inspecting:\t", sub_expr->str());
                 if (auto protoOp = dynamic_cast<PrototypeExprAST*>(sub_expr.get())){
                     if (protoOp->get_token() == CoalMemPrototyeASTToken_t::ThreadIndex) isThreadIdBlock = true;
                     else if (protoOp->get_token() == CoalMemPrototyeASTToken_t::BlockDim) isGloabalTIDBlock.first += 1;
                     else if (protoOp->get_token() == CoalMemPrototyeASTToken_t::BlockIndex) isGloabalTIDBlock.second += 1;
                 }
-                else if (auto constOp = dynamic_cast<ConstIntExprAST*>(sub_expr.get()))  constMultResult *= constOp->get_value();
+                else if (auto constOp = dynamic_cast<ConstIntExprAST*>(sub_expr.get())) { printInfo(debug, "Got constant inst: ", constOp->get_value());constMultResult *= constOp->get_value();}
                 else assert(false && "leaf expression cannot be any other type!");
             }
             if ( !threadIdParsed && isThreadIdBlock && isGloabalTIDBlock.first == 0 && isGloabalTIDBlock.second == 0){
@@ -508,8 +543,8 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
             return nullopt;
         }
     }
-    // stride from local threadId should be same of global threadId
-    if (strideFromLocalThreadID != strideFromTID) return nullopt;
+    // stride from local threadId should be same of global threadId, if there are global TID
+    if (globalTIDParsed && ( strideFromLocalThreadID != strideFromTID ) ) return nullopt;
     // no threadId, no parallellism
     if (!threadIdParsed) return nullopt;
 
@@ -551,7 +586,9 @@ optional<CoalPointerOpAnalysisResult> analysePointerOperand(Value* ptrOperand){
     /// TODO: calculate offset AST expression
     
     CalcTreeNode::calcOffsetEquation(offsetCalcRoot);
-    if (debug) offsetCalcRoot->prettyPrint();
+    if (debug) {printInfo(debug, "GEP offset");offsetCalcRoot->prettyPrint();}
+
+    /// TODO: apply distribution rule and extract sub multiplication field of AST
     if (auto binaryOp = dynamic_cast<BinaryExprAST*>(offsetCalcRoot->nodeExpression.expr.get())){
 
         /// TODO: apply distributive rule and make all multiply children of any add
@@ -562,22 +599,22 @@ optional<CoalPointerOpAnalysisResult> analysePointerOperand(Value* ptrOperand){
         auto potentialEqCand = ViableOffsetEquation::constructFromOffsetExprOrNo(subExprsDeque);
 
         /// TODO: check if the above contains value. If not, master load/store cannot be coalesced
-        if (!potentialEqCand.has_value()) return nullopt;
+        if (!potentialEqCand.has_value()){return nullopt;}
         CPAresult.offsetEquation = potentialEqCand.value();
     }
     /** @note if it's not binary, we don't consider it to be coalescable b/c it should be itself coalesced **/
     else return nullopt;
-    printInfo(debug, "Source GEP:\t", *ptrAddrGEPInst);
-    if (debug) offsetCalcRoot->prettyPrint();
+
 
     /// TODO: extract GEP pointer Op source dependence tree
     Value* ptrOp = ptrAddrGEPWrapper.PointerOp;
     CalcTreeNode* ptrOpCalcRoot = new CalcTreeNode;
     CalcTreeNode::setupCalcTreeNode(ptrOpCalcRoot, ptrOp, nullptr);
-    if ( !computerSrcPtrDependenceTree(ptrOpCalcRoot)){
+    if ( !computeSrcPtrDependenceTree(ptrOpCalcRoot)){
         printInfo(debug, *ptrAddrGEPInst, "\t is impossible to be coalesced b/c source addr.");
         return nullopt;
     }
+    
     /// TODO: find ptr Op source expression
     CalcTreeNode::calcPtrSrc(ptrOpCalcRoot);
     printInfo(debug, "Source GEP:\t", *ptrAddrGEPInst);

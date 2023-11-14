@@ -118,6 +118,8 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
 }
 
 void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
+    bool debug = DEBUG;
+
     /// TODO: return if any loop is detected
     LoopAnalysis::Result &loopAnaResult = FAM.getResult<LoopAnalysis>(F);
     if (!loopAnaResult.empty()) return;
@@ -127,6 +129,19 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
     findAllStoresPerFunc(F, allStoreFuncDeque);
 
     /// TODO: filter our stores that cannot be coalesced
+    deque<CoalStore> allCoalStoreDeque;
+    for (auto storeCand : allStoreFuncDeque){
+        auto p = CoalStore::createCoalStoreOrNo(storeCand);
+        if (!p.has_value()) continue;
+        allCoalStoreDeque.push_back(p.value());
+    }
+
+    if (debug){
+        sep_center("All CoalStores");
+        for (auto cs : allCoalStoreDeque) {cs.print(); seperator(36, '-')}
+        sep_center("All CoalStores Ends");
+
+    }
 
     /// TODO: gather CoalStore with same pattern, arranged in groups
 
@@ -137,8 +152,10 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
 
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
-        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
-        if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+        if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
+        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+        run_coal(F, FAM);
+        return PreservedAnalyses::all();
         // unit_test_ViableOffsetEquation_construction();
         // unit_test_distributive_transform();
         // return PreservedAnalyses::all();
@@ -234,7 +251,13 @@ void coalPass::CoalPass::runOnOneBB(BasicBlock* targetBB){
       errs() << "deque size:\t" << coalLoads.size() << "\n";
       for (auto l : coalLoads) {
         l.print();
-    }
+        }
+        sep_center("compare ptr src");
+        auto front = coalLoads.front();
+        for (auto l : coalLoads){
+            if (front.srcPtrExpr == l.srcPtrExpr) errs() << "same src\n";
+            else errs() << "Different src\n";
+        }
       // for every store in this basicblock, check it's dest and src address. If both coming from getelementptr and offset related to TID, then this store can be coalesced
     //   for (StoreInst *storeInstCand : bbCoalAnalysisData->allStoreInstDeque){
     //       // check value operand

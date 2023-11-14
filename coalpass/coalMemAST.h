@@ -25,6 +25,11 @@ using namespace llvm;
 
 enum class CoalMemBinaryASTToken_t: uint8_t {Mult, Add};
 enum class CoalMemPrototyeASTToken_t: uint8_t {ThreadIndex, BlockDim, BlockIndex, TID};
+/**
+ * @param Argument: argument passed to the function.
+ * @param GlobalVariable: inclusing shared memory, global array, etc.
+ * @param Alloca: local array in the scope of current function body.
+*/
 enum class CoalMemConstExprASTToken_t : uint8_t {None, Argument, GlobalVariable, Alloca};
 
 // class BinaryExprAST;
@@ -121,6 +126,7 @@ private:
 public:
     ConstArgExprAST(CoalMemConstExprASTToken_t _token, Value* _argument) : token{_token}, argument{_argument}{}
     Value* const getArg() const {return argument;}
+    CoalMemConstExprASTToken_t  getExprType() const {return token;}
     string str() override {
         switch (token)
         {
@@ -129,10 +135,25 @@ public:
         case CoalMemConstExprASTToken_t::GlobalVariable:
             return "Global " + dyn_cast<GlobalValue>(argument)->getName().str();
         case CoalMemConstExprASTToken_t::Alloca:
-            return string("Aloca ") + dyn_cast<AllocaInst>(argument)->getOpcodeName();
+            return string("Alloca ") + dyn_cast<AllocaInst>(argument)->getOpcodeName();
         default:
             return "None!";
         }
+    }
+    friend bool operator==(const ConstArgExprAST& lhs, const ConstArgExprAST& rhs){
+        return (lhs.token == rhs.token && lhs.argument == rhs.argument);
+        // if (lhs.token != rhs.token) return false;
+        // switch (lhs.token)
+        // {
+        // case CoalMemConstExprASTToken_t::Argument:
+        //      dyn_cast<Argument>(lhs.argument)->getName().str();
+        // case CoalMemConstExprASTToken_t::GlobalVariable:
+        //     return "Global " + dyn_cast<GlobalValue>(argument)->getName().str();
+        // case CoalMemConstExprASTToken_t::Alloca:
+        //     return string("Alloca ") + dyn_cast<AllocaInst>(argument)->getOpcodeName();
+        // default:
+        //     return "None!";
+        // }
     }
 };
 
