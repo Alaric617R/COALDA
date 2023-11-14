@@ -60,6 +60,26 @@ void prettyPrintCalcTreeNodeHelper(const string& prefix, const CalcTreeNode* nod
     }
 }
 
+optional<CoalStore> CoalStore::createCoalStoreOrNo(StoreInst* storeCandInst){
+    CoalStore coalStoreResult;
+    coalStoreResult.origStoreInst = storeCandInst;
+
+    /// TODO: analys value operand, must be CoalLoad
+    if (LoadInst* valueOpLoadInst = dyn_cast<LoadInst>(storeCandInst->getValueOperand())){
+        optional<CoalLoad> optionalLoad = CoalLoad::createCoalLoadOrNo(valueOpLoadInst);
+        if (optionalLoad.has_value()) coalStoreResult.valOpCoalLoad = std::move(optionalLoad.value());
+        else return nullopt;
+    } else return nullopt;
+
+    /// @note: reaching this point, coalStoreResult.valOpCoalLoad has been filled
+    /// TODO: anaylse pointer operand
+    optional<CoalPointerOpAnalysisResult> CPAresult = analysePointerOperand(storeCandInst->getPointerOperand());
+    if (!CPAresult.has_value()) return nullopt;
+
+    /// TODO: check if equation of pointer source an value operand are the same
+    /// @note: consider variant for shared memory
+    coalStoreResult.
+}
 optional<CoalLoad> CoalLoad::createCoalLoadOrNo(LoadInst* loadCandInst){
     
     bool debug = DEBUG;
@@ -77,66 +97,16 @@ optional<CoalLoad> CoalLoad::createCoalLoadOrNo(LoadInst* loadCandInst){
             return nullopt;
         }
     }
-    /// @note if this load is not from GEP, cannot be Coaled
-    if (!isa<GetElementPtrInst>(loadCandInst->getPointerOperand())) return nullopt;
-    GetElementPtrInst* loadAddrGEPInst = dyn_cast<GetElementPtrInst>(loadCandInst->getPointerOperand());
-    /** allowed two types of GEP
-     * 1. only one-dimensional offset. E.G, %17 = getelementptr inbounds i32, ptr %11, i64 %16
-     * 2. twp-dimensional offset, but with GPU shared memory so the first one will be zero. E.G,   %129 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %128
-     * */ 
-    GEPWrapper loadAddrGEPWrapper;
-    if (!calcGEPCoalCandidate(loadAddrGEPInst).has_value()) return nullopt;
-    else loadAddrGEPWrapper = std::move(calcGEPCoalCandidate(loadAddrGEPInst).value());
+    
+    /// TODO: analyse load pointer operand
+    optional<CoalPointerOpAnalysisResult> CPAresult = analysePointerOperand(loadCandInst->getPointerOperand());
+    if (!CPAresult.has_value()) return nullopt;
 
-    printInfo(debug, "source starts:\t", *loadAddrGEPWrapper.PointerOp, "\toffset starts:\t", *loadAddrGEPWrapper.OffsetOp);
-    /// TODO: build offset calculation tree
-    Value* offsetOp = loadAddrGEPWrapper.OffsetOp;
-    CalcTreeNode* offsetCalcRoot = new CalcTreeNode;
-    CalcTreeNode::setupCalcTreeNode(offsetCalcRoot, offsetOp, nullptr);
-    if (!computeValueDependenceTree(offsetCalcRoot)){
-        printInfo(debug, *loadAddrGEPInst, "\t is impossible to be coalesced b/c no parallel structure is found.");
-        return nullopt;
-    }
-    errs() << "alarc\n";
-    /// TODO: calculate offset AST expression
-    CalcTreeNode::calcOffsetEquation(offsetCalcRoot);
-    printInfo(debug, "Source GEP:\t", *loadAddrGEPInst);
-    if (auto binaryOp = dynamic_cast<BinaryExprAST*>(offsetCalcRoot->nodeExpression.expr.get())){
-        /// TODO: apply distributive rule and make all multiply children of any add
-        shared_ptr<BinaryExprAST> distributiveForm = BinaryExprAST::distributiveTransform(make_shared<BinaryExprAST>(*binaryOp));
-        
-        /// TODO: construct @param ViableOffsetEquation by traversing distributive form
-        deque<shared_ptr<CoalMemExprAST>> subExprsDeque = BinaryExprAST::extractSubMultExprsFromDistForm(distributiveForm);
-        auto potentialEqCand = ViableOffsetEquation::constructFromOffsetExprOrNo(subExprsDeque);
-
-        /// TODO: check if the above contains value. If not, this load cannot be coalesced
-        if (!potentialEqCand.has_value()) return nullopt;
-        coalLoadResult.offsetEquation = potentialEqCand.value();
-    }
-    /** @note if it's not binary, we don't consider it to be coalescable b/c it should be itself coalesced **/
-    else return nullopt;
-    printInfo(debug, "Source GEP:\t", *loadAddrGEPInst);
-    if (debug) offsetCalcRoot->prettyPrint();
-
-    /// TODO: extract GEP pointer Op source dependence tree
-    Value* ptrOp = loadAddrGEPWrapper.PointerOp;
-    CalcTreeNode* ptrOpCalcRoot = new CalcTreeNode;
-    CalcTreeNode::setupCalcTreeNode(ptrOpCalcRoot, ptrOp, nullptr);
-    if ( !computerSrcPtrDependenceTree(ptrOpCalcRoot)){
-        printInfo(debug, *loadAddrGEPInst, "\t is impossible to be coalesced b/c source addr.");
-        return nullopt;
-    }
-    /// TODO: find ptr Op source expression
-    CalcTreeNode::calcPtrSrc(ptrOpCalcRoot);
-    printInfo(debug, "Source GEP:\t", *loadAddrGEPInst);
-    if (debug) ptrOpCalcRoot->prettyPrint();
-    if (auto src = dynamic_cast<ConstArgExprAST*>(ptrOpCalcRoot->nodeExpression.expr.get())){
-        coalLoadResult.srcPtrExpr = *src;
-    }
-    else return nullopt;
+    /// TODO: construct CoalLoad
+    coalLoadResult.offsetEquation = CPAresult.value().offsetEquation;
+    coalLoadResult.srcPtrExpr = CPAresult.value().srcPtrExpr;
 
     return coalLoadResult;
-
 
 }
 
@@ -435,6 +405,10 @@ void BinaryExprAST::exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAS
 
 // helper
 
+bool operator==(const ViableOffsetEquation& lhs, const ViableOffsetEquation& rhs){
+    return (lhs.stride == rhs.stride && lhs.offset == rhs.offset && lhs.batchedTID == rhs.batchedTID);
+}
+
 bool CalcTreeNode::opcodeInFSM(Value* inst){
     
     if(!isa<Instruction>(inst)) return false;
@@ -547,3 +521,72 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
 
 }
 
+
+optional<CoalPointerOpAnalysisResult> analysePointerOperand(Value* ptrOperand){
+    bool debug = DEBUG;
+    printInfo(debug, "Analysing Ptr Operand:\t", *ptrOperand);
+    CoalPointerOpAnalysisResult CPAresult;
+
+    /// @note if this pointer operand is not from GEP, cannot be Coaled
+    if (!isa<GetElementPtrInst>(ptrOperand)) return nullopt;
+    GetElementPtrInst* ptrAddrGEPInst = dyn_cast<GetElementPtrInst>(ptrOperand);
+    /** allowed two types of GEP
+     * 1. only one-dimensional offset. E.G, %17 = getelementptr inbounds i32, ptr %11, i64 %16
+     * 2. twp-dimensional offset, but with GPU shared memory so the first one will be zero. E.G,   %129 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %128
+     * */ 
+    GEPWrapper ptrAddrGEPWrapper;
+    if (!calcGEPCoalCandidate(ptrAddrGEPInst).has_value()) return nullopt;
+    else ptrAddrGEPWrapper = std::move(calcGEPCoalCandidate(ptrAddrGEPInst).value());
+    printInfo(debug, "GEP source starts:\t", *ptrAddrGEPWrapper.PointerOp, "\toffset starts:\t", *ptrAddrGEPWrapper.OffsetOp);
+
+    /// TODO: build offset calculation tree
+    Value* offsetOp = ptrAddrGEPWrapper.OffsetOp;
+    CalcTreeNode* offsetCalcRoot = new CalcTreeNode;
+    CalcTreeNode::setupCalcTreeNode(offsetCalcRoot, offsetOp, nullptr);
+    if (!computeValueDependenceTree(offsetCalcRoot)){
+        printInfo(debug, *ptrAddrGEPInst, "\t is impossible to be coalesced b/c no parallel structure is found.");
+        return nullopt;
+    }
+
+    /// TODO: calculate offset AST expression
+    
+    CalcTreeNode::calcOffsetEquation(offsetCalcRoot);
+    if (debug) offsetCalcRoot->prettyPrint();
+    if (auto binaryOp = dynamic_cast<BinaryExprAST*>(offsetCalcRoot->nodeExpression.expr.get())){
+
+        /// TODO: apply distributive rule and make all multiply children of any add
+        shared_ptr<BinaryExprAST> distributiveForm = BinaryExprAST::distributiveTransform(make_shared<BinaryExprAST>(*binaryOp));
+        
+        /// TODO: construct @param ViableOffsetEquation by traversing distributive form
+        deque<shared_ptr<CoalMemExprAST>> subExprsDeque = BinaryExprAST::extractSubMultExprsFromDistForm(distributiveForm);
+        auto potentialEqCand = ViableOffsetEquation::constructFromOffsetExprOrNo(subExprsDeque);
+
+        /// TODO: check if the above contains value. If not, master load/store cannot be coalesced
+        if (!potentialEqCand.has_value()) return nullopt;
+        CPAresult.offsetEquation = potentialEqCand.value();
+    }
+    /** @note if it's not binary, we don't consider it to be coalescable b/c it should be itself coalesced **/
+    else return nullopt;
+    printInfo(debug, "Source GEP:\t", *ptrAddrGEPInst);
+    if (debug) offsetCalcRoot->prettyPrint();
+
+    /// TODO: extract GEP pointer Op source dependence tree
+    Value* ptrOp = ptrAddrGEPWrapper.PointerOp;
+    CalcTreeNode* ptrOpCalcRoot = new CalcTreeNode;
+    CalcTreeNode::setupCalcTreeNode(ptrOpCalcRoot, ptrOp, nullptr);
+    if ( !computerSrcPtrDependenceTree(ptrOpCalcRoot)){
+        printInfo(debug, *ptrAddrGEPInst, "\t is impossible to be coalesced b/c source addr.");
+        return nullopt;
+    }
+    /// TODO: find ptr Op source expression
+    CalcTreeNode::calcPtrSrc(ptrOpCalcRoot);
+    printInfo(debug, "Source GEP:\t", *ptrAddrGEPInst);
+    if (debug) ptrOpCalcRoot->prettyPrint();
+    if (auto src = dynamic_cast<ConstArgExprAST*>(ptrOpCalcRoot->nodeExpression.expr.get())){
+        CPAresult.srcPtrExpr = *src;
+    }
+    else return nullopt;
+
+    return CPAresult;
+
+}

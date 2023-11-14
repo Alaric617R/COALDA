@@ -81,7 +81,10 @@ struct ViableOffsetEquation{
 
     /// invariant of @param exprsDeque: has been applied distributive rule: no add operand
     static optional<ViableOffsetEquation> constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprAST>> exprsDeque);
+    friend bool operator==(const ViableOffsetEquation& lhs, const ViableOffsetEquation& rhs);
 };
+
+
 
 // class of LoadInst that can be coalesced
 struct CoalLoad{
@@ -105,6 +108,24 @@ struct CoalLoad{
 
 };
 
+/**  for CoalStore:
+ *   1. value operand must be CoalLoad
+ *   2. ptr operand must be able to be transferred to ViableOffsetEquation
+ *   3. equation for value op and ptr op must be the same
+ */
+
+struct CoalStore{
+// data
+    StoreInst* origStoreInst;
+    /// value operand
+    CoalLoad valOpCoalLoad;
+    /// ptr operand
+    ConstArgExprAST storeSrcPtrExpr = ConstArgExprAST(CoalMemConstExprASTToken_t::None, nullptr);
+
+/// method
+    static optional<CoalStore> createCoalStoreOrNo(StoreInst* storeCandInst);
+};
+
 
 /**
  * Return false if no TID related field is found.
@@ -120,6 +141,19 @@ bool computeValueDependenceTree(CalcTreeNode* root);
  * 4. global variable ( @note Now doesn't support)
 */
 bool computerSrcPtrDependenceTree(CalcTreeNode* root);
+
+struct CoalPointerOpAnalysisResult{
+    /// offset of pointer operand
+    ViableOffsetEquation offsetEquation;
+    /// pointer source
+    ConstArgExprAST srcPtrExpr = ConstArgExprAST(CoalMemConstExprASTToken_t::None, nullptr);
+};
+/**
+ * This method can be used both in CoalLoad ans CoalStore, when comes to analyse their pointer operand.
+ * 1. Determine if @param ptrOperand is from GEP
+ * 2. Determine offset equation for this GEP
+*/
+optional<CoalPointerOpAnalysisResult> analysePointerOperand(Value* ptrOperand);
 
 /** helpers **/
 BasicBlock::reverse_iterator reversePos_helper(Instruction* inst);

@@ -117,7 +117,23 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
     }
 }
 
+void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
+    /// TODO: return if any loop is detected
+    LoopAnalysis::Result &loopAnaResult = FAM.getResult<LoopAnalysis>(F);
+    if (!loopAnaResult.empty()) return;
 
+    /// TODO: find all stores in the function
+    deque<StoreInst*> allStoreFuncDeque;
+    findAllStoresPerFunc(F, allStoreFuncDeque);
+
+    /// TODO: filter our stores that cannot be coalesced
+
+    /// TODO: gather CoalStore with same pattern, arranged in groups
+
+    /// TODO: for each CoalStore group, insert new offset calculation instruction before the original store
+
+    /// TODO: alter or delete the original store. Substitude with new one
+}
 
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
@@ -204,11 +220,21 @@ PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &
 void coalPass::CoalPass::runOnOneBB(BasicBlock* targetBB){
       SingleBBCoalAnalysisData *bbCoalAnalysisData = bbCoalDataMap[targetBB];
       findAllLoadAndStorePerBB(targetBB, bbCoalAnalysisData);
+      deque<CoalLoad> coalLoads;
       /// TODO: analysis all Loads
       for (auto loadInstCand : bbCoalAnalysisData->allLoadInstDeque){
         auto res = CoalLoad::createCoalLoadOrNo(loadInstCand);
-        if (res.has_value()) res.value().print();
+        if (res.has_value()) { 
+            errs() << "found!\n"; 
+            auto v = res.value();
+            coalLoads.push_back(v);
+        }
       }
+      sep_center("COALLOADS");
+      errs() << "deque size:\t" << coalLoads.size() << "\n";
+      for (auto l : coalLoads) {
+        l.print();
+    }
       // for every store in this basicblock, check it's dest and src address. If both coming from getelementptr and offset related to TID, then this store can be coalesced
     //   for (StoreInst *storeInstCand : bbCoalAnalysisData->allStoreInstDeque){
     //       // check value operand
@@ -433,4 +459,14 @@ deque<Instruction*> coalPass::CoalPass::findAllContributorInstFIFO_helper(Instru
         sep_center_idy('-', "end");
     }
     return contributorFIFODeque;
+}
+
+void coalPass::CoalPass::findAllStoresPerFunc(Function &F, deque<StoreInst*> &allStoreFuncDeque){
+    for (auto &BB : F){
+        for (auto &inst : BB){
+            if (auto store = dyn_cast<StoreInst>(&inst)){
+                allStoreFuncDeque.push_back(store);
+            }
+        }
+    }
 }

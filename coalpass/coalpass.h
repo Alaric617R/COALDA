@@ -71,6 +71,10 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
     /** methods **/
     PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM);
 
+    /// run coalAnalysis in whole function scope rather than single BB.
+    /// Prerequisite: no loop in the function.
+    void run_coal(Function &F, FunctionAnalysisManager &FAM);
+
     void runOnOneBB(BasicBlock* targetBB);
 
     void findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBBCoalAnalysisData* bbCoalAnalysisData);
@@ -84,7 +88,7 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
 
 
     /*** helper functions ***/
-
+    void findAllStoresPerFunc(Function &F, deque<StoreInst*> &allStoreFuncDeque);
 
     optional<PtrCalcChain> ptrOperandAnalysisGEP_helper(GetElementPtrInst* parentGEPInst);
 
