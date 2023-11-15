@@ -78,5 +78,7 @@ https://www.cis.upenn.edu/~alur/Cav17.pdf
 
 https://github.com/upenn-acg/gpudrano-static-analysis_v1.0
 
+https://forums.developer.nvidia.com/t/detect-memory-coalescing-from-sass-file/238896
+
 ### Benchmark for Performance Testing
 https://github.com/yuhc/gpu-rodinia
