@@ -117,6 +117,35 @@ void coalPass::CoalPass::findAllLoadAndStorePerBB(BasicBlock* targetBB, SingleBB
     }
 }
 
+void coalPass::CoalPass::insertGlobalTidRegister(Function &F){
+    /// TODO: determine order of blockindex, blockdim and localthreadindex
+    int cnt = 0;
+    int tid_cnt = 0, blockIdx_cnt = 0, blockDim_cnt = 0;
+    for (auto &bb : F){
+        for (auto &inst : bb){
+            cnt ++;
+            if (&inst == LocalTidRegister) tid_cnt = cnt;
+            else if (&inst == BlockDimRegister) blockDim_cnt = cnt;
+            else if (&inst == BlockIndexRegister) blockIdx_cnt = cnt;
+        }
+    }
+    int min_val = max(max(tid_cnt, blockDim_cnt), max(blockDim_cnt, blockIdx_cnt));
+    Instruction* insertAfter = nullptr;
+    if (min_val == tid_cnt) insertAfter = LocalTidRegister;
+    else if (min_val == blockIdx_cnt) insertAfter = BlockIndexRegister;
+    else if (min_val == blockDim_cnt) insertAfter = BlockDimRegister;
+    assert(insertAfter != nullptr && "InsertAfter must be one of three possible insts.");
+
+    /// TODO: insert globalTid calculation
+    // create BlockDim * BlockIndex
+    BinaryOperator *multDimIndex = BinaryOperator::Create(Instruction::Mul, BlockDimRegister, BlockIndexRegister, "multDimIndex");
+    multDimIndex->moveAfter(insertAfter);
+    /// create threadIdx + multDimIndex
+    BinaryOperator *globalTid = BinaryOperator::Create(Instruction::Add, multDimIndex, LocalTidRegister, "GlobalTID");
+    globalTid->moveAfter(multDimIndex);
+    GlobalTidRegister = globalTid;
+}
+
 void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
     bool debug = DEBUG;
 
@@ -144,16 +173,47 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
     }
 
     /// TODO: gather CoalStore with same pattern, arranged in groups
+    deque<CoalStore> csCandidates(allCoalStoreDeque);
+    deque<CoalStoreGroup*> coalStoreGroupingDeque;
+    while (!csCandidates.empty()){
+        CoalStore front = csCandidates.front();
+        csCandidates.pop_front();
+        CoalStoreGroup *sameCoalStoreFrontSet = new CoalStoreGroup;
+        sameCoalStoreFrontSet->group.push_back(front);
+        /// TODO: match @param front with the rest CoalStore in the deque
+        deque<CoalStore> csCpy(csCandidates);
+        deque<CoalStore> collector;
+        for (auto elemStore : csCpy){
+            if (elemStore.is_same(front)) {
+                sameCoalStoreFrontSet->group.push_back(elemStore);
+            }
+            else {
+                collector.push_back(elemStore);
+            }
+        }
+        /// TODO: overwrite csCandidates with collector, which contains different CoalStore compared to front
+        csCandidates = collector;
+        /// TODO: if there are more than one CoalStore added to the same group as front, add that group into global pool
+        if (sameCoalStoreFrontSet->group.size() > 1){
+            coalStoreGroupingDeque.push_back(sameCoalStoreFrontSet);
+        }
+        else{
+            delete sameCoalStoreFrontSet;
+        }
+    }
+
+    if (debug) { for (auto e : coalStoreGroupingDeque) e->print();}
 
     /// TODO: for each CoalStore group, insert new offset calculation instruction before the original store
+    insertGlobalTidRegister(F);
 
     /// TODO: alter or delete the original store. Substitude with new one
 }
 
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
-        if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
-        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
+        if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
         run_coal(F, FAM);
         return PreservedAnalyses::all();
         // unit_test_ViableOffsetEquation_construction();

@@ -95,6 +95,8 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
     
     deque<Instruction*> findAllContributorInstFIFO_helper(Instruction* rootInst);
 
+    void insertGlobalTidRegister(Function& F);
+
 
     /** test cases **/
     #if DEBUG

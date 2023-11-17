@@ -35,7 +35,10 @@ using std::nullopt;
 using namespace llvm;
 
 extern unordered_set<const char*> OffsetAllowedOpcodeFSM;
-
+extern Instruction* GlobalTidRegister;
+extern Instruction* LocalTidRegister;
+extern Instruction* BlockDimRegister;
+extern Instruction* BlockIndexRegister;
 
 
 struct OffsetEquation{
@@ -150,9 +153,36 @@ struct CoalStore{
         errs() << format("Ptr Offset: [Stride = %d]\t[StrideOffset = %d]\t[%s]\n", storeSrcPtrExpr.offsetEquation.stride, storeSrcPtrExpr.offsetEquation.offset, tid_str.c_str());
     }
 
+    /// return true if two stores can be coalesced into one group
+    /// @note two stores need to be in same basicblock!!!
+    /// Reason is simple, we don't want to get into control flow and possbile runtime coalescable store is out of our consideration.
+    bool is_same(const CoalStore& other) const;
+
     static optional<CoalStore> createCoalStoreOrNo(StoreInst* storeCandInst);
 };
 
+static int CSG_CNT = 1;
+struct CoalStoreGroup{
+    int id;
+    deque<CoalStore> group; 
+    CoalStoreGroup(){
+        id = CSG_CNT ++;
+    }
+
+/// method
+    bool transform();
+    void print() const{
+        if (group.empty()) return;
+        string banner_start = string_format("CoalStoreGroup %d Starts", id);
+        string banner_end = string_format("CoalStoreGroup %d Ends", id);
+        sep_center(banner_start);
+        for (auto cs : group){
+            cs.print();
+        }
+        sep_center(banner_end);
+    }
+    ~CoalStoreGroup(){CSG_CNT--;}
+};
 
 /**
  * Return false if no TID related field is found.

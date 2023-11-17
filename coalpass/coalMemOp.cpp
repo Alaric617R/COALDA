@@ -14,6 +14,11 @@ unordered_set<const char*> OffsetAllowedOpcodeFSM{
      "call",
 };
 
+Instruction* GlobalTidRegister = nullptr;
+Instruction* LocalTidRegister = nullptr;
+Instruction* BlockDimRegister = nullptr;
+Instruction* BlockIndexRegister = nullptr;
+
 /*** local helpers ***/
 
 /** allowed two types of GEP
@@ -86,9 +91,18 @@ optional<CoalStore> CoalStore::createCoalStoreOrNo(StoreInst* storeCandInst){
 
     /// TODO: check if equation of pointer source an value operand are the same
     /// TODO: consider variant case for shared memory
+    /**
+    * For shared memory, allow difference in global tid and local tid. But stride and offset must be the same
+    */
     if ((coalStoreResult.valOpCoalLoad.srcPtrExpr.getExprType() == CoalMemConstExprASTToken_t::GlobalVariable) || (coalStoreResult.storeSrcPtrExpr.srcPtrExpr.getExprType() == CoalMemConstExprASTToken_t::GlobalVariable)){
         /// TODO: change this line!!!
-        return coalStoreResult; 
+        if ( coalStoreResult.valOpCoalLoad.offsetEquation.offset != coalStoreResult.storeSrcPtrExpr.offsetEquation.offset ||
+             coalStoreResult.valOpCoalLoad.offsetEquation.stride != coalStoreResult.storeSrcPtrExpr.offsetEquation.stride ){
+                printInfo(debug, *storeCandInst, "\thas different canonical expression equations [even though using shared memory] of value op and ptr op!\nValue Op: [", 
+            coalStoreResult.valOpCoalLoad.offsetEquation.str(), "]\tPtr Op:[", coalStoreResult.storeSrcPtrExpr.offsetEquation.str(), "]");
+            return nullopt;
+        }
+        return coalStoreResult;
     }
 
     /// TODO: normal case, where equation for value op and ptr op should be the same
@@ -333,6 +347,8 @@ bool computeValueDependenceTree(CalcTreeNode* root){
             ret_flag = true;
         }
         else ret_flag = false;
+
+
         return ret_flag;
     }
     else if (Argument *arg = dyn_cast<Argument>(root->inst)){
@@ -386,9 +402,19 @@ void CalcTreeNode::calcOffsetEquation(CalcTreeNode* root){
         else if (auto callInstExpr = dyn_cast<CallInst>(root->inst)){
             assert(root->childNodesSet.size() == 0 && "call instruction should have no child node!");
             CoalMemPrototyeASTToken_t protoToken;
-            if (callInstExpr->getCalledFunction()->getName() == "llvm.nvvm.read.ptx.sreg.tid.x") protoToken = CoalMemPrototyeASTToken_t::ThreadIndex;
-            else if (callInstExpr->getCalledFunction()->getName() == "llvm.nvvm.read.ptx.sreg.ntid.x") protoToken = CoalMemPrototyeASTToken_t::BlockDim;
-            else if (callInstExpr->getCalledFunction()->getName() == "llvm.nvvm.read.ptx.sreg.ctaid.x") protoToken = CoalMemPrototyeASTToken_t::BlockIndex;
+            /// TODO: assign global register 
+            if (callInstExpr->getCalledFunction()->getName() == "llvm.nvvm.read.ptx.sreg.tid.x") {
+                protoToken = CoalMemPrototyeASTToken_t::ThreadIndex;
+                GlobalTidRegister = callInstExpr;
+            }
+            else if (callInstExpr->getCalledFunction()->getName() == "llvm.nvvm.read.ptx.sreg.ntid.x") {
+                protoToken = CoalMemPrototyeASTToken_t::BlockDim;
+                BlockDimRegister = callInstExpr;
+            }
+            else if (callInstExpr->getCalledFunction()->getName() == "llvm.nvvm.read.ptx.sreg.ctaid.x"){ 
+                protoToken = CoalMemPrototyeASTToken_t::BlockIndex;
+                BlockIndexRegister = callInstExpr;
+            }
             else assert(0 && string("Unsupported called function:\t" + callInstExpr->getCalledFunction()->getName().str()).c_str());
             root->nodeExpression.expr = std::make_shared<PrototypeExprAST>(protoToken);
         }
@@ -626,4 +652,58 @@ optional<CoalPointerOpAnalysisResult> analysePointerOperand(Value* ptrOperand){
 
     return CPAresult;
 
+}
+
+bool CoalStore::is_same(const CoalStore& other) const{
+    bool debug = DEBUG;
+
+    /// TODO: check whether they're in same basicblock
+    if (this->origStoreInst->getParent() != other.origStoreInst->getParent()) {
+        printInfo(debug, *this->origStoreInst, "\tis different from\t", *other.origStoreInst, "\tb/c they're not in same basicblock.");
+        return false;
+    }
+    /// TODO: check Equation: stride, TID type (for both value op and ptr op)
+    if ( (this->storeSrcPtrExpr.offsetEquation.stride != other.storeSrcPtrExpr.offsetEquation.stride) ||
+         (this->storeSrcPtrExpr.offsetEquation.batchedTID != other.storeSrcPtrExpr.offsetEquation.batchedTID) ||
+         (this->valOpCoalLoad.offsetEquation.batchedTID != other.valOpCoalLoad.offsetEquation.batchedTID)
+     ){
+        printInfo(debug, *this->origStoreInst, "\tis different from\t", *other.origStoreInst, "\tb/c Eqation doesn't match");
+        return false;
+     }
+    /// TODO: check store value Op: pointer source
+    if (!(this->valOpCoalLoad.srcPtrExpr == other.valOpCoalLoad.srcPtrExpr)) {
+        printInfo(debug, *this->origStoreInst, "\tis different from\t", *other.origStoreInst, "\tb/c Value op pointer source is different.");
+        return false;
+     }
+
+     /// TODO: check store pointer Op: pointer source
+    if (!(this->storeSrcPtrExpr.srcPtrExpr == other.storeSrcPtrExpr.srcPtrExpr)) {
+        printInfo(debug, *this->origStoreInst, "\tis different from\t", *other.origStoreInst, "\tb/c Source op pointer source is different.");
+        return false;
+    }
+
+    return true;
+}
+
+bool CoalStoreGroup::transform(){
+    bool debug = DEBUG;
+    if (this->group.empty()) return false;
+
+    /// TODO: check in this group whether copied region is contiguous
+    unordered_set<int> offsetRemainderSet;
+    for (int offset = 0; offset < group.front().storeSrcPtrExpr.offsetEquation.stride; offset ++) {
+        printInfo(debug, "Stride: ", group.front().storeSrcPtrExpr.offsetEquation.stride, "\tinserting offset: ", offset);
+        offsetRemainderSet.insert(offset);
+    }
+    for (const auto elemCoalStore : group){
+        int offsetToErase = elemCoalStore.storeSrcPtrExpr.offsetEquation.offset;
+        printInfo(debug, "Removing offset:\t", offsetToErase);
+        offsetRemainderSet.erase(offsetToErase);
+    }
+    if (offsetRemainderSet.size() > 0) {
+        printInfo(debug, "Copied region not contiguous, can't transform.");
+        return false;
+    }
+
+    /// TODO:
 }
