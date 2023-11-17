@@ -705,5 +705,62 @@ bool CoalStoreGroup::transform(){
         return false;
     }
 
-    /// TODO:
+    /// TODO: add address calculation for value and ptr op of CoalStores
+    int id_cnt = 0;
+    for (const auto & elemCoalStore : group){
+        id_cnt ++;
+
+        /// TODO: deal with value Op
+        LoadInst* ValueOpLoadInst = elemCoalStore.valOpCoalLoad.origLoadInst;
+        // insert localTid/globalTid + blockDim
+        Instruction* tidReg = (elemCoalStore.valOpCoalLoad.offsetEquation.batchedTID) ? GlobalTidRegister : LocalTidRegister;
+        BinaryOperator* newLoadAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidReg, BlockDimRegister, "valLoadNewOffsetBase"+std::to_string(id_cnt));
+        newLoadAddressOffsetBase->moveBefore(ValueOpLoadInst);
+        BinaryOperator* newLoadAddressOffset = BinaryOperator::Create(Instruction::Add, newLoadAddressOffsetBase, ConstantInt::get(Type::getInt32Ty(tidReg->getContext()), elemCoalStore.valOpCoalLoad.offsetEquation.offset), "valLoadNewOffsetWithOffset"+std::to_string(id_cnt));
+        newLoadAddressOffset->moveBefore(ValueOpLoadInst);
+        printInfo(debug, "new address offset [", id_cnt, "]:\t", newLoadAddressOffset);
+        GetElementPtrInst* newLoadAddress = nullptr;
+        if (elemCoalStore.valOpCoalLoad.offsetEquation.batchedTID){
+            /// deal shared memory
+            Value* origLoadGEP = ValueOpLoadInst->getPointerOperand();
+            Value* indexList[2] = {ConstantInt::get(Type::getInt64Ty(tidReg->getContext()),0), newLoadAddressOffset};
+            newLoadAddress = GetElementPtrInst::Create(origLoadGEP->getType() , elemCoalStore.valOpCoalLoad.srcPtrExpr.getArg(), ArrayRef<Value*>(indexList, 2), "valLoadNewGEPAddr" + std::to_string(id_cnt));
+            newLoadAddress->moveBefore(ValueOpLoadInst);
+            printInfo(debug, "new GEP for Load shared memory:\t", *newLoadAddress);
+        }
+        else{
+            Value* origLoadGEP = ValueOpLoadInst->getPointerOperand();
+            Value* indexList[1] = {newLoadAddressOffset};
+            newLoadAddress = GetElementPtrInst::Create(origLoadGEP->getType() , elemCoalStore.valOpCoalLoad.srcPtrExpr.getArg(), ArrayRef<Value*>(indexList, 1), "valLoadNewGEPAddr" + std::to_string(id_cnt));
+            newLoadAddress->moveBefore(ValueOpLoadInst);
+            printInfo(debug, "new GEP for Load:\t", *newLoadAddress);
+        }
+
+        /// TODO: deal with pointer Op
+        GetElementPtrInst* ptrOpGEP = dyn_cast<GetElementPtrInst>(elemCoalStore.origStoreInst->getPointerOperand());
+        assert(ptrOpGEP != nullptr && "CoalStore's pointer Op must be GEP!");
+        /// TODO: change the offset of GEP from stride * tid 
+        // insert localTid/globalTid + blockDim
+        Instruction* tidReg = (elemCoalStore.storeSrcPtrExpr.offsetEquation.batchedTID) ? GlobalTidRegister : LocalTidRegister;
+        BinaryOperator* newStorePtrAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidReg, BlockDimRegister, "storePtrGEPNewOffset"+std::to_string(id_cnt));
+        newStorePtrAddressOffsetBase->moveBefore(ptrOpGEP);
+        BinaryOperator* newStorePtrAddressOffset = BinaryOperator::Create(Instruction::Add, tidReg, BlockDimRegister, "storePtrGEPNewOffset"+std::to_string(id_cnt));
+        newStorePtrAddressOffset->moveBefore(ptrOpGEP);
+
+        GetElementPtrInst* newStorePtrAddress = nullptr;
+        if (elemCoalStore.storeSrcPtrExpr.offsetEquation.batchedTID){
+            /// deal shared memory
+            Value* indexList[2] = {ConstantInt::get(Type::getInt64Ty(tidReg->getContext()),0), newStorePtrAddressOffset};
+            newStorePtrAddress = GetElementPtrInst::Create(ptrOpGEP->getType(), elemCoalStore.storeSrcPtrExpr.srcPtrExpr.getArg(), ArrayRef<Value*>(indexList, 2), "ptrOpNewGEPAddr" + std::to_string(id_cnt));
+            newStorePtrAddress->moveBefore(ptrOpGEP);
+            printInfo(debug, "new GEP for Store ptr Op shared memory:\t", *newStorePtrAddress);
+        }
+        else{
+            Value* indexList[1] = {newStorePtrAddressOffset};
+            newStorePtrAddress = GetElementPtrInst::Create(ptrOpGEP->getType() , elemCoalStore.storeSrcPtrExpr.srcPtrExpr.getArg(), ArrayRef<Value*>(indexList, 1), "ptrOpNewGEPAddr" + std::to_string(id_cnt));
+            newStorePtrAddress->moveBefore(ptrOpGEP);
+            printInfo(debug, "new GEP for Store ptr Op:\t", *newStorePtrAddress);
+        }
+    }
+
 }
