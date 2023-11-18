@@ -78,6 +78,18 @@ void coalPass::CoalPass::unit_test_ViableOffsetEquation_construction(){
 
 }
 
+void coalPass::CoalPass::unit_test_learn_GEP_type(Function &F){
+    for (auto &bb : F){
+        for (auto &inst : bb){
+            if (auto gep = dyn_cast<GetElementPtrInst>(&inst)){
+                
+                printInfo(true,"GEP:\t", inst, "\ntype:\t",*gep->getType(), "\n", "ptr op type:\t", *gep->getPointerOperandType(), 
+                "\nsource elem type:\t", *gep->getSourceElementType(),"\nresult elem type:\t", *gep->getResultElementType());
+            }
+        }
+    }
+}
+
 /** Patches **/
 void printAllOp(Instruction* inst){
         sep_center("Operand list");
@@ -129,21 +141,24 @@ void coalPass::CoalPass::insertGlobalTidRegister(Function &F){
             else if (&inst == BlockIndexRegister) blockIdx_cnt = cnt;
         }
     }
-    int min_val = max(max(tid_cnt, blockDim_cnt), max(blockDim_cnt, blockIdx_cnt));
+    // errs() << format("tid: %d\tblockIdx: %d\tblockDim: %d\n", tid_cnt, blockIdx_cnt, blockDim_cnt);
+    int max_val = max(max(tid_cnt, blockDim_cnt), max(blockDim_cnt, blockIdx_cnt));
     Instruction* insertAfter = nullptr;
-    if (min_val == tid_cnt) insertAfter = LocalTidRegister;
-    else if (min_val == blockIdx_cnt) insertAfter = BlockIndexRegister;
-    else if (min_val == blockDim_cnt) insertAfter = BlockDimRegister;
+    if (max_val == tid_cnt) insertAfter = LocalTidRegister;
+    else if (max_val == blockIdx_cnt) insertAfter = BlockIndexRegister;
+    else if (max_val == blockDim_cnt) insertAfter = BlockDimRegister;
     assert(insertAfter != nullptr && "InsertAfter must be one of three possible insts.");
 
+    
     /// TODO: insert globalTid calculation
     // create BlockDim * BlockIndex
-    BinaryOperator *multDimIndex = BinaryOperator::Create(Instruction::Mul, BlockDimRegister, BlockIndexRegister, "multDimIndex");
+    BinaryOperator *multDimIndex = BinaryOperator::Create(Instruction::Mul, BlockDimRegister, BlockIndexRegister, "multDimIndex", insertAfter->getParent());
     multDimIndex->moveAfter(insertAfter);
     /// create threadIdx + multDimIndex
-    BinaryOperator *globalTid = BinaryOperator::Create(Instruction::Add, multDimIndex, LocalTidRegister, "GlobalTID");
+    BinaryOperator *globalTid = BinaryOperator::Create(Instruction::Add, multDimIndex, LocalTidRegister, "GlobalTID", insertAfter->getParent());
     globalTid->moveAfter(multDimIndex);
     GlobalTidRegister = globalTid;
+    // for (auto &inst : *insertAfter->getParent()) printInfo(true, inst);
 }
 
 void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
@@ -206,6 +221,17 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
 
     /// TODO: for each CoalStore group, insert new offset calculation instruction before the original store
     insertGlobalTidRegister(F);
+    for (auto& coalGroup : coalStoreGroupingDeque){
+        bool flag = coalGroup->transform();
+        if (flag){
+            coalGroup->print();
+            printInfo(debug, "Transformed Successfully!");
+        }
+        else{
+            coalGroup->print();
+            printInfo(debug, "Transform Failed!");
+        }
+    }
 
     /// TODO: alter or delete the original store. Substitude with new one
 }
@@ -214,6 +240,7 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
         // if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
         if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+        // unit_test_learn_GEP_type(F); 
         run_coal(F, FAM);
         return PreservedAnalyses::all();
         // unit_test_ViableOffsetEquation_construction();
@@ -553,3 +580,4 @@ void coalPass::CoalPass::findAllStoresPerFunc(Function &F, deque<StoreInst*> &al
         }
     }
 }
+

@@ -9,6 +9,7 @@
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/Analysis/AliasSetTracker.h"
 #include "llvm/Pass.h"
+#include "llvm/IR/Instructions.h"
 
 
 #include  <iostream>

@@ -103,6 +103,8 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
     void unit_test_ViableOffsetEquation_construction();
 
     void unit_test_distributive_transform();
+
+    void unit_test_learn_GEP_type(Function &F);
     #endif
 };
 }
