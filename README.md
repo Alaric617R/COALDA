@@ -1,4 +1,4 @@
-# COALDA - CUDA Memory Coalescing
+# COALDA - Compiler Optimization for CUDA Memory Coalescing
 
 ## Problem Definition
 In CUDA SIMT programming, we frequently want a consecutive region of memory get filled, such as copy data and shared memory loading.
