@@ -61,8 +61,8 @@ void test_rgb_array()
 void test_increase_brightness()
 {
   int width, height;
-  int *host_pixel_src = read_ppm("images/1.ppm", width, height);
-  const dim3 dimGrid = dim3(1, 1, 1);
+  int *host_pixel_src = read_ppm("images/test.ppm", width, height);
+  const dim3 dimGrid = dim3((width * height + TILE_WIDTH - 1) / TILE_WIDTH, 1, 1);
   const dim3 dimBlock = dim3(TILE_WIDTH, 1, 1);
   int num_pixels = width * height;
   int host_pixel_res[3 * num_pixels];
@@ -71,7 +71,7 @@ void test_increase_brightness()
   cudaMalloc(&device_pixel_src, 3 * num_pixels * sizeof(int));
   cudaMalloc(&device_pixel_cpy, 3 * num_pixels * sizeof(int));
   cudaMemcpy(device_pixel_src, host_pixel_src, 3 * num_pixels * sizeof(int), cudaMemcpyHostToDevice);
-  rgb_increase_brightness(device_pixel_cpy, device_pixel_src, width * height, 1.2);
+  rgb_increase_brightness<<<dimGrid, dimBlock>>>(device_pixel_cpy, device_pixel_src, width * height, 1.2);
   cudaDeviceSynchronize();
   cudaMemcpy(host_pixel_res, device_pixel_cpy, 3 * num_pixels * sizeof(int), cudaMemcpyDeviceToHost);
   cudaDeviceSynchronize();
@@ -80,6 +80,7 @@ void test_increase_brightness()
 
 int main()
 {
-  test_rgb_array();
+  // test_rgb_array();
+  test_increase_brightness();
   return 0;
 }
