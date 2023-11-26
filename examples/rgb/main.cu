@@ -1,5 +1,6 @@
 #include "rgb.cu"
 #include "rgb_func.cu"
+#include "ppm_utils.h"
 #include <cstdio>
 
 void test_rgb_array()
