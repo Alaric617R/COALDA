@@ -20,9 +20,9 @@ __global__ void rgb_increase_brightness(int *pixel_dst, int *pixel_src, int size
   /*
     Computation
   */
-  pixel_smem_dst[3 * local_tid + 0] = min(255, (factor + 1.0f) * (pixel_smem_src[3 * local_tid + 0]));
-  pixel_smem_dst[3 * local_tid + 1] = min(255, (factor + 1.0f) * (pixel_smem_src[3 * local_tid + 1]));
-  pixel_smem_dst[3 * local_tid + 2] = min(255, (factor + 1.0f) * (pixel_smem_src[3 * local_tid + 2]));
+  pixel_smem_dst[3 * local_tid + 0] = min(255, (int)(factor + 1.0f) * (pixel_smem_src[3 * local_tid + 0]));
+  pixel_smem_dst[3 * local_tid + 1] = min(255, (int)(factor + 1.0f) * (pixel_smem_src[3 * local_tid + 1]));
+  pixel_smem_dst[3 * local_tid + 2] = min(255, (int)(factor + 1.0f) * (pixel_smem_src[3 * local_tid + 2]));
 
   /*
     Write result to destination
