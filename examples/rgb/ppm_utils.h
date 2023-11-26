@@ -1,24 +1,29 @@
 #include <fstream>
 #include <string>
+#include <iostream>
 #include <sstream>
 
 int *read_ppm(std::string file_name, int &width, int &height)
 {
     int *result;
-    int max_val;
+    int max_val = 0;
     std::string line;
-    std::ifstream ppm_file(file_name);
+    std::ifstream ppm_file(file_name, std::ios::binary);
     if (!ppm_file.is_open())
     {
         printf("Error opening file!\n");
         return nullptr;
     }
     std::getline(ppm_file, line);
-    while (getline(ppm_file, line) && line[0] == '#')
-    {
-        continue;
-    }
-    ppm_file >> width >> height >> max_val;
+    std::cout << line << "\n";
+    getline(ppm_file, line);    // Skip comment
+    std::cout << line << "\n";
+    getline(ppm_file, line);
+    std::istringstream(line) >> width >> height;
+    std::cout << width << height;
+    getline(ppm_file, line);
+    std::istringstream(line) >> max_val;
+    std::cout << width << height;
     result = new int(width * height);
     for (int i = 0; i < width * height; i++)
     {
