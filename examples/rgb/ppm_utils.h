@@ -3,6 +3,14 @@
 #include <iostream>
 #include <sstream>
 
+// 0x20: space, 0x23: hashtag, 0x0a: eol
+// Idea:
+// Skip over the first end of line
+// While pointing to a 0x23, skip over the next end of line
+// Read width and height, ascii, skip over end of line
+// Read max val, ascii. skip over end of line
+// Read by byte, store the byte as int to dynamic memory
+
 int *read_ppm(std::string file_name, int &width, int &height)
 {
     int *result;
