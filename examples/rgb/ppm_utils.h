@@ -60,7 +60,7 @@ int *read_ppm(std::string file_name, int &width, int &height) {
   std::cout << "width: " << width << ", height: " << height
             << ", max_val: " << max_val << "\n";
   std::cout << "Allocating mem...\n";
-  int *result = new int(3 * width * height);
+  int *result = new int[3 * width * height];
   std::cout << "Reading rgb data...\n";
   int cnt = 0;
   while (true) {
@@ -90,18 +90,29 @@ void write_ppm(std::string file_name, int *data, int width, int height) {
     printf("Error opening file for writing!\n");
     return;
   }
-  ppm_file << "P3\n"
-           << width << " " << height << "\n"
-           << "255\n";
+  ppm_file.put('P');
+  ppm_file.put('6');
+  ppm_file.put('\r');
+  ppm_file.put('\n');
+  ppm_file.put('2');
+  ppm_file.put('5');
+  ppm_file.put('6');
+  ppm_file.put(' ');
+  ppm_file.put('2');
+  ppm_file.put('5');
+  ppm_file.put('6');
+  ppm_file.put('\r');
+  ppm_file.put('\n');
+  ppm_file.put('2');
+  ppm_file.put('5');
+  ppm_file.put('5');
+  ppm_file.put('\r');
+  ppm_file.put('\n');
   for (int i = 0; i < height * width; i++) {
-    ppm_file << data[3 * i + 0] << " " << data[3 * i + 1] << " "
-             << data[3 * i + 2] << "\n";
+    ppm_file.put((char)data[3 * i + 0]);
+    ppm_file.put((char)data[3 * i + 1]);
+    ppm_file.put((char)data[3 * i + 2]);
   }
   ppm_file.close();
   return;
-}
-
-int main() {
-  int width, height;
-  int *host_pixel_src = read_ppm("images/1.ppm", width, height);
 }
