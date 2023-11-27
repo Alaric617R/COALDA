@@ -90,12 +90,28 @@ void write_ppm(std::string file_name, int *data, int width, int height) {
     printf("Error opening file for writing!\n");
     return;
   }
-  ppm_file << "P3\n"
-           << width << " " << height << "\n"
-           << "255\n";
+  ppm_file.put('P');
+  ppm_file.put('6');
+  ppm_file.put('\r');
+  ppm_file.put('\n');
+  ppm_file.put('2');
+  ppm_file.put('5');
+  ppm_file.put('6');
+  ppm_file.put(' ');
+  ppm_file.put('2');
+  ppm_file.put('5');
+  ppm_file.put('6');
+  ppm_file.put('\r');
+  ppm_file.put('\n');
+  ppm_file.put('2');
+  ppm_file.put('5');
+  ppm_file.put('5');
+  ppm_file.put('\r');
+  ppm_file.put('\n');
   for (int i = 0; i < height * width; i++) {
-    ppm_file << data[3 * i + 0] << " " << data[3 * i + 1] << " "
-             << data[3 * i + 2] << "\n";
+    ppm_file.put((char)data[3 * i + 0]);
+    ppm_file.put((char)data[3 * i + 1]);
+    ppm_file.put((char)data[3 * i + 2]);
   }
   ppm_file.close();
   return;

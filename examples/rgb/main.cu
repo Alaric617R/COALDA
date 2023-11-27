@@ -73,7 +73,7 @@ void test_increase_brightness() {
   cudaMemcpy(device_pixel_src, host_pixel_src, 3 * num_pixels * sizeof(int),
              cudaMemcpyHostToDevice);
   rgb_increase_brightness<<<dimGrid, dimBlock>>>(
-      device_pixel_cpy, device_pixel_src, width * height, 1.2);
+      device_pixel_cpy, device_pixel_src, width * height, 1.8);
   cudaDeviceSynchronize();
   cudaMemcpy(host_pixel_res, device_pixel_cpy, 3 * num_pixels * sizeof(int),
              cudaMemcpyDeviceToHost);
