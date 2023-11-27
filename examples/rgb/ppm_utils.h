@@ -60,9 +60,10 @@ int *read_ppm(std::string file_name, int &width, int &height) {
   std::cout << "width: " << width << ", height: " << height
             << ", max_val: " << max_val << "\n";
   std::cout << "Allocating mem...\n";
-  int *result = new int[3 * width * height];
+  long long total_rgb = 3 * (long long)width * (long long)height;
+  int *result = new int[total_rgb];
   std::cout << "Reading rgb data...\n";
-  int cnt = 0;
+  long long cnt = 0;
   while (true) {
     ppm_file.get(c);
     if (c == 0x0d) {
@@ -75,9 +76,9 @@ int *read_ppm(std::string file_name, int &width, int &height) {
       }
     }
     result[cnt] = (int)((unsigned char)c);
-    std::cout << "cnt = " << cnt << ", " << result[cnt] << '\n';
+    // std::cout << "cnt = " << cnt << ", " << result[cnt] << '\n';
     cnt++;
-    if (cnt == 3 * width * height) break;
+    if (cnt == total_rgb) break;
   }
   ppm_file.close();
   std::cout << "Read ppm succeeded\n";
@@ -85,6 +86,7 @@ int *read_ppm(std::string file_name, int &width, int &height) {
 }
 
 void write_ppm(std::string file_name, int *data, int width, int height) {
+  std::cout << "Writing result...\n";
   std::ofstream ppm_file(file_name);
   if (!ppm_file.is_open()) {
     printf("Error opening file for writing!\n");

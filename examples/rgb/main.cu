@@ -61,8 +61,9 @@ void test_rgb_array() {
 void test_increase_brightness() {
   int width, height;
   int *host_pixel_src = read_ppm("images/1.ppm", width, height);
-  const dim3 dimGrid =
-      dim3((width * height + TILE_WIDTH - 1) / TILE_WIDTH, 1, 1);
+  long long total_pixel = width * height;
+  int num_block = (total_pixel + TILE_WIDTH - 1) / TILE_WIDTH;
+  const dim3 dimGrid = dim3(num_block, 1, 1);
   const dim3 dimBlock = dim3(TILE_WIDTH, 1, 1);
   int num_pixels = width * height;
   int host_pixel_res[3 * num_pixels];
