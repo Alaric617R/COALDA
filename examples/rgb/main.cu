@@ -80,6 +80,9 @@ void test_increase_brightness() {
              cudaMemcpyDeviceToHost);
   cudaDeviceSynchronize();
   write_ppm("images/1_modified.ppm", host_pixel_res, width, height);
+  delete[] host_pixel_src;
+  cudaFree(device_pixel_src);
+  cudaFree(device_pixel_cpy);
 }
 
 int main() {
