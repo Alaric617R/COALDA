@@ -13,7 +13,6 @@
 
 int *read_ppm(std::string file_name, int &width, int &height) {
   char c;
-  int *result;
   width = 0;
   height = 0;
   int max_val = 0;
@@ -61,9 +60,10 @@ int *read_ppm(std::string file_name, int &width, int &height) {
   std::cout << "width: " << width << ", height: " << height
             << ", max_val: " << max_val << "\n";
   std::cout << "Allocating mem...\n";
-  result = new int(width * height);
+  int *result = new int(3 * width * height);
   std::cout << "Reading rgb data...\n";
-  for (int i = 0; i < 4 * width * height; i++) {
+  int cnt = 0;
+  while (true) {
     ppm_file.get(c);
     if (c == 0x0d) {
       char c_next;
@@ -74,11 +74,10 @@ int *read_ppm(std::string file_name, int &width, int &height) {
         ppm_file.unget();
       }
     }
-    result[i] = (int)((unsigned char)c);
-    std::cout << result[i] << '\n';
-    if (i == 3 * width * height - 1) break;
-    // std::cout << result[3 * i + 0] << ' ' << result[3 * i + 1] << ' '
-    //           << result[3 * i + 2] << '\n';
+    result[cnt] = (int)((unsigned char)c);
+    std::cout << "cnt = " << cnt << ", " << result[cnt] << '\n';
+    cnt++;
+    if (cnt == 3 * width * height) break;
   }
   ppm_file.close();
   std::cout << "Read ppm succeeded\n";
@@ -100,4 +99,9 @@ void write_ppm(std::string file_name, int *data, int width, int height) {
   }
   ppm_file.close();
   return;
+}
+
+int main() {
+  int width, height;
+  int *host_pixel_src = read_ppm("images/1.ppm", width, height);
 }
