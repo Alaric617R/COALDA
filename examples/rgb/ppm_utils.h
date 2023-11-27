@@ -13,33 +13,62 @@
 
 int *read_ppm(std::string file_name, int &width, int &height)
 {
+    char c;
     int *result;
+    width = 0;
+    height = 0;
     int max_val = 0;
-    std::string line;
     std::ifstream ppm_file(file_name, std::ios::binary);
     if (!ppm_file.is_open())
     {
         printf("Error opening file!\n");
         return nullptr;
     }
-    std::getline(ppm_file, line);
-    std::cout << line << "\n";
-    getline(ppm_file, line);    // Skip comment
-    std::cout << line << "\n";
-    getline(ppm_file, line);
-    std::istringstream(line) >> width >> height;
-    std::cout << width << height;
-    getline(ppm_file, line);
-    std::istringstream(line) >> max_val;
-    std::cout << width << height;
+    std::cout << "Skipping first line...\n";
+    while (ppm_file.get(c)) {
+        if (c == 0x0a) break;
+    }
+    std::cout << "Skipping comments...\n";
+    while (ppm_file.get(c)) {
+        if (c == 0x23) {
+            while (ppm_file.get(c)) {
+                if (c == 0x0a) break;
+            }
+        } else {
+            ppm_file.unget();
+            break;
+        }
+    }
+    std::cout << "Reading width...\n";
+    while (ppm_file.get(c)) {
+        if (c == 0x20 || c == 0x0a) break;
+        std::cout << c << '\n';
+        width = width * 10 + (c - '0');
+    }
+    std::cout << "Reading height...\n";
+    while (ppm_file.get(c)) {
+        if (c == 0x20 || c == 0x0a) break;
+        std::cout << c << '\n';
+        height = height * 10 + (c - '0');
+    }
+    std::cout << "Reading max val...\n";
+    while (ppm_file.get(c)) {
+        if (c == 0x20 || c == 0x0a) break;
+        std::cout << c << '\n';
+        max_val = max_val * 10 + (c - '0');
+    }
+    std::cout << "Allocating mem...\n";
     result = new int(width * height);
+    std::cout << "Reading rgb data...\n";
     for (int i = 0; i < width * height; i++)
     {
-        int r, g, b;
-        ppm_file >> r >> g >> b;
-        result[3 * i + 0] = r;
-        result[3 * i + 1] = g;
-        result[3 * i + 2] = b;
+        char r, g, b;
+        ppm_file.get(r);
+        ppm_file.get(g);
+        ppm_file.get(b);
+        result[3 * i + 0] = r - '0';
+        result[3 * i + 1] = g - '0';
+        result[3 * i + 2] = b - '0';
     }
     ppm_file.close();
     return result;
