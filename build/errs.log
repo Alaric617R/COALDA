@@ -1,0 +1,71 @@
+In file included from /usr/include/c++/13.2.1/variant:44,
+                 from /usr/include/llvm/ADT/DenseMapInfo.h:23,
+                 from /usr/include/llvm/ADT/DenseMap.h:17,
+                 from /usr/include/llvm/IR/PassManager.h:40,
+                 from /usr/include/llvm/Analysis/BlockFrequencyInfo.h:16,
+                 from /home/arch/Desktop/EECS583_Project/coalpass/coalpass.h:3,
+                 from /home/arch/Desktop/EECS583_Project/coalpass/coalpass.cpp:1:
+/usr/include/c++/13.2.1/bits/stl_construct.h: In instantiation of ‘void std::_Construct(_Tp*, _Args&& ...) [with _Tp = ConstIntExprAST; _Args = {ConstIntExprAST*}]’:
+/usr/include/c++/13.2.1/bits/alloc_traits.h:660:19:   required from ‘static void std::allocator_traits<std::allocator<void> >::construct(allocator_type&, _Up*, _Args&& ...) [with _Up = ConstIntExprAST; _Args = {ConstIntExprAST*}; allocator_type = std::allocator<void>]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:604:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {ConstIntExprAST*}; _Tp = ConstIntExprAST; _Alloc = std::allocator<void>; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:971:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = ConstIntExprAST; _Alloc = std::allocator<void>; _Args = {ConstIntExprAST*}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:1712:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<void>; _Args = {ConstIntExprAST*}; _Tp = ConstIntExprAST; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr.h:464:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<void>; _Args = {ConstIntExprAST*}; _Tp = ConstIntExprAST]’
+/usr/include/c++/13.2.1/bits/shared_ptr.h:1009:14:   required from ‘std::shared_ptr<typename std::enable_if<(! std::is_array< <template-parameter-1-1> >::value), _Tp>::type> std::make_shared(_Args&& ...) [with _Tp = ConstIntExprAST; _Args = {ConstIntExprAST*}; typename enable_if<(! is_array< <template-parameter-1-1> >::value), _Tp>::type = ConstIntExprAST]’
+/home/arch/Desktop/EECS583_Project/coalpass/coalpass.cpp:61:129:   required from here
+/usr/include/c++/13.2.1/bits/stl_construct.h:119:7: error: invalid conversion from ‘ConstIntExprAST*’ to ‘int’ [-fpermissive]
+  119 |       ::new((void*)__p) _Tp(std::forward<_Args>(__args)...);
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       |
+      |       ConstIntExprAST*
+In file included from /home/arch/Desktop/EECS583_Project/coalpass/coalpass.h:22:
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:149:25: note:   initializing argument 1 of ‘ConstIntExprAST::ConstIntExprAST(int)’
+  149 |     ConstIntExprAST(int _value): value{_value}{}
+      |                     ~~~~^~~~~~
+/usr/include/c++/13.2.1/bits/stl_construct.h: In instantiation of ‘void std::_Construct(_Tp*, _Args&& ...) [with _Tp = PrototypeExprAST; _Args = {PrototypeExprAST*}]’:
+/usr/include/c++/13.2.1/bits/alloc_traits.h:660:19:   required from ‘static void std::allocator_traits<std::allocator<void> >::construct(allocator_type&, _Up*, _Args&& ...) [with _Up = PrototypeExprAST; _Args = {PrototypeExprAST*}; allocator_type = std::allocator<void>]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:604:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {PrototypeExprAST*}; _Tp = PrototypeExprAST; _Alloc = std::allocator<void>; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:971:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = PrototypeExprAST; _Alloc = std::allocator<void>; _Args = {PrototypeExprAST*}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:1712:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<void>; _Args = {PrototypeExprAST*}; _Tp = PrototypeExprAST; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr.h:464:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<void>; _Args = {PrototypeExprAST*}; _Tp = PrototypeExprAST]’
+/usr/include/c++/13.2.1/bits/shared_ptr.h:1009:14:   required from ‘std::shared_ptr<typename std::enable_if<(! std::is_array< <template-parameter-1-1> >::value), _Tp>::type> std::make_shared(_Args&& ...) [with _Tp = PrototypeExprAST; _Args = {PrototypeExprAST*}; typename enable_if<(! is_array< <template-parameter-1-1> >::value), _Tp>::type = PrototypeExprAST]’
+/home/arch/Desktop/EECS583_Project/coalpass/coalpass.cpp:61:189:   required from here
+/usr/include/c++/13.2.1/bits/stl_construct.h:119:7: error: no matching function for call to ‘PrototypeExprAST::PrototypeExprAST(PrototypeExprAST*)’
+  119 |       ::new((void*)__p) _Tp(std::forward<_Args>(__args)...);
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:106:5: note: candidate: ‘PrototypeExprAST::PrototypeExprAST(CoalMemPrototyeASTToken_t)’
+  106 |     PrototypeExprAST(CoalMemPrototyeASTToken_t _token): token{_token}{}
+      |     ^~~~~~~~~~~~~~~~
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:106:48: note:   no known conversion for argument 1 from ‘PrototypeExprAST*’ to ‘CoalMemPrototyeASTToken_t’
+  106 |     PrototypeExprAST(CoalMemPrototyeASTToken_t _token): token{_token}{}
+      |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:102:7: note: candidate: ‘PrototypeExprAST::PrototypeExprAST(const PrototypeExprAST&)’
+  102 | class PrototypeExprAST : public ConstExprAST {
+      |       ^~~~~~~~~~~~~~~~
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:102:7: note:   no known conversion for argument 1 from ‘PrototypeExprAST*’ to ‘const PrototypeExprAST&’
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:102:7: note: candidate: ‘PrototypeExprAST::PrototypeExprAST(PrototypeExprAST&&)’
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:102:7: note:   no known conversion for argument 1 from ‘PrototypeExprAST*’ to ‘PrototypeExprAST&&’
+/usr/include/c++/13.2.1/bits/stl_construct.h: In instantiation of ‘void std::_Construct(_Tp*, _Args&& ...) [with _Tp = BinaryExprAST; _Args = {BinaryExprAST*}]’:
+/usr/include/c++/13.2.1/bits/alloc_traits.h:660:19:   required from ‘static void std::allocator_traits<std::allocator<void> >::construct(allocator_type&, _Up*, _Args&& ...) [with _Up = BinaryExprAST; _Args = {BinaryExprAST*}; allocator_type = std::allocator<void>]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:604:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {BinaryExprAST*}; _Tp = BinaryExprAST; _Alloc = std::allocator<void>; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:971:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = BinaryExprAST; _Alloc = std::allocator<void>; _Args = {BinaryExprAST*}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr_base.h:1712:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<void>; _Args = {BinaryExprAST*}; _Tp = BinaryExprAST; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/13.2.1/bits/shared_ptr.h:464:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<void>; _Args = {BinaryExprAST*}; _Tp = BinaryExprAST]’
+/usr/include/c++/13.2.1/bits/shared_ptr.h:1009:14:   required from ‘std::shared_ptr<typename std::enable_if<(! std::is_array< <template-parameter-1-1> >::value), _Tp>::type> std::make_shared(_Args&& ...) [with _Tp = BinaryExprAST; _Args = {BinaryExprAST*}; typename enable_if<(! is_array< <template-parameter-1-1> >::value), _Tp>::type = BinaryExprAST]’
+/home/arch/Desktop/EECS583_Project/coalpass/coalpass.cpp:61:46:   required from here
+/usr/include/c++/13.2.1/bits/stl_construct.h:119:7: error: no matching function for call to ‘BinaryExprAST::BinaryExprAST(BinaryExprAST*)’
+  119 |       ::new((void*)__p) _Tp(std::forward<_Args>(__args)...);
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:72:5: note: candidate: ‘BinaryExprAST::BinaryExprAST(CoalMemBinaryASTToken_t, std::shared_ptr<CoalMemExprAST>, std::shared_ptr<CoalMemExprAST>)’
+   72 |     BinaryExprAST(CoalMemBinaryASTToken_t _op, shared_ptr<CoalMemExprAST> _lhs, shared_ptr<CoalMemExprAST> _rhs): op{_op}, lhs{_lhs}, rhs{_rhs}{
+      |     ^~~~~~~~~~~~~
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:72:5: note:   candidate expects 3 arguments, 1 provided
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:62:7: note: candidate: ‘BinaryExprAST::BinaryExprAST(const BinaryExprAST&)’
+   62 | class BinaryExprAST : public CoalMemExprAST{
+      |       ^~~~~~~~~~~~~
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:62:7: note:   no known conversion for argument 1 from ‘BinaryExprAST*’ to ‘const BinaryExprAST&’
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:62:7: note: candidate: ‘BinaryExprAST::BinaryExprAST(BinaryExprAST&&)’
+/home/arch/Desktop/EECS583_Project/coalpass/coalMemOp.h:62:7: note:   no known conversion for argument 1 from ‘BinaryExprAST*’ to ‘BinaryExprAST&&’
+make[2]: *** [coalpass/CMakeFiles/CoalPass.dir/build.make:76: coalpass/CMakeFiles/CoalPass.dir/coalpass.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:208: coalpass/CMakeFiles/CoalPass.dir/all] Error 2
+make: *** [Makefile:136: all] Error 2
