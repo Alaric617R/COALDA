@@ -74,7 +74,7 @@ int *read_ppm(std::string file_name, int &width, int &height) {
         ppm_file.unget();
       }
     }
-    result[i] = static_cast<unsigned int>(c);
+    result[i] = (int)((unsigned char)c);
     std::cout << result[i] << '\n';
     if (i == 3 * width * height - 1) break;
     // std::cout << result[3 * i + 0] << ' ' << result[3 * i + 1] << ' '
