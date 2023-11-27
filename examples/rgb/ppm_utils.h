@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 
-// 0x20: space, 0x23: hashtag, 0x0a: eol
+// 0x20: space, 0x23: hashtag, 0x0a: eol, 0x0d: return
 // Idea:
 // Skip over the first end of line
 // While pointing to a 0x23, skip over the next end of line
@@ -39,35 +39,49 @@ int *read_ppm(std::string file_name, int &width, int &height) {
   }
   std::cout << "Reading width...\n";
   while (ppm_file.get(c)) {
+    if (c == 0x0d) continue;
     if (c == 0x20 || c == 0x0a) break;
     std::cout << c << '\n';
     width = width * 10 + (c - '0');
   }
   std::cout << "Reading height...\n";
   while (ppm_file.get(c)) {
+    if (c == 0x0d) continue;
     if (c == 0x20 || c == 0x0a) break;
     std::cout << c << '\n';
     height = height * 10 + (c - '0');
   }
   std::cout << "Reading max val...\n";
   while (ppm_file.get(c)) {
+    if (c == 0x0d) continue;
     if (c == 0x20 || c == 0x0a) break;
     std::cout << c << '\n';
     max_val = max_val * 10 + (c - '0');
   }
+  std::cout << "width: " << width << ", height: " << height
+            << ", max_val: " << max_val << "\n";
   std::cout << "Allocating mem...\n";
   result = new int(width * height);
   std::cout << "Reading rgb data...\n";
-  for (int i = 0; i < width * height; i++) {
-    char r, g, b;
-    ppm_file.get(r);
-    ppm_file.get(g);
-    ppm_file.get(b);
-    result[3 * i + 0] = r - '0';
-    result[3 * i + 1] = g - '0';
-    result[3 * i + 2] = b - '0';
+  for (int i = 0; i < 4 * width * height; i++) {
+    ppm_file.get(c);
+    if (c == 0x0d) {
+      char c_next;
+      ppm_file.get(c_next);
+      if (c_next == 0x0a) {
+        continue;
+      } else {
+        ppm_file.unget();
+      }
+    }
+    result[i] = static_cast<unsigned int>(c);
+    std::cout << result[i] << '\n';
+    if (i == 3 * width * height - 1) break;
+    // std::cout << result[3 * i + 0] << ' ' << result[3 * i + 1] << ' '
+    //           << result[3 * i + 2] << '\n';
   }
   ppm_file.close();
+  std::cout << "Read ppm succeeded\n";
   return result;
 }
 
