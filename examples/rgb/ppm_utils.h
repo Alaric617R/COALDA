@@ -60,7 +60,7 @@ int *read_ppm(std::string file_name, int &width, int &height) {
   std::cout << "width: " << width << ", height: " << height
             << ", max_val: " << max_val << "\n";
   std::cout << "Allocating mem...\n";
-  int *result = new int(3 * width * height);
+  int *result = new int[3 * width * height];
   std::cout << "Reading rgb data...\n";
   int cnt = 0;
   while (true) {
@@ -99,9 +99,4 @@ void write_ppm(std::string file_name, int *data, int width, int height) {
   }
   ppm_file.close();
   return;
-}
-
-int main() {
-  int width, height;
-  int *host_pixel_src = read_ppm("images/1.ppm", width, height);
 }
