@@ -42,7 +42,7 @@ __global__ void rgb_increase_brightness_coalesced(int *pixel_dst,
   /*
     Declaration
   */
-  int global_tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int global_tid = 3 * blockIdx.x * blockDim.x + threadIdx.x;
   int local_tid = threadIdx.x;
   __shared__ int pixel_smem_src[3 * TILE_WIDTH];
   __shared__ int pixel_smem_dst[3 * TILE_WIDTH];
