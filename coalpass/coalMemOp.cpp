@@ -780,7 +780,7 @@ bool CoalStoreGroup::transform(){
         assert(GlobalTidScaledOffset == globalTidScaledOffsetForStore && "load and store should have same stride!");
         /// TODO: change the offset of GEP from stride * tid + offset to localTid/globalTid + blockDim + offset
         Instruction* tidRegPtrOp = (elemCoalStore.storeSrcPtrExpr.offsetEquation.batchedTID) ? GlobalTidScaledOffset : LocalTidRegister;
-        BinaryOperator* newStorePtrAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidRegPtrOp, BlockDimRegister, "storePtrGEPNewOffset"+std::to_string(id_cnt), ptrOpGEP->getParent());
+        BinaryOperator* newStorePtrAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidRegPtrOp, BlockDimRegister, "storePtrGEPNewOffsetBase"+std::to_string(id_cnt), ptrOpGEP->getParent());
         newStorePtrAddressOffsetBase->moveBefore(ptrOpGEP);
         BinaryOperator* newStorePtrAddressOffset = BinaryOperator::Create(Instruction::Add, newStorePtrAddressOffsetBase, ConstantInt::get(Type::getInt32Ty(tidRegPtrOp->getContext()), 
                                                                           elemCoalStore.storeSrcPtrExpr.offsetEquation.offset), "storePtrGEPNewOffset"+std::to_string(id_cnt), ptrOpGEP->getParent());

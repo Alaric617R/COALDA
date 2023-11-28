@@ -237,6 +237,14 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
     }
 
     /// TODO: alter or delete the original store. Substitude with new one
+    if (debug){
+        sep_center("Modified LLVM IR");
+        for (auto &bb : F){
+            for (auto &inst : bb){
+                errs() << inst << '\n';
+            }
+        }
+    }
 }
 
 
