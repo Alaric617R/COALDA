@@ -4,7 +4,7 @@
 #include "rgb.cu"
 #include "rgb_func.cu"
 
-#define TILE_WIDTH 32
+#define TILE_WIDTH 1024
 
 void test_rgb_array() {
   const dim3 dimGrid = dim3(1, 1, 1);

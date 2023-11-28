@@ -1,4 +1,4 @@
-#define TILE_WIDTH 32
+#define TILE_WIDTH 1024
 
 // Commonly used, intuitive but uncoalesced
 __global__ void rgb_copy_array_interleaved(int *pixel_dst, int *pixel_src)
