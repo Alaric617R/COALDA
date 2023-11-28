@@ -14,8 +14,11 @@ __global__ void rgb_increase_brightness(int *pixel_dst, int *pixel_src,
     region of memory
   */
   pixel_smem_src[3 * local_tid + 0] = pixel_src[3 * global_tid + 0];  // r
+  __syncthreads();
   pixel_smem_src[3 * local_tid + 1] = pixel_src[3 * global_tid + 1];  // g
+  __syncthreads();
   pixel_smem_src[3 * local_tid + 2] = pixel_src[3 * global_tid + 2];  // b
+  __syncthreads();
 
   /*
     Computation
@@ -26,13 +29,16 @@ __global__ void rgb_increase_brightness(int *pixel_dst, int *pixel_src,
       min(255, (int)(factor * (pixel_smem_src[3 * local_tid + 1])));
   pixel_smem_dst[3 * local_tid + 2] =
       min(255, (int)(factor * (pixel_smem_src[3 * local_tid + 2])));
+  __syncthreads();
 
   /*
     Write result to destination
     TODO: uncoalesced
   */
   pixel_dst[3 * global_tid + 0] = pixel_smem_dst[3 * local_tid + 0];  // r
+  __syncthreads();
   pixel_dst[3 * global_tid + 1] = pixel_smem_dst[3 * local_tid + 1];  // g
+  __syncthreads();
   pixel_dst[3 * global_tid + 2] = pixel_smem_dst[3 * local_tid + 2];  // b
 };
 
@@ -54,10 +60,13 @@ __global__ void rgb_increase_brightness_coalesced(int *pixel_dst,
   */
   pixel_smem_src[local_tid + 0 * blockDim.x] =
       pixel_src[global_tid + 0 * blockDim.x];  // r
+  __syncthreads();
   pixel_smem_src[local_tid + 1 * blockDim.x] =
       pixel_src[global_tid + 1 * blockDim.x];  // g
+  __syncthreads();
   pixel_smem_src[local_tid + 2 * blockDim.x] =
       pixel_src[global_tid + 2 * blockDim.x];  // b
+  __syncthreads();
 
   /*
     Computation
@@ -68,6 +77,7 @@ __global__ void rgb_increase_brightness_coalesced(int *pixel_dst,
       min(255, (int)(factor * (pixel_smem_src[3 * local_tid + 1])));
   pixel_smem_dst[3 * local_tid + 2] =
       min(255, (int)(factor * (pixel_smem_src[3 * local_tid + 2])));
+  __syncthreads();
 
   /*
     Write result to destination
@@ -75,8 +85,10 @@ __global__ void rgb_increase_brightness_coalesced(int *pixel_dst,
   */
   pixel_dst[global_tid + 0 * blockDim.x] =
       pixel_smem_dst[local_tid + 0 * blockDim.x];  // r
+  __syncthreads();
   pixel_dst[global_tid + 1 * blockDim.x] =
       pixel_smem_dst[local_tid + 1 * blockDim.x];  // g
+  __syncthreads();
   pixel_dst[global_tid + 2 * blockDim.x] =
       pixel_smem_dst[local_tid + 2 * blockDim.x];  // b
 };
