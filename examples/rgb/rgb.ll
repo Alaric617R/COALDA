@@ -131,9 +131,10 @@ attributes #0 = { noinline norecurse sspstrong uwtable "frame-pointer"="all" "mi
 attributes #1 = { nocallback nofree nounwind willreturn memory(argmem: readwrite) }
 
 !llvm.module.flags = !{!0, !1, !2, !3, !4, !5}
+!llvm.linker.options = !{}
 !llvm.ident = !{!6}
 
-!0 = !{i32 2, !"SDK Version", [2 x i32] [i32 11, i32 8]}
+!0 = !{i32 2, !"SDK Version", [2 x i32] [i32 11, i32 7]}
 !1 = !{i32 1, !"wchar_size", i32 4}
 !2 = !{i32 8, !"PIC Level", i32 2}
 !3 = !{i32 7, !"PIE Level", i32 2}
