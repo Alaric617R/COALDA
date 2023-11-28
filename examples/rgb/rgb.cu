@@ -60,7 +60,10 @@ __global__ void rgb_smem_array_interleaved(int *pixel_dst, int *pixel_src, int s
     Write result to destination
     TODO: uncoalesced
   */
+  __syncthreads();
   pixel_dst[3 * global_tid + 0] = pixel_smem_dst[3 * local_tid + 0]; // r
+  __syncthreads();
   pixel_dst[3 * global_tid + 1] = pixel_smem_dst[3 * local_tid + 1]; // g
+  __syncthreads();
   pixel_dst[3 * global_tid + 2] = pixel_smem_dst[3 * local_tid + 2]; // b
 };
