@@ -435,9 +435,9 @@ void CalcTreeNode::calcOffsetEquation(CalcTreeNode* root){
 
 void BinaryExprAST::exchangeAddMultNodes(BinaryExprAST* multParent, BinaryExprAST* addChild, bool isLeftChild){
     assert( (isLeftChild && multParent->lhs.get() == addChild)  || ( !isLeftChild && multParent->rhs.get() == addChild));
-    shared_ptr<CoalMemExprAST> addNodeLHS = addChild->lhs;
-    shared_ptr<CoalMemExprAST> addNodeRHS = addChild->rhs;
-    shared_ptr<CoalMemExprAST> multChildToKeep = (isLeftChild) ? multParent->rhs : multParent->lhs;
+    shared_ptr<CoalMemExprASTBase> addNodeLHS = addChild->lhs;
+    shared_ptr<CoalMemExprASTBase> addNodeRHS = addChild->rhs;
+    shared_ptr<CoalMemExprASTBase> multChildToKeep = (isLeftChild) ? multParent->rhs : multParent->lhs;
     // clone a new mult, with add RHS
     BinaryExprAST* rightClonedMultExpr = new BinaryExprAST(CoalMemBinaryASTToken_t::Mult, addNodeRHS, multChildToKeep);
     // modify current mult, keep the other child, change child that points to add
@@ -512,7 +512,7 @@ BasicBlock::iterator         forwardPos_helper(Instruction* inst){
 }
 
 
-optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprAST>> exprsDeque){
+optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprASTBase>> exprsDeque){
     bool debug = !DEBUG;
     ViableOffsetEquation offsetEquation;
     bool threadIdParsed = false;
@@ -528,7 +528,7 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
     }
     for (auto expr : exprsDeque){
         
-        if (BinaryExprAST* binaryOp = dynamic_cast<BinaryExprAST*>(expr.get())){
+        if (BinaryExprAST* binaryOp = dyn_cast<BinaryExprAST>(expr.get())){
             assert( binaryOp->type() == CoalMemBinaryASTToken_t::Mult && "In parsing for ViableOffsetEquation, no ADD is expected!");
             auto unitExprs = BinaryExprAST::expandNodes(std::make_shared<BinaryExprAST>(*binaryOp));
             assert(unitExprs.has_value() && "This multiply is not fully distributed upon!");
@@ -540,12 +540,12 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
             std::pair<int,int> isGloabalTIDBlock = std::make_pair(0, 0);
             for (auto sub_expr : Exprs){
                 printInfo(debug, "inspecting:\t", sub_expr->str());
-                if (auto protoOp = dynamic_cast<PrototypeExprAST*>(sub_expr.get())){
+                if (auto protoOp = dyn_cast<PrototypeExprAST>(sub_expr.get())){
                     if (protoOp->get_token() == CoalMemPrototyeASTToken_t::ThreadIndex) isThreadIdBlock = true;
                     else if (protoOp->get_token() == CoalMemPrototyeASTToken_t::BlockDim) isGloabalTIDBlock.first += 1;
                     else if (protoOp->get_token() == CoalMemPrototyeASTToken_t::BlockIndex) isGloabalTIDBlock.second += 1;
                 }
-                else if (auto constOp = dynamic_cast<ConstIntExprAST*>(sub_expr.get())) { printInfo(debug, "Got constant inst: ", constOp->get_value());constMultResult *= constOp->get_value();}
+                else if (auto constOp = dyn_cast<ConstIntExprAST>(sub_expr.get())) { printInfo(debug, "Got constant inst: ", constOp->get_value());constMultResult *= constOp->get_value();}
                 else assert(false && "leaf expression cannot be any other type!");
             }
             if ( !threadIdParsed && isThreadIdBlock && isGloabalTIDBlock.first == 0 && isGloabalTIDBlock.second == 0){
@@ -562,7 +562,7 @@ optional<ViableOffsetEquation> ViableOffsetEquation::constructFromOffsetExprOrNo
             }
             else return nullopt;
         }
-        else if (ConstIntExprAST* constOp = dynamic_cast<ConstIntExprAST*>(expr.get())){
+        else if (ConstIntExprAST* constOp = dyn_cast<ConstIntExprAST>(expr.get())){
             curOffset += constOp->get_value();
         }
         else {
@@ -615,13 +615,13 @@ optional<CoalPointerOpAnalysisResult> analysePointerOperand(Value* ptrOperand){
     if (debug) {printInfo(debug, "GEP offset");offsetCalcRoot->prettyPrint();}
 
     /// TODO: apply distribution rule and extract sub multiplication field of AST
-    if (auto binaryOp = dynamic_cast<BinaryExprAST*>(offsetCalcRoot->nodeExpression.expr.get())){
+    if (auto binaryOp = dyn_cast<BinaryExprAST>(offsetCalcRoot->nodeExpression.expr.get())){
 
         /// TODO: apply distributive rule and make all multiply children of any add
         shared_ptr<BinaryExprAST> distributiveForm = BinaryExprAST::distributiveTransform(make_shared<BinaryExprAST>(*binaryOp));
         
         /// TODO: construct @param ViableOffsetEquation by traversing distributive form
-        deque<shared_ptr<CoalMemExprAST>> subExprsDeque = BinaryExprAST::extractSubMultExprsFromDistForm(distributiveForm);
+        deque<shared_ptr<CoalMemExprASTBase>> subExprsDeque = BinaryExprAST::extractSubMultExprsFromDistForm(distributiveForm);
         auto potentialEqCand = ViableOffsetEquation::constructFromOffsetExprOrNo(subExprsDeque);
 
         /// TODO: check if the above contains value. If not, master load/store cannot be coalesced
@@ -645,7 +645,7 @@ optional<CoalPointerOpAnalysisResult> analysePointerOperand(Value* ptrOperand){
     CalcTreeNode::calcPtrSrc(ptrOpCalcRoot);
     printInfo(debug, "Source GEP:\t", *ptrAddrGEPInst);
     if (debug) ptrOpCalcRoot->prettyPrint();
-    if (auto src = dynamic_cast<ConstArgExprAST*>(ptrOpCalcRoot->nodeExpression.expr.get())){
+    if (auto src = dyn_cast<ConstArgExprAST>(ptrOpCalcRoot->nodeExpression.expr.get())){
         CPAresult.srcPtrExpr = *src;
     }
     else return nullopt;
