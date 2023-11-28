@@ -15,7 +15,8 @@ __global__ void rgb_copy_array_interleaved(int *pixel_dst, int *pixel_src)
 // Desired, coalesced
 __global__ void rgb_copy_array_coalesced(int *pixel_dst, int *pixel_src)
 {
-  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  // IMPORTANT: BUGGY CODE FIX
+  int tid = 3 * blockIdx.x * blockDim.x + threadIdx.x;
   pixel_dst[tid + 0 * blockDim.x] = pixel_src[tid + 0 * blockDim.x]; // r/g/b stride 1
   pixel_dst[tid + 1 * blockDim.x] = pixel_src[tid + 1 * blockDim.x]; // r/g/b stride 2
   pixel_dst[tid + 2 * blockDim.x] = pixel_src[tid + 2 * blockDim.x]; // r/g/b stride 3
