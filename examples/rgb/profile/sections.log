@@ -1,0 +1,25 @@
+-------------------------------------------- ----------------------------------------------------------------- ------- --------------------------------------------------
+Identifier                                   Display Name                                                      Enabled Filename                                          
+-------------------------------------------- ----------------------------------------------------------------- ------- --------------------------------------------------
+C2CLink                                      C2CLink                                                           no      ...sight Compute/2023.3.0/Sections/C2CLink.section
+ComputeWorkloadAnalysis                      Compute Workload Analysis                                         no      ...23.3.0/Sections/ComputeWorkloadAnalysis.section
+InstructionStats                             Instruction Statistics                                            no      ...2023.3.0/Sections/InstructionStatistics.section
+LaunchStats                                  Launch Statistics                                                 yes     ...pute/2023.3.0/Sections/LaunchStatistics.section
+MemoryWorkloadAnalysis                       Memory Workload Analysis                                          no      ...023.3.0/Sections/MemoryWorkloadAnalysis.section
+MemoryWorkloadAnalysis_Chart                 Memory Workload Analysis Chart                                    no      ...0/Sections/MemoryWorkloadAnalysis_Chart.section
+MemoryWorkloadAnalysis_Tables                Memory Workload Analysis Tables                                   no      .../Sections/MemoryWorkloadAnalysis_Tables.section
+NumaAffinity                                 NUMA Affinity                                                     no      ... Compute/2023.3.0/Sections/NumaAffinity.section
+Nvlink                                       NVLink                                                            no      ...Nsight Compute/2023.3.0/Sections/Nvlink.section
+Nvlink_Tables                                NVLink Tables                                                     no      ...Compute/2023.3.0/Sections/Nvlink_Tables.section
+Nvlink_Topology                              NVLink Topology                                                   no      ...mpute/2023.3.0/Sections/Nvlink_Topology.section
+Occupancy                                    Occupancy                                                         yes     ...ght Compute/2023.3.0/Sections/Occupancy.section
+PmSampling                                   PM Sampling                                                       no      ...ht Compute/2023.3.0/Sections/PmSampling.section
+SchedulerStats                               Scheduler Statistics                                              no      ...e/2023.3.0/Sections/SchedulerStatistics.section
+SourceCounters                               Source Counters                                                   no      ...ompute/2023.3.0/Sections/SourceCounters.section
+SpeedOfLight                                 GPU Speed Of Light Throughput                                     yes     ... Compute/2023.3.0/Sections/SpeedOfLight.section
+SpeedOfLight_HierarchicalDoubleRooflineChart GPU Speed Of Light Hierarchical Roofline Chart (Double Precision) no      ...OfLight_HierarchicalDoubleRooflineChart.section
+SpeedOfLight_HierarchicalHalfRooflineChart   GPU Speed Of Light Hierarchical Roofline Chart (Half Precision)   no      ...edOfLight_HierarchicalHalfRooflineChart.section
+SpeedOfLight_HierarchicalSingleRooflineChart GPU Speed Of Light Hierarchical Roofline Chart (Single Precision) no      ...OfLight_HierarchicalSingleRooflineChart.section
+SpeedOfLight_HierarchicalTensorRooflineChart GPU Speed Of Light Hierarchical Roofline Chart (Tensor Core)      no      ...OfLight_HierarchicalTensorRooflineChart.section
+SpeedOfLight_RooflineChart                   GPU Speed Of Light Roofline Chart                                 no      ...3.0/Sections/SpeedOfLight_RooflineChart.section
+WarpStateStats                               Warp State Statistics                                             no      ...e/2023.3.0/Sections/WarpStateStatistics.section
