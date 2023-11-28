@@ -1,5 +1,5 @@
-; ModuleID = 'main-cuda-nvptx64-nvidia-cuda-sm_89.bc'
-source_filename = "main.cu"
+; ModuleID = 'optimized.bc'
+source_filename = "rgb.cu"
 target datalayout = "e-i64:64-i128:128-v16:16-v32:32-n16:32:64"
 target triple = "nvptx64-nvidia-cuda"
 
@@ -163,6 +163,8 @@ define dso_local void @_Z26rgb_smem_array_interleavedPiS_i(ptr noundef %0, ptr n
   %10 = call i32 @llvm.nvvm.read.ptx.sreg.ntid.x()
   %11 = mul i32 %9, %10
   %12 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
+  %multDimIndex = mul i32 %10, %9
+  %GlobalTID = add i32 %multDimIndex, %12
   %13 = add i32 %11, %12
   store i32 %13, ptr %7, align 4
   %14 = call i32 @llvm.nvvm.read.ptx.sreg.tid.x()
@@ -172,39 +174,51 @@ define dso_local void @_Z26rgb_smem_array_interleavedPiS_i(ptr noundef %0, ptr n
   %17 = mul nsw i32 3, %16
   %18 = add nsw i32 %17, 0
   %19 = sext i32 %18 to i64
-  %20 = getelementptr inbounds i32, ptr %15, i64 %19
+  %valLoadNewOffsetBase1 = add i32 %GlobalTID, %10
+  %valLoadNewOffsetWithOffset1 = add i32 %valLoadNewOffsetBase1, 0
+  %20 = getelementptr inbounds i32, ptr %15, i32 %valLoadNewOffsetWithOffset1
   %21 = load i32, ptr %20, align 4
   %22 = load i32, ptr %8, align 4
   %23 = mul nsw i32 3, %22
   %24 = add nsw i32 %23, 0
   %25 = sext i32 %24 to i64
-  %26 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %25
+  %storePtrGEPNewOffset1 = add i32 %12, %10
+  %storePtrGEPNewOffset11 = add i32 %storePtrGEPNewOffset1, 0
+  %26 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i32 %storePtrGEPNewOffset11
   store i32 %21, ptr %26, align 4
   %27 = load ptr, ptr %5, align 8
   %28 = load i32, ptr %7, align 4
   %29 = mul nsw i32 3, %28
   %30 = add nsw i32 %29, 1
   %31 = sext i32 %30 to i64
-  %32 = getelementptr inbounds i32, ptr %27, i64 %31
+  %valLoadNewOffsetBase2 = add i32 %GlobalTID, %10
+  %valLoadNewOffsetWithOffset2 = add i32 %valLoadNewOffsetBase2, 1
+  %32 = getelementptr inbounds i32, ptr %27, i32 %valLoadNewOffsetWithOffset2
   %33 = load i32, ptr %32, align 4
   %34 = load i32, ptr %8, align 4
   %35 = mul nsw i32 3, %34
   %36 = add nsw i32 %35, 1
   %37 = sext i32 %36 to i64
-  %38 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %37
+  %storePtrGEPNewOffset2 = add i32 %12, %10
+  %storePtrGEPNewOffset22 = add i32 %storePtrGEPNewOffset2, 1
+  %38 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i32 %storePtrGEPNewOffset22
   store i32 %33, ptr %38, align 4
   %39 = load ptr, ptr %5, align 8
   %40 = load i32, ptr %7, align 4
   %41 = mul nsw i32 3, %40
   %42 = add nsw i32 %41, 2
   %43 = sext i32 %42 to i64
-  %44 = getelementptr inbounds i32, ptr %39, i64 %43
+  %valLoadNewOffsetBase3 = add i32 %GlobalTID, %10
+  %valLoadNewOffsetWithOffset3 = add i32 %valLoadNewOffsetBase3, 2
+  %44 = getelementptr inbounds i32, ptr %39, i32 %valLoadNewOffsetWithOffset3
   %45 = load i32, ptr %44, align 4
   %46 = load i32, ptr %8, align 4
   %47 = mul nsw i32 3, %46
   %48 = add nsw i32 %47, 2
   %49 = sext i32 %48 to i64
-  %50 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i64 %49
+  %storePtrGEPNewOffset3 = add i32 %12, %10
+  %storePtrGEPNewOffset33 = add i32 %storePtrGEPNewOffset3, 2
+  %50 = getelementptr inbounds [99 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_src to ptr), i64 0, i32 %storePtrGEPNewOffset33
   store i32 %45, ptr %50, align 4
   %51 = load i32, ptr %8, align 4
   %52 = icmp slt i32 %51, 3
@@ -292,40 +306,52 @@ define dso_local void @_Z26rgb_smem_array_interleavedPiS_i(ptr noundef %0, ptr n
   %126 = mul nsw i32 3, %125
   %127 = add nsw i32 %126, 0
   %128 = sext i32 %127 to i64
-  %129 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %128
+  %valLoadNewOffsetBase14 = add i32 %12, %10
+  %valLoadNewOffsetWithOffset15 = add i32 %valLoadNewOffsetBase14, 0
+  %129 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i32 %valLoadNewOffsetWithOffset15
   %130 = load i32, ptr %129, align 4
   %131 = load ptr, ptr %4, align 8
   %132 = load i32, ptr %7, align 4
   %133 = mul nsw i32 3, %132
   %134 = add nsw i32 %133, 0
   %135 = sext i32 %134 to i64
-  %136 = getelementptr inbounds i32, ptr %131, i64 %135
+  %storePtrGEPNewOffset16 = add i32 %GlobalTID, %10
+  %storePtrGEPNewOffset17 = add i32 %storePtrGEPNewOffset16, 0
+  %136 = getelementptr inbounds i32, ptr %131, i32 %storePtrGEPNewOffset17
   store i32 %130, ptr %136, align 4
   %137 = load i32, ptr %8, align 4
   %138 = mul nsw i32 3, %137
   %139 = add nsw i32 %138, 1
   %140 = sext i32 %139 to i64
-  %141 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %140
+  %valLoadNewOffsetBase28 = add i32 %12, %10
+  %valLoadNewOffsetWithOffset29 = add i32 %valLoadNewOffsetBase28, 1
+  %141 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i32 %valLoadNewOffsetWithOffset29
   %142 = load i32, ptr %141, align 4
   %143 = load ptr, ptr %4, align 8
   %144 = load i32, ptr %7, align 4
   %145 = mul nsw i32 3, %144
   %146 = add nsw i32 %145, 1
   %147 = sext i32 %146 to i64
-  %148 = getelementptr inbounds i32, ptr %143, i64 %147
+  %storePtrGEPNewOffset210 = add i32 %GlobalTID, %10
+  %storePtrGEPNewOffset211 = add i32 %storePtrGEPNewOffset210, 1
+  %148 = getelementptr inbounds i32, ptr %143, i32 %storePtrGEPNewOffset211
   store i32 %142, ptr %148, align 4
   %149 = load i32, ptr %8, align 4
   %150 = mul nsw i32 3, %149
   %151 = add nsw i32 %150, 2
   %152 = sext i32 %151 to i64
-  %153 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i64 %152
+  %valLoadNewOffsetBase312 = add i32 %12, %10
+  %valLoadNewOffsetWithOffset313 = add i32 %valLoadNewOffsetBase312, 2
+  %153 = getelementptr inbounds [96 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ26rgb_smem_array_interleavedPiS_iE14pixel_smem_dst to ptr), i64 0, i32 %valLoadNewOffsetWithOffset313
   %154 = load i32, ptr %153, align 4
   %155 = load ptr, ptr %4, align 8
   %156 = load i32, ptr %7, align 4
   %157 = mul nsw i32 3, %156
   %158 = add nsw i32 %157, 2
   %159 = sext i32 %158 to i64
-  %160 = getelementptr inbounds i32, ptr %155, i64 %159
+  %storePtrGEPNewOffset314 = add i32 %GlobalTID, %10
+  %storePtrGEPNewOffset315 = add i32 %storePtrGEPNewOffset314, 2
+  %160 = getelementptr inbounds i32, ptr %155, i32 %storePtrGEPNewOffset315
   store i32 %154, ptr %160, align 4
   ret void
 }
@@ -339,7 +365,7 @@ declare i32 @llvm.nvvm.read.ptx.sreg.ntid.x() #1
 ; Function Attrs: nocallback nofree nosync nounwind speculatable willreturn memory(none)
 declare i32 @llvm.nvvm.read.ptx.sreg.tid.x() #1
 
-attributes #0 = { convergent mustprogress noinline norecurse nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="sm_89" "target-features"="+ptx78,+sm_89" }
+attributes #0 = { convergent mustprogress noinline norecurse nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="sm_70" "target-features"="+ptx78,+sm_70" }
 attributes #1 = { nocallback nofree nosync nounwind speculatable willreturn memory(none) }
 
 !llvm.module.flags = !{!0, !1, !2, !3}
