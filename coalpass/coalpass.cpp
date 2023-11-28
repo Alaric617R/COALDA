@@ -18,7 +18,7 @@ void coalPass::CoalPass::unit_test_distributive_transform(){
     errs() << "before dist:\t" << mult->str() << '\n';
     auto after = BinaryExprAST::distributiveTransform(mult);
     // errs() << "after dist:\t" << BinaryExprAST::distributiveTransform(mult)->str() << '\n';
-    if (auto bn = dynamic_cast<BinaryExprAST*>(after.get()))
+    if (auto bn = dyn_cast<BinaryExprAST>(after.get()))
         errs() << "after dist:\t" << bn->str() << '\n';
     else errs() << "no!\n";
 
@@ -31,7 +31,7 @@ void coalPass::CoalPass::unit_test_distributive_transform(){
     errs() << "before dist:\t" << addTot->str() << '\n';
     after = BinaryExprAST::distributiveTransform(addTot);
     // errs() << "after dist:\t" << BinaryExprAST::distributiveTransform(mult)->str() << '\n';
-    if (auto bn = dynamic_cast<BinaryExprAST*>(after.get()))
+    if (auto bn = dyn_cast<BinaryExprAST>(after.get()))
         errs() << "after dist:\t" << bn->str() << '\n';
     else errs() << "no!\n";
 }
@@ -48,7 +48,7 @@ void coalPass::CoalPass::unit_test_ViableOffsetEquation_construction(){
     auto blockIdx = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockIndex);
     auto blockDim = make_shared<PrototypeExprAST>(CoalMemPrototyeASTToken_t::BlockDim);
 
-    CoalMemExprAST* base = dynamic_cast<CoalMemExprAST*>(blockDim.get());
+    CoalMemExprASTBase* base = dyn_cast<CoalMemExprASTBase>(blockDim.get());
 
 
     auto t3 = make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, threadIdx, const3);

@@ -1,13 +1,13 @@
 #include "coalMemAST.h"
 
-optional<deque<shared_ptr<CoalMemExprAST>>> BinaryExprAST::expandNodes(shared_ptr<BinaryExprAST> root_expr)  {
-        deque<shared_ptr<CoalMemExprAST>> result;
-        deque<shared_ptr<CoalMemExprAST>> nodesToExpand;
+optional<deque<shared_ptr<CoalMemExprASTBase>>> BinaryExprAST::expandNodes(shared_ptr<BinaryExprAST> root_expr)  {
+        deque<shared_ptr<CoalMemExprASTBase>> result;
+        deque<shared_ptr<CoalMemExprASTBase>> nodesToExpand;
         nodesToExpand.push_back(root_expr);
         while(!nodesToExpand.empty()){
             auto front = nodesToExpand.front();
             nodesToExpand.pop_front();
-            if (auto binaryOp = dynamic_cast<BinaryExprAST*>(front.get())){
+            if (auto binaryOp = dyn_cast<BinaryExprAST>(front.get())){
                 if (binaryOp->op == CoalMemBinaryASTToken_t::Add) {
                     errs() << "Cannot expand on ADD!\n";
                     return nullopt;
@@ -15,7 +15,7 @@ optional<deque<shared_ptr<CoalMemExprAST>>> BinaryExprAST::expandNodes(shared_pt
                 nodesToExpand.push_back(binaryOp->lhs);
                 nodesToExpand.push_back(binaryOp->rhs);
             }
-            else if (auto constOp = dynamic_cast<ConstExprAST*>(front.get())){
+            else if (auto constOp = dyn_cast<ConstExprAST>(front.get())){
                 result.push_back(front);
             }
             else {
@@ -24,14 +24,14 @@ optional<deque<shared_ptr<CoalMemExprAST>>> BinaryExprAST::expandNodes(shared_pt
         }
         return result;
     }
-deque<shared_ptr<CoalMemExprAST>> BinaryExprAST::extractSubMultExprsFromDistForm(shared_ptr<BinaryExprAST> root_add){
-    deque<shared_ptr<CoalMemExprAST>> result;
-    deque<shared_ptr<CoalMemExprAST>> exprNodes;
+deque<shared_ptr<CoalMemExprASTBase>> BinaryExprAST::extractSubMultExprsFromDistForm(shared_ptr<BinaryExprAST> root_add){
+    deque<shared_ptr<CoalMemExprASTBase>> result;
+    deque<shared_ptr<CoalMemExprASTBase>> exprNodes;
     exprNodes.push_back(root_add);
     while (!exprNodes.empty()){
         auto frontNode = exprNodes.front();
         exprNodes.pop_front();
-        if (auto binaryNode = dynamic_cast<BinaryExprAST*>(frontNode.get())){
+        if (auto binaryNode = dyn_cast<BinaryExprAST>(frontNode.get())){
             if (binaryNode->type() == CoalMemBinaryASTToken_t::Add){
                 exprNodes.push_back(binaryNode->lhs);
                 exprNodes.push_back(binaryNode->rhs);
@@ -52,22 +52,22 @@ deque<shared_ptr<CoalMemExprAST>> BinaryExprAST::extractSubMultExprsFromDistForm
 shared_ptr<BinaryExprAST> BinaryExprAST::distributiveTransform(shared_ptr<BinaryExprAST> root){
     bool debug = !DEBUG;
     // terminator: constExpr
-    ConstExprAST* constExpr = dynamic_cast<ConstExprAST*>(root.get());
+    ConstExprAST* constExpr = dyn_cast<ConstExprAST>(root.get());
     if (constExpr != nullptr) return root;
     // binary operator: interesting stuff
-    BinaryExprAST* curNodeBinaryExpr = dynamic_cast<BinaryExprAST*>(root.get());
+    BinaryExprAST* curNodeBinaryExpr = dyn_cast<BinaryExprAST>(root.get());
     if (curNodeBinaryExpr != nullptr){
         bool isCurMult = (curNodeBinaryExpr->op == CoalMemBinaryASTToken_t::Mult);
         /// TODO: preorder traversal, first left child
-        BinaryExprAST* lhsBinaryOp = dynamic_cast<BinaryExprAST*>(curNodeBinaryExpr->lhs.get());
-        BinaryExprAST* rhsBinaryOp = dynamic_cast<BinaryExprAST*>(curNodeBinaryExpr->rhs.get());
+        BinaryExprAST* lhsBinaryOp = dyn_cast<BinaryExprAST>(curNodeBinaryExpr->lhs.get());
+        BinaryExprAST* rhsBinaryOp = dyn_cast<BinaryExprAST>(curNodeBinaryExpr->rhs.get());
         bool leftFixdown = (isCurMult && lhsBinaryOp != nullptr && lhsBinaryOp->op == CoalMemBinaryASTToken_t::Add);
         bool rightFixDown = (isCurMult && rhsBinaryOp != nullptr && rhsBinaryOp->op == CoalMemBinaryASTToken_t::Add);
         /// TODO: find (b+c) * a pattern
         if (leftFixdown){
-            shared_ptr<CoalMemExprAST>   a = curNodeBinaryExpr->rhs;
-            shared_ptr<CoalMemExprAST>   b = lhsBinaryOp->lhs;
-            shared_ptr<CoalMemExprAST>   c = lhsBinaryOp->rhs;
+            shared_ptr<CoalMemExprASTBase>   a = curNodeBinaryExpr->rhs;
+            shared_ptr<CoalMemExprASTBase>   b = lhsBinaryOp->lhs;
+            shared_ptr<CoalMemExprASTBase>   c = lhsBinaryOp->rhs;
             /// TODO: construct a*b + a*c
             shared_ptr<BinaryExprAST>  ab = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, b);
             shared_ptr<BinaryExprAST>  ac = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, c);
@@ -79,9 +79,9 @@ shared_ptr<BinaryExprAST> BinaryExprAST::distributiveTransform(shared_ptr<Binary
         }
         /// TODO: find a * (b+c) pattern
         else if (rightFixDown){
-            shared_ptr<CoalMemExprAST>   a = curNodeBinaryExpr->lhs;
-            shared_ptr<CoalMemExprAST>   b = rhsBinaryOp->lhs;
-            shared_ptr<CoalMemExprAST>   c = rhsBinaryOp->rhs;
+            shared_ptr<CoalMemExprASTBase>   a = curNodeBinaryExpr->lhs;
+            shared_ptr<CoalMemExprASTBase>   b = rhsBinaryOp->lhs;
+            shared_ptr<CoalMemExprASTBase>   c = rhsBinaryOp->rhs;
             /// TODO: construct a*b + a*c
             shared_ptr<BinaryExprAST>  ab = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, b);
             shared_ptr<BinaryExprAST>  ac = std::make_shared<BinaryExprAST>(CoalMemBinaryASTToken_t::Mult, a, c);
