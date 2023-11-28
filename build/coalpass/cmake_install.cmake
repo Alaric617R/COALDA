@@ -1,4 +1,4 @@
-# Install script for directory: /home/arch/Desktop/EECS583_Project/coalpass
+# Install script for directory: /home/zihaoye/Documents/EECS583_Project/coalpass
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -49,12 +49,12 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "CoalPass" OR NOT CMAKE_INSTALL_COMPONENT)
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/CoalPass.so"
          RPATH "\$ORIGIN/../lib")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE MODULE FILES "/home/arch/Desktop/EECS583_Project/build/coalpass/CoalPass.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE MODULE FILES "/home/zihaoye/Documents/EECS583_Project/build/coalpass/CoalPass.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/CoalPass.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/CoalPass.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/CoalPass.so"
-         OLD_RPATH "\$ORIGIN/../lib:/usr/lib:"
+         OLD_RPATH "\$ORIGIN/../lib:"
          NEW_RPATH "\$ORIGIN/../lib")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/CoalPass.so")

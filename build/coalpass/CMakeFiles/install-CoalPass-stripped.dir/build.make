@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/arch/Desktop/EECS583_Project
+CMAKE_SOURCE_DIR = /home/zihaoye/Documents/EECS583_Project
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/arch/Desktop/EECS583_Project/build
+CMAKE_BINARY_DIR = /home/zihaoye/Documents/EECS583_Project/build
 
 # Utility rule file for install-CoalPass-stripped.
 
@@ -67,7 +67,7 @@ include coalpass/CMakeFiles/install-CoalPass-stripped.dir/compiler_depend.make
 include coalpass/CMakeFiles/install-CoalPass-stripped.dir/progress.make
 
 coalpass/CMakeFiles/install-CoalPass-stripped:
-	cd /home/arch/Desktop/EECS583_Project/build/coalpass && /usr/bin/cmake -DCMAKE_INSTALL_COMPONENT="CoalPass" -DCMAKE_INSTALL_DO_STRIP=1 -P /home/arch/Desktop/EECS583_Project/build/cmake_install.cmake
+	cd /home/zihaoye/Documents/EECS583_Project/build/coalpass && /usr/bin/cmake -DCMAKE_INSTALL_COMPONENT="CoalPass" -DCMAKE_INSTALL_DO_STRIP=1 -P /home/zihaoye/Documents/EECS583_Project/build/cmake_install.cmake
 
 install-CoalPass-stripped: coalpass/CMakeFiles/install-CoalPass-stripped
 install-CoalPass-stripped: coalpass/CMakeFiles/install-CoalPass-stripped.dir/build.make
@@ -78,10 +78,10 @@ coalpass/CMakeFiles/install-CoalPass-stripped.dir/build: install-CoalPass-stripp
 .PHONY : coalpass/CMakeFiles/install-CoalPass-stripped.dir/build
 
 coalpass/CMakeFiles/install-CoalPass-stripped.dir/clean:
-	cd /home/arch/Desktop/EECS583_Project/build/coalpass && $(CMAKE_COMMAND) -P CMakeFiles/install-CoalPass-stripped.dir/cmake_clean.cmake
+	cd /home/zihaoye/Documents/EECS583_Project/build/coalpass && $(CMAKE_COMMAND) -P CMakeFiles/install-CoalPass-stripped.dir/cmake_clean.cmake
 .PHONY : coalpass/CMakeFiles/install-CoalPass-stripped.dir/clean
 
 coalpass/CMakeFiles/install-CoalPass-stripped.dir/depend:
-	cd /home/arch/Desktop/EECS583_Project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/arch/Desktop/EECS583_Project /home/arch/Desktop/EECS583_Project/coalpass /home/arch/Desktop/EECS583_Project/build /home/arch/Desktop/EECS583_Project/build/coalpass /home/arch/Desktop/EECS583_Project/build/coalpass/CMakeFiles/install-CoalPass-stripped.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/zihaoye/Documents/EECS583_Project /home/zihaoye/Documents/EECS583_Project/coalpass /home/zihaoye/Documents/EECS583_Project/build /home/zihaoye/Documents/EECS583_Project/build/coalpass /home/zihaoye/Documents/EECS583_Project/build/coalpass/CMakeFiles/install-CoalPass-stripped.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : coalpass/CMakeFiles/install-CoalPass-stripped.dir/depend
 

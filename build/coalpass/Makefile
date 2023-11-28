@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/arch/Desktop/EECS583_Project
+CMAKE_SOURCE_DIR = /home/zihaoye/Documents/EECS583_Project
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/arch/Desktop/EECS583_Project/build
+CMAKE_BINARY_DIR = /home/zihaoye/Documents/EECS583_Project/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -132,14 +132,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/arch/Desktop/EECS583_Project/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/arch/Desktop/EECS583_Project/build/CMakeFiles /home/arch/Desktop/EECS583_Project/build/coalpass//CMakeFiles/progress.marks
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/arch/Desktop/EECS583_Project/build/CMakeFiles 0
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/zihaoye/Documents/EECS583_Project/build/CMakeFiles /home/zihaoye/Documents/EECS583_Project/build/coalpass//CMakeFiles/progress.marks
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zihaoye/Documents/EECS583_Project/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/clean
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/clean
 .PHONY : clean
 
 # The main clean target
@@ -148,22 +148,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/preinstall
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/preinstall
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/arch/Desktop/EECS583_Project/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 coalpass/CMakeFiles/CoalPass.dir/rule:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/CMakeFiles/CoalPass.dir/rule
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/CMakeFiles/CoalPass.dir/rule
 .PHONY : coalpass/CMakeFiles/CoalPass.dir/rule
 
 # Convenience name for target.
@@ -172,12 +172,12 @@ CoalPass: coalpass/CMakeFiles/CoalPass.dir/rule
 
 # fast build rule for target.
 CoalPass/fast:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/build
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/build
 .PHONY : CoalPass/fast
 
 # Convenience name for target.
 coalpass/CMakeFiles/install-CoalPass.dir/rule:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/CMakeFiles/install-CoalPass.dir/rule
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/CMakeFiles/install-CoalPass.dir/rule
 .PHONY : coalpass/CMakeFiles/install-CoalPass.dir/rule
 
 # Convenience name for target.
@@ -186,12 +186,12 @@ install-CoalPass: coalpass/CMakeFiles/install-CoalPass.dir/rule
 
 # fast build rule for target.
 install-CoalPass/fast:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/install-CoalPass.dir/build.make coalpass/CMakeFiles/install-CoalPass.dir/build
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/install-CoalPass.dir/build.make coalpass/CMakeFiles/install-CoalPass.dir/build
 .PHONY : install-CoalPass/fast
 
 # Convenience name for target.
 coalpass/CMakeFiles/install-CoalPass-stripped.dir/rule:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/CMakeFiles/install-CoalPass-stripped.dir/rule
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coalpass/CMakeFiles/install-CoalPass-stripped.dir/rule
 .PHONY : coalpass/CMakeFiles/install-CoalPass-stripped.dir/rule
 
 # Convenience name for target.
@@ -200,7 +200,7 @@ install-CoalPass-stripped: coalpass/CMakeFiles/install-CoalPass-stripped.dir/rul
 
 # fast build rule for target.
 install-CoalPass-stripped/fast:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/install-CoalPass-stripped.dir/build.make coalpass/CMakeFiles/install-CoalPass-stripped.dir/build
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/install-CoalPass-stripped.dir/build.make coalpass/CMakeFiles/install-CoalPass-stripped.dir/build
 .PHONY : install-CoalPass-stripped/fast
 
 coalMemAST.o: coalMemAST.cpp.o
@@ -208,7 +208,7 @@ coalMemAST.o: coalMemAST.cpp.o
 
 # target to build an object file
 coalMemAST.cpp.o:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemAST.cpp.o
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemAST.cpp.o
 .PHONY : coalMemAST.cpp.o
 
 coalMemAST.i: coalMemAST.cpp.i
@@ -216,7 +216,7 @@ coalMemAST.i: coalMemAST.cpp.i
 
 # target to preprocess a source file
 coalMemAST.cpp.i:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemAST.cpp.i
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemAST.cpp.i
 .PHONY : coalMemAST.cpp.i
 
 coalMemAST.s: coalMemAST.cpp.s
@@ -224,7 +224,7 @@ coalMemAST.s: coalMemAST.cpp.s
 
 # target to generate assembly for a file
 coalMemAST.cpp.s:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemAST.cpp.s
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemAST.cpp.s
 .PHONY : coalMemAST.cpp.s
 
 coalMemOp.o: coalMemOp.cpp.o
@@ -232,7 +232,7 @@ coalMemOp.o: coalMemOp.cpp.o
 
 # target to build an object file
 coalMemOp.cpp.o:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemOp.cpp.o
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemOp.cpp.o
 .PHONY : coalMemOp.cpp.o
 
 coalMemOp.i: coalMemOp.cpp.i
@@ -240,7 +240,7 @@ coalMemOp.i: coalMemOp.cpp.i
 
 # target to preprocess a source file
 coalMemOp.cpp.i:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemOp.cpp.i
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemOp.cpp.i
 .PHONY : coalMemOp.cpp.i
 
 coalMemOp.s: coalMemOp.cpp.s
@@ -248,7 +248,7 @@ coalMemOp.s: coalMemOp.cpp.s
 
 # target to generate assembly for a file
 coalMemOp.cpp.s:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemOp.cpp.s
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalMemOp.cpp.s
 .PHONY : coalMemOp.cpp.s
 
 coalpass.o: coalpass.cpp.o
@@ -256,7 +256,7 @@ coalpass.o: coalpass.cpp.o
 
 # target to build an object file
 coalpass.cpp.o:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalpass.cpp.o
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalpass.cpp.o
 .PHONY : coalpass.cpp.o
 
 coalpass.i: coalpass.cpp.i
@@ -264,7 +264,7 @@ coalpass.i: coalpass.cpp.i
 
 # target to preprocess a source file
 coalpass.cpp.i:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalpass.cpp.i
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalpass.cpp.i
 .PHONY : coalpass.cpp.i
 
 coalpass.s: coalpass.cpp.s
@@ -272,7 +272,7 @@ coalpass.s: coalpass.cpp.s
 
 # target to generate assembly for a file
 coalpass.cpp.s:
-	cd /home/arch/Desktop/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalpass.cpp.s
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(MAKE) $(MAKESILENT) -f coalpass/CMakeFiles/CoalPass.dir/build.make coalpass/CMakeFiles/CoalPass.dir/coalpass.cpp.s
 .PHONY : coalpass.cpp.s
 
 # Help Target
@@ -310,6 +310,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/arch/Desktop/EECS583_Project/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/zihaoye/Documents/EECS583_Project/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
