@@ -14,7 +14,7 @@ cd ../examples/rgb
 rm *.bc *.ll *.ptx
 
 # Compile the device code to LLVM IR
-clang++ --cuda-gpu-arch=sm_70 -emit-llvm -c rgb.cu -o rgb.bc
+clang++ --cuda-gpu-arch=sm_70 -emit-llvm -c rgb.cu main.cu -Xclang -disable-O0-optnone
 
 # Apply pass to the LLVM IR
 opt -load ../../build/coalpass/CoalPass.so -passes=coal rgb.bc -o optimized.bc
