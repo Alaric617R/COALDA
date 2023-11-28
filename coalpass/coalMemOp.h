@@ -42,7 +42,7 @@ extern Instruction* BlockIndexRegister;
 
 
 struct OffsetEquation{
-    shared_ptr<CoalMemExprAST> expr;
+    shared_ptr<CoalMemExprASTBase> expr;
 };
 
 
@@ -87,7 +87,7 @@ struct ViableOffsetEquation{
         return std::to_string(stride) + " * " + tid + " + " + std::to_string(offset);
     }
     /// invariant of @param exprsDeque: has been applied distributive rule: no add operand
-    static optional<ViableOffsetEquation> constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprAST>> exprsDeque);
+    static optional<ViableOffsetEquation> constructFromOffsetExprOrNo(deque<shared_ptr<CoalMemExprASTBase>> exprsDeque);
     friend bool operator==(const ViableOffsetEquation& lhs, const ViableOffsetEquation& rhs);
     friend bool operator!=(const ViableOffsetEquation& lhs, const ViableOffsetEquation& rhs);
 };
