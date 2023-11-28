@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC  -Wl,-rpath-link,  -Wl,--gc-sections -shared  -o CoalPass.so CMakeFiles/CoalPass.dir/coalpass.cpp.o CMakeFiles/CoalPass.dir/coalMemOp.cpp.o CMakeFiles/CoalPass.dir/coalMemAST.cpp.o  -Wl,-rpath,"\$ORIGIN/../lib:/usr/lib:" /usr/lib/libLLVM-16.so 

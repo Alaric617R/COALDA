@@ -39,6 +39,7 @@ extern Instruction* GlobalTidRegister;
 extern Instruction* LocalTidRegister;
 extern Instruction* BlockDimRegister;
 extern Instruction* BlockIndexRegister;
+extern Instruction* multDimIndexRegister;
 
 
 struct OffsetEquation{
@@ -211,6 +212,11 @@ optional<CoalPointerOpAnalysisResult> analysePointerOperand(Value* ptrOperand);
 BasicBlock::reverse_iterator reversePos_helper(Instruction* inst);
 
 BasicBlock::iterator         forwardPos_helper(Instruction* inst);
+
+/**
+ * The offseted GlobalTid is automatically inserted after globalTid w/o offset
+*/
+Instruction* insertGlobalTidWithScaledOffsetRegister(int stride);
 
 
 

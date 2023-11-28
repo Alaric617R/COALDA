@@ -98,6 +98,7 @@ struct CoalPass : public PassInfoMixin<CoalPass>{
     void insertGlobalTidRegister(Function& F);
 
 
+
     /** test cases **/
     #if DEBUG
     void unit_test_ViableOffsetEquation_construction();

@@ -18,8 +18,35 @@ Instruction* GlobalTidRegister = nullptr;
 Instruction* LocalTidRegister = nullptr;
 Instruction* BlockDimRegister = nullptr;
 Instruction* BlockIndexRegister = nullptr;
+Instruction* multDimIndexRegister = nullptr;
 
 /*** local helpers ***/
+
+Instruction* insertGlobalTidWithScaledOffsetRegister(int stride){
+    static map<int, Instruction*> strideToRegMap;
+    if (strideToRegMap.find(stride) != strideToRegMap.end()){
+        return strideToRegMap[stride];
+    }
+    // create BlockDim * BlockIndex: has been stored into multDimIndexRegister
+    // create stride * multDimIndex
+    BinaryOperator *multDimIndexScaled = BinaryOperator::Create(Instruction::Mul, 
+                                                                multDimIndexRegister, 
+                                                                ConstantInt::get(Type::getInt32Ty(multDimIndexRegister->getContext()), stride), 
+                                                                "multDimIndexScaled#" + std::to_string(stride), 
+                                                                GlobalTidRegister->getParent());
+    multDimIndexScaled->moveAfter(GlobalTidRegister);
+    /// create threadIdx + multDimIndexScaled
+    BinaryOperator *globalTidScaledOffset = BinaryOperator::Create(Instruction::Add, 
+                                                                   multDimIndexScaled, 
+                                                                   LocalTidRegister, 
+                                                                   "GlobalTIDScaled#" + std::to_string(stride), 
+                                                                   GlobalTidRegister->getParent());
+    globalTidScaledOffset->moveAfter(multDimIndexScaled);
+    /// TODO: add this register to the static mapping
+    strideToRegMap[stride] = globalTidScaledOffset;
+    return globalTidScaledOffset;
+    // for (auto &inst : *insertAfter->getParent()) printInfo(true, inst);
+}
 
 /** allowed two types of GEP
  * 1. only one-dimensional offset. E.G, %17 = getelementptr inbounds i32, ptr %11, i64 %16
@@ -685,6 +712,7 @@ bool CoalStore::is_same(const CoalStore& other) const{
     return true;
 }
 
+
 bool CoalStoreGroup::transform(){
     bool debug = DEBUG;
     if (this->group.empty()) return false;
@@ -713,9 +741,12 @@ bool CoalStoreGroup::transform(){
         /// TODO: deal with value Op
         LoadInst* ValueOpLoadInst = elemCoalStore.valOpCoalLoad.origLoadInst;
         GetElementPtrInst* origLoadGEP = dyn_cast<GetElementPtrInst>(ValueOpLoadInst->getPointerOperand());
+        GetElementPtrInst* origCoalStorePtrGEP = dyn_cast<GetElementPtrInst>(elemCoalStore.origStoreInst->getPointerOperand());
         assert(origLoadGEP != nullptr && "CoalStore's load inst must be loading from GEP!");
+        /// TODO: generate and insert globalTidScaledOffset register, inserting before whichever comes first: origLoadGEP or origCoalStorePtrGEP
+        Instruction* GlobalTidScaledOffset = insertGlobalTidWithScaledOffsetRegister(elemCoalStore.valOpCoalLoad.offsetEquation.stride);
         // insert localTid/globalTid + blockDim
-        Instruction* tidReg = (elemCoalStore.valOpCoalLoad.offsetEquation.batchedTID) ? GlobalTidRegister : LocalTidRegister;
+        Instruction* tidReg = (elemCoalStore.valOpCoalLoad.offsetEquation.batchedTID) ? GlobalTidScaledOffset : LocalTidRegister;
         BinaryOperator* newLoadAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidReg, BlockDimRegister, "valLoadNewOffsetBase"+std::to_string(id_cnt), ValueOpLoadInst->getParent());
         newLoadAddressOffsetBase->moveBefore(origLoadGEP);
         BinaryOperator* newLoadAddressOffset = BinaryOperator::Create(Instruction::Add, newLoadAddressOffsetBase, ConstantInt::get(Type::getInt32Ty(tidReg->getContext()), 
@@ -744,11 +775,12 @@ bool CoalStoreGroup::transform(){
 
         /// TODO: deal with pointer Op
         GetElementPtrInst* ptrOpGEP = dyn_cast<GetElementPtrInst>(elemCoalStore.origStoreInst->getPointerOperand());
-        StoreInst* origCoalStoreInst = elemCoalStore.origStoreInst;
         assert(ptrOpGEP != nullptr && "CoalStore's pointer Op must be GEP!");
+        Instruction* globalTidScaledOffsetForStore = insertGlobalTidWithScaledOffsetRegister(elemCoalStore.storeSrcPtrExpr.offsetEquation.stride);
+        assert(GlobalTidScaledOffset == globalTidScaledOffsetForStore && "load and store should have same stride!");
         /// TODO: change the offset of GEP from stride * tid + offset to localTid/globalTid + blockDim + offset
-        Instruction* tidRegPtrOp = (elemCoalStore.storeSrcPtrExpr.offsetEquation.batchedTID) ? GlobalTidRegister : LocalTidRegister;
-        BinaryOperator* newStorePtrAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidRegPtrOp, BlockDimRegister, "storePtrGEPNewOffset"+std::to_string(id_cnt), ptrOpGEP->getParent());
+        Instruction* tidRegPtrOp = (elemCoalStore.storeSrcPtrExpr.offsetEquation.batchedTID) ? GlobalTidScaledOffset : LocalTidRegister;
+        BinaryOperator* newStorePtrAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidRegPtrOp, BlockDimRegister, "storePtrGEPNewOffsetBase"+std::to_string(id_cnt), ptrOpGEP->getParent());
         newStorePtrAddressOffsetBase->moveBefore(ptrOpGEP);
         BinaryOperator* newStorePtrAddressOffset = BinaryOperator::Create(Instruction::Add, newStorePtrAddressOffsetBase, ConstantInt::get(Type::getInt32Ty(tidRegPtrOp->getContext()), 
                                                                           elemCoalStore.storeSrcPtrExpr.offsetEquation.offset), "storePtrGEPNewOffset"+std::to_string(id_cnt), ptrOpGEP->getParent());
