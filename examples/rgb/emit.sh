@@ -1,7 +1,6 @@
 #!/bin/bash
 
-rm *.bc *.ll *.ptx
-clang++ --cuda-gpu-arch=sm_89 -emit-llvm -c rgb.cu main.cu -Xclang -disable-O0-optnone
+rm *.bc *.ll
+clang++ -std=c++20 -stdlib=libc++ --cuda-path=/opt/cuda-11.7 --cuda-gpu-arch=sm_86 -emit-llvm -c rgb.cu main.cu -Xclang -disable-O0-optnone
 llvm-dis *.bc
 
-nvcc --ptx rgb.cu
