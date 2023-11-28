@@ -153,6 +153,7 @@ void coalPass::CoalPass::insertGlobalTidRegister(Function &F){
     /// TODO: insert globalTid calculation
     // create BlockDim * BlockIndex
     BinaryOperator *multDimIndex = BinaryOperator::Create(Instruction::Mul, BlockDimRegister, BlockIndexRegister, "multDimIndex", insertAfter->getParent());
+    multDimIndexRegister = multDimIndex;
     multDimIndex->moveAfter(insertAfter);
     /// create threadIdx + multDimIndex
     BinaryOperator *globalTid = BinaryOperator::Create(Instruction::Add, multDimIndex, LocalTidRegister, "GlobalTID", insertAfter->getParent());
@@ -160,6 +161,8 @@ void coalPass::CoalPass::insertGlobalTidRegister(Function &F){
     GlobalTidRegister = globalTid;
     // for (auto &inst : *insertAfter->getParent()) printInfo(true, inst);
 }
+
+
 
 void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
     bool debug = DEBUG;
