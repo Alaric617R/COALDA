@@ -22,15 +22,24 @@ rm *.bc *.ll *.ptx
 
 # Compile the CUDA device code for rgb.cu
 # $CLANG_PATH/clang --cuda-gpu-arch=$GPU_ARCH -c rgb.cu -o ./tmp/rgb-sm_75.s
-clang++ --cuda-gpu-arch=sm_75 --cuda-device-only -emit-llvm -c rgb.cu -o rgb.bc -Xclang -disable-O0-optnone
+clang++ --cuda-gpu-arch=sm_75 --cuda-device-only -emit-llvm -c rgb.cu -o rgb_device.bc -Xclang -disable-O0-optnone
+opt -load-pass-plugin ../../build/coalpass/CoalPass.so -passes=coal rgb_device.bc -o rgb_device.bc
+llc -march=nvptx64 -mcpu=sm_75 rgb_device.bc -o rgb_device.ptx
 
 # Assemble the device code
-$CUDA_PATH/ptxas -c optimized.ptx --gpu-name=sm_75
+$CUDA_PATH/ptxas -c rgb_device.ptx --gpu-name=sm_75 -o rgb_device.o
+
+# Linker stage
+$CUDA_PATH/ptxas - rgb_device.ptx --gpu-name=sm_75 -o rgb_device.o
+$CUDA_PATH/fatbinary --link -create rgb_device.fatbin --image=profile=sm_75,file=rgb_device.o --64
 
 # Link to create a fat binary
-$CUDA_PATH/fatbinary -create optimized.fatbin --image=profile=sm_75,file=elf.o --64
+clang++ --cuda-gpu-arch=sm_75 rgb.cu rgb_device.fatbin -o rgb_device_final.o
 
 #TODO: Compile rgb.cu to host only
+clang++ --cuda-gpu-arch=sm_75 --cuda-host-only -emit-llvm -c main.cu -o rgb_host.bc -Xclang -disable-O0-optnone
+
+$CUDA_PATH/ptxas -c rgb_device.ptx --gpu-name=sm_75 -o rgb_device.o
 
 
 

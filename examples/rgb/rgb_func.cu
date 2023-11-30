@@ -1,3 +1,4 @@
+#define TILE_WIDTH 32
 __global__ void rgb_increase_brightness(int *pixel_dst, int *pixel_src,
                                         int size, float factor) {
   /*

@@ -24,9 +24,9 @@ llvm-dis *.bc
 
 # Compile the LLVM IR to CUDA PTX
 llc -march=nvptx64 -mcpu=sm_70 optimized.bc -o optimized.ptx
-clang -Xcuda
 
 # Compile the host code and optimized device code to an executable
-clang -arch=sm_75 main.cu rgb_optimized.ptx -o rgb_optimized
+sudo nvcc --run -arch=sm_70 main.o optimized.ptx -o rgb_optimized --device-link
 
-./rgb_optimized
+
+# ./rgb_optimized
