@@ -127,6 +127,96 @@ define dso_local void @_Z41__device_stub__rgb_smem_array_interleavedPiS_i(ptr no
   ret void
 }
 
+; Function Attrs: noinline norecurse sspstrong uwtable
+define dso_local void @_Z38__device_stub__rgb_increase_brightnessPiS_if(ptr noundef %0, ptr noundef %1, i32 noundef %2, float noundef %3) #0 {
+  %5 = alloca ptr, align 8
+  %6 = alloca ptr, align 8
+  %7 = alloca i32, align 4
+  %8 = alloca float, align 4
+  %9 = alloca %struct.dim3.0, align 8
+  %10 = alloca %struct.dim3.0, align 8
+  %11 = alloca i64, align 8
+  %12 = alloca ptr, align 8
+  %13 = alloca { i64, i32 }, align 8
+  %14 = alloca { i64, i32 }, align 8
+  store ptr %0, ptr %5, align 8
+  store ptr %1, ptr %6, align 8
+  store i32 %2, ptr %7, align 4
+  store float %3, ptr %8, align 4
+  %15 = alloca ptr, i64 4, align 16
+  %16 = getelementptr ptr, ptr %15, i32 0
+  store ptr %5, ptr %16, align 8
+  %17 = getelementptr ptr, ptr %15, i32 1
+  store ptr %6, ptr %17, align 8
+  %18 = getelementptr ptr, ptr %15, i32 2
+  store ptr %7, ptr %18, align 8
+  %19 = getelementptr ptr, ptr %15, i32 3
+  store ptr %8, ptr %19, align 8
+  %20 = call i32 @__cudaPopCallConfiguration(ptr %9, ptr %10, ptr %11, ptr %12)
+  %21 = load i64, ptr %11, align 8
+  %22 = load ptr, ptr %12, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %13, ptr align 8 %9, i64 12, i1 false)
+  %23 = getelementptr inbounds { i64, i32 }, ptr %13, i32 0, i32 0
+  %24 = load i64, ptr %23, align 8
+  %25 = getelementptr inbounds { i64, i32 }, ptr %13, i32 0, i32 1
+  %26 = load i32, ptr %25, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %14, ptr align 8 %10, i64 12, i1 false)
+  %27 = getelementptr inbounds { i64, i32 }, ptr %14, i32 0, i32 0
+  %28 = load i64, ptr %27, align 8
+  %29 = getelementptr inbounds { i64, i32 }, ptr %14, i32 0, i32 1
+  %30 = load i32, ptr %29, align 8
+  %31 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z38__device_stub__rgb_increase_brightnessPiS_if, i64 %24, i32 %26, i64 %28, i32 %30, ptr noundef %15, i64 noundef %21, ptr noundef %22)
+  br label %32
+
+32:                                               ; preds = %4
+  ret void
+}
+
+; Function Attrs: noinline norecurse sspstrong uwtable
+define dso_local void @_Z48__device_stub__rgb_increase_brightness_coalescedPiS_if(ptr noundef %0, ptr noundef %1, i32 noundef %2, float noundef %3) #0 {
+  %5 = alloca ptr, align 8
+  %6 = alloca ptr, align 8
+  %7 = alloca i32, align 4
+  %8 = alloca float, align 4
+  %9 = alloca %struct.dim3.0, align 8
+  %10 = alloca %struct.dim3.0, align 8
+  %11 = alloca i64, align 8
+  %12 = alloca ptr, align 8
+  %13 = alloca { i64, i32 }, align 8
+  %14 = alloca { i64, i32 }, align 8
+  store ptr %0, ptr %5, align 8
+  store ptr %1, ptr %6, align 8
+  store i32 %2, ptr %7, align 4
+  store float %3, ptr %8, align 4
+  %15 = alloca ptr, i64 4, align 16
+  %16 = getelementptr ptr, ptr %15, i32 0
+  store ptr %5, ptr %16, align 8
+  %17 = getelementptr ptr, ptr %15, i32 1
+  store ptr %6, ptr %17, align 8
+  %18 = getelementptr ptr, ptr %15, i32 2
+  store ptr %7, ptr %18, align 8
+  %19 = getelementptr ptr, ptr %15, i32 3
+  store ptr %8, ptr %19, align 8
+  %20 = call i32 @__cudaPopCallConfiguration(ptr %9, ptr %10, ptr %11, ptr %12)
+  %21 = load i64, ptr %11, align 8
+  %22 = load ptr, ptr %12, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %13, ptr align 8 %9, i64 12, i1 false)
+  %23 = getelementptr inbounds { i64, i32 }, ptr %13, i32 0, i32 0
+  %24 = load i64, ptr %23, align 8
+  %25 = getelementptr inbounds { i64, i32 }, ptr %13, i32 0, i32 1
+  %26 = load i32, ptr %25, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %14, ptr align 8 %10, i64 12, i1 false)
+  %27 = getelementptr inbounds { i64, i32 }, ptr %14, i32 0, i32 0
+  %28 = load i64, ptr %27, align 8
+  %29 = getelementptr inbounds { i64, i32 }, ptr %14, i32 0, i32 1
+  %30 = load i32, ptr %29, align 8
+  %31 = call noundef i32 @cudaLaunchKernel(ptr noundef @_Z48__device_stub__rgb_increase_brightness_coalescedPiS_if, i64 %24, i32 %26, i64 %28, i32 %30, ptr noundef %15, i64 noundef %21, ptr noundef %22)
+  br label %32
+
+32:                                               ; preds = %4
+  ret void
+}
+
 attributes #0 = { noinline norecurse sspstrong uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" }
 attributes #1 = { nocallback nofree nounwind willreturn memory(argmem: readwrite) }
 
