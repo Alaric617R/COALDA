@@ -2,7 +2,6 @@
 
 #include "ppm_utils.h"
 #include "rgb.cu"
-#include "rgb_func.cu"
 
 #define TILE_WIDTH 1024
 
