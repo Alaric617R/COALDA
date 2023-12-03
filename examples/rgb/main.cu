@@ -3,7 +3,7 @@
 #include "ppm_utils.h"
 #include "rgb.cu"
 
-#define TILE_WIDTH 1024
+#define TILE_WIDTH 512
 
 void test_rgb_array() {
   const dim3 dimGrid = dim3(1, 1, 1);
@@ -99,7 +99,7 @@ void test_increase_brightness_unroll() {
   cudaMalloc(&device_pixel_cpy, 4 * 3 * num_pixels * sizeof(int));
   cudaMemcpy(device_pixel_src, host_pixel_src, 4 * 3 * num_pixels * sizeof(int),
              cudaMemcpyHostToDevice);
-  rgb_increase_brightness_coalesced<<<dimGrid, dimBlock>>>(
+  rgb_increase_brightness_unroll<<<dimGrid, dimBlock>>>(
       device_pixel_cpy, device_pixel_src, width * height, 1.8);
   cudaDeviceSynchronize();
   cudaMemcpy(host_pixel_res, device_pixel_cpy, 4 * 3 * num_pixels * sizeof(int),
