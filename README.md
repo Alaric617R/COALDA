@@ -23,6 +23,7 @@ Currently we only consider the case that all threads filling a consecutive regio
 
 
 ## Solution Overview
+To note, COALDA mainly focuses on optimizing bandwidth for data transfers between host and GPU, which is the most major field for uncoalesced memory accesses. This lowers the complexity and overhead for compilation yet covers most potential memory operations to optimize. 
 
 There are overall two steps:
 
