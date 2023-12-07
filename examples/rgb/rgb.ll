@@ -3,14 +3,14 @@ source_filename = "rgb.cu"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
-%struct.dim3.0 = type { i32, i32, i32 }
+%struct.dim3 = type { i32, i32, i32 }
 
 ; Function Attrs: noinline norecurse sspstrong uwtable
 define dso_local void @_Z41__device_stub__rgb_copy_array_interleavedPiS_(ptr noundef %0, ptr noundef %1) #0 {
   %3 = alloca ptr, align 8
   %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3.0, align 8
-  %6 = alloca %struct.dim3.0, align 8
+  %5 = alloca %struct.dim3, align 8
+  %6 = alloca %struct.dim3, align 8
   %7 = alloca i64, align 8
   %8 = alloca ptr, align 8
   %9 = alloca { i64, i32 }, align 8
@@ -53,8 +53,8 @@ declare void @llvm.memcpy.p0.p0.i64(ptr noalias nocapture writeonly, ptr noalias
 define dso_local void @_Z39__device_stub__rgb_copy_array_coalescedPiS_(ptr noundef %0, ptr noundef %1) #0 {
   %3 = alloca ptr, align 8
   %4 = alloca ptr, align 8
-  %5 = alloca %struct.dim3.0, align 8
-  %6 = alloca %struct.dim3.0, align 8
+  %5 = alloca %struct.dim3, align 8
+  %6 = alloca %struct.dim3, align 8
   %7 = alloca i64, align 8
   %8 = alloca ptr, align 8
   %9 = alloca { i64, i32 }, align 8
@@ -91,8 +91,8 @@ define dso_local void @_Z41__device_stub__rgb_smem_array_interleavedPiS_i(ptr no
   %4 = alloca ptr, align 8
   %5 = alloca ptr, align 8
   %6 = alloca i32, align 4
-  %7 = alloca %struct.dim3.0, align 8
-  %8 = alloca %struct.dim3.0, align 8
+  %7 = alloca %struct.dim3, align 8
+  %8 = alloca %struct.dim3, align 8
   %9 = alloca i64, align 8
   %10 = alloca ptr, align 8
   %11 = alloca { i64, i32 }, align 8
