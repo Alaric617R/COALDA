@@ -2,6 +2,7 @@
 
 #include "ppm_utils.h"
 #include "rgb.cu"
+#include "rgb_pass_ready.cu"
 
 #define TILE_WIDTH 512
 
@@ -72,7 +73,7 @@ void test_increase_brightness() {
   cudaMalloc(&device_pixel_cpy, 3 * num_pixels * sizeof(int));
   cudaMemcpy(device_pixel_src, host_pixel_src, 3 * num_pixels * sizeof(int),
              cudaMemcpyHostToDevice);
-  rgb_increase_brightness<<<dimGrid, dimBlock>>>(
+  rgb_increase_brightness_pass_ready<<<dimGrid, dimBlock>>>(
       device_pixel_cpy, device_pixel_src, width * height, 1.8);
   cudaDeviceSynchronize();
   cudaMemcpy(host_pixel_res, device_pixel_cpy, 3 * num_pixels * sizeof(int),
