@@ -21,7 +21,7 @@ clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-device-only -emit-llvm
 clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-host-only -emit-llvm -c rgb.cu -o rgb_host.o -Xclang -disable-O0-optnone
 
 # Apply the pass to the device bc code
-opt -load-pass-plugin ../../build/coalpass/CoalPass.so -passes=coal rgb_device.bc -o rgb_device.bc
+opt -load-pass-plugin ../../build/coalpass/CoalPass.so -passes=coal rgb_device.bc -o rgb_device.bc > apply.out
 
 # Convert rgb_device.bc to ptx
 llc -march=nvptx64 -mcpu=${GPU_ARCH} rgb_device.bc -o rgb_device.ptx
