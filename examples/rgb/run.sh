@@ -5,6 +5,12 @@ GPU_ARCH="sm_75"
 
 # NOTE: If you have no inline problem, try to switch to CUDA 11.7
 
+
+cd ../../build
+cmake ..
+make
+cd ../examples/rgb
+
 # Seperate Compilation follows the below process
 # "nvptx64-nvidia-cuda" - "clang", inputs: ["rgb.cu"], output: "/tmp/rgb-c42443/rgb-sm_35.s"
 # "nvptx64-nvidia-cuda" - "NVPTX::Assembler", inputs: ["/tmp/rgb-c42443/rgb-sm_35.s"], output: "/tmp/rgb-d56ddb/rgb-sm_35.o"
