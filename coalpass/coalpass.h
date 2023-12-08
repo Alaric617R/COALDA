@@ -1,5 +1,6 @@
 #ifndef COALPASS_H
 #define COALPASS_H
+
 #include "llvm/Analysis/BlockFrequencyInfo.h"
 #include "llvm/Analysis/BranchProbabilityInfo.h"
 #include "llvm/IR/PassManager.h"

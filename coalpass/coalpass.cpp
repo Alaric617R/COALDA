@@ -1,4 +1,11 @@
 #include "coalpass.h"
+#include "debugLog.h"
+#include <fstream>
+#include <llvm/Support/raw_ostream.h>
+#include <string>
+
+
+using std::ofstream;
 
 //** Debug test functions **//
 void coalPass::CoalPass::unit_test_distributive_transform(){
@@ -237,32 +244,49 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
     }
 
     /// TODO: alter or delete the original store. Substitude with new one
-    if (debug){
-        sep_center("Modified LLVM IR");
+    #ifdef TRACE_LL_OUTPUT
+    ofstream outputLL(std::string(LOG_PATH) + "CoalPassOutput_" + F.getName().str() + ".ll");
+        // rename all basicBlock
+        int bb_idx = 0;
         for (auto &bb : F){
-            for (auto &inst : bb){
-                errs() << inst << '\n';
-            }
+            bb.setName("BB_" + std::to_string(bb_idx++));
         }
-    }
+        sep_center_sm("Modified LLVM IR for Function: " + F.getName().str(), outputLL);
+        for (auto &bb : F){
+            outputLL << bb.getName().str() << ":\n";
+            for (auto &inst : bb){
+                string tmp;
+                raw_string_ostream(tmp) << inst;
+                outputLL << tmp << '\n';
+            }
+            outputLL << '\n';
+        }
+        outputLL.close();
+    #endif
 }
 
 
 PreservedAnalyses coalPass::CoalPass::run(Function &F, FunctionAnalysisManager &FAM){
         // if (DEBUG &&  F.getName().str() != string("_Z26rgb_copy_array_interleavedPiS_"))  return PreservedAnalyses::all();
-        if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
+        // if (DEBUG &&  F.getName().str() != string("_Z26rgb_smem_array_interleavedPiS_i"))  return PreservedAnalyses::all();
         // unit_test_learn_GEP_type(F); 
-        run_coal(F, FAM);
-        return PreservedAnalyses::all();
         // unit_test_ViableOffsetEquation_construction();
         // unit_test_distributive_transform();
         // return PreservedAnalyses::all();
 
+        #ifdef TRACE_LL_OUTPUT
+        errs() << "Running coalPass on function:\t" << F.getName() << "\n";
+        #endif
 
         /// TODO: if function contains any loop, skip this function
         LoopAnalysis::Result &loopAnaResult = FAM.getResult<LoopAnalysis>(F);
-        if (!loopAnaResult.empty()) return PreservedAnalyses::all();
-        
+        if (loopAnaResult.empty()) {
+            run_coal(F, FAM);
+            return PreservedAnalyses::all();
+        }
+        else  return PreservedAnalyses::all();
+
+
         sep_center(F.getName());
         int bb_cnt = 0;
         for (auto &bb : F){

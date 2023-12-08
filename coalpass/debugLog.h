@@ -1,5 +1,8 @@
 #ifndef DEBUG_LOG_H
 #define DEBUG_LOG_H
+
+#define TRACE_LL_OUTPUT
+
 #include "llvm/Analysis/BlockFrequencyInfo.h"
 #include "llvm/Analysis/BranchProbabilityInfo.h"
 #include "llvm/IR/PassManager.h"
@@ -10,6 +13,7 @@
 #include "llvm/Analysis/AliasSetTracker.h"
 #include "llvm/Pass.h"
 #include "llvm/IR/Instructions.h"
+#include "llvm/Support/raw_ostream.h"
 
 
 #include  <iostream>
@@ -24,6 +28,9 @@
 #include <memory>
 using namespace std;
 
+#ifdef TRACE_LL_OUTPUT
+#define LOG_PATH "/home/arch/Desktop/EECS583_Project/examples/rgb/"
+#endif
 
 using std::deque;
 using std::optional;
@@ -107,5 +114,12 @@ std::string string_format( const std::string& format, Args ... args )
    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
 }
 
+#ifdef TRACE_LL_OUTPUT
+#define sep_center_sm(center, fd) \
+        for (int i = 0; i < 18; i ++) fd << '<'; \
+        fd << '\t' << center << '\t'; \
+        for (int i = 0; i < 18; i ++) fd << '>'; \
+        fd << '\n';
+#endif
 
 #endif
