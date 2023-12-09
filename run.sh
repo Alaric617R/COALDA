@@ -22,6 +22,7 @@ GPU_ARCH="sm_75"
 # "x86_64-pc-linux-gnu" - "GNU::Linker", inputs: ["/tmp/rgb-2642c4.o", "/tmp/main-9b99b7.o"], output: "a.out"
 
 # Compile the CUDA device and host code to rgb_device.bc and rgb_host.o
+# clang++ -stdlib=libc++ --cuda-gpu-arch=sm_75 --cuda-device-only -emit-llvm -c rgb.cu -o rgb_device.bc -Xclang -disable-O0-optnone
 clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-device-only -emit-llvm -c ${1}.cu -o ${1}_device.bc -Xclang -disable-O0-optnone
 clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-host-only -emit-llvm -c ${1}.cu -o ${1}_host.o -Xclang -disable-O0-optnone
 
@@ -29,6 +30,8 @@ clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-host-only -emit-llvm -
 opt -load-pass-plugin ../../build/coalpass/CoalPass.so -passes=coal ${1}_device.bc -o ${1}_device.bc
 
 # Convert rgb_device.bc to ptx
+# llc -march=nvptx64 -mcpu=sm_75 rgb_device.bc -o rgb_device_1.ptx
+
 llc -march=nvptx64 -mcpu=${GPU_ARCH} ${1}_device.bc -o ${1}_device.ptx
 
 # Convert rgb_device.ptx to cubin
@@ -44,4 +47,4 @@ nvcc main.cu ${1}.o -o ${1}.out
 ./${1}.out
 
 # Remove redundant files
-rm *.bc *.ptx *.o
+rm *.bc *.ptx *.o *.cubin *.ll
