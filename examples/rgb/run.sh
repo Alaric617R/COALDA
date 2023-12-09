@@ -23,6 +23,7 @@ cd ../examples/rgb
 # "x86_64-pc-linux-gnu" - "GNU::Linker", inputs: ["/tmp/rgb-2642c4.o", "/tmp/main-9b99b7.o"], output: "a.out"
 
 # Compile the CUDA device and host code to rgb_device.bc and rgb_host.o
+# clang++ -stdlib=libc++ --cuda-gpu-arch=sm_75 rgb_pass_ready.cu main.cu -o a.out
 clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-device-only -emit-llvm -c ${1}.cu -o ${1}_device.bc -Xclang -disable-O0-optnone
 clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-host-only -emit-llvm -c ${1}.cu -o ${1}_host.o -Xclang -disable-O0-optnone
 
@@ -45,4 +46,5 @@ nvcc main.cu ${1}.o -o ${1}.out
 ./${1}.out
 
 # Remove redundant files
-rm *.bc *.ptx *.o
+# rm *.bc *.ptx *.o *.cubin *.ll
+rm ${1}_device.bc ${1}_device.ptx ${1}.o ${1}_host.o ${1}_device.cubin
