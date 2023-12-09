@@ -45,4 +45,4 @@ nvcc main.cu ${1}.o -o ${1}.out
 ./${1}.out
 
 # Remove redundant files
-rm *.bc *.ptx *.o
+rm *.bc *.ptx *.o *.cubin
