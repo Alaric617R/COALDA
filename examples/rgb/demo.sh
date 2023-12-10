@@ -14,8 +14,8 @@ clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-path=${CUDA_PATH} --cu
 opt -load-pass-plugin ../../build/coalpass/CoalPass.so -passes=coal rgb_pass_ready_device_origin.bc -o rgb_pass_ready_device_opted.bc
 
 # Convert rgb_device.bc to ptx
-llc -march=nvptx64 -mcpu=${GPU_ARCH} rgb_pass_ready_device_opted.bc -o rgb_pass_ready_device_opted.ptx
-llc -march=nvptx64 -mcpu=${GPU_ARCH} rgb_pass_ready_device_origin.bc -o rgb_pass_ready_device_origin.ptx
+llc -march=nvptx64 -mcpu=${GPU_ARCH} -O0 rgb_pass_ready_device_opted.bc -o rgb_pass_ready_device_opted.ptx
+llc -march=nvptx64 -mcpu=${GPU_ARCH} -O0 rgb_pass_ready_device_origin.bc -o rgb_pass_ready_device_origin.ptx
 
 # Convert rgb_device.ptx to cubin
 ${NVCC} --gpu-architecture=${GPU_ARCH} --cubin rgb_pass_ready_device_opted.ptx
@@ -31,4 +31,4 @@ ${NVCC} main.cu rgb_pass_ready_opted.o -o rgb_pass_ready_origin.out
 
 # Run ncu
 # sudo /opt/cuda/nsight_compute/ncu -c 1 -o origin --section MemoryWorkloadAnalysis_Chart "./rgb_pass_ready_origin.out"
-# sudo /opt/cuda/nsight_compute/ncu -c 1 -o opted --section MemoryWorkloadAnalysis_Chart "./rgb_pass_ready_opted.out"
+sudo /opt/cuda/nsight_compute/ncu -c 1 -o opted --section MemoryWorkloadAnalysis_Chart "./rgb_pass_ready_opted.out"
