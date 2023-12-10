@@ -3,6 +3,10 @@
 #include <sstream>
 #include <string>
 
+/*
+  A simple implementation of binary read & write for .ppm
+*/
+
 // 0x20: space, 0x23: hashtag, 0x0a: eol, 0x0d: return
 // Idea:
 // Skip over the first end of line

@@ -6,6 +6,10 @@
 #define TILE_WIDTH 512
 
 void test_increase_brightness_pass_ready() {
+
+  /*
+    Declaration and configuration
+  */
   int width, height;
   int *host_pixel_src = read_ppm("images/1.ppm", width, height);
   long long total_pixel = width * height;
@@ -16,8 +20,16 @@ void test_increase_brightness_pass_ready() {
   int host_pixel_res[3 * num_pixels];
   int *device_pixel_src;
   int *device_pixel_cpy;
+
+  /*
+    Allocate host and device memory
+  */
   cudaMalloc(&device_pixel_src, 3 * num_pixels * sizeof(int));
   cudaMalloc(&device_pixel_cpy, 3 * num_pixels * sizeof(int));
+
+  /*
+    Data movement and kernel launch
+  */
   cudaMemcpy(device_pixel_src, host_pixel_src, 3 * num_pixels * sizeof(int),
              cudaMemcpyHostToDevice);
   rgb_increase_brightness_pass_ready<<<dimGrid, dimBlock>>>(
@@ -26,7 +38,16 @@ void test_increase_brightness_pass_ready() {
   cudaMemcpy(host_pixel_res, device_pixel_cpy, 3 * num_pixels * sizeof(int),
              cudaMemcpyDeviceToHost);
   cudaDeviceSynchronize();
+
+  /*
+    Write result to output file
+  */
   write_ppm("images/1_modified.ppm", host_pixel_res, width, height);
+
+
+  /*
+    Free host and device memory
+  */
   delete[] host_pixel_src;
   cudaFree(device_pixel_src);
   cudaFree(device_pixel_cpy);

@@ -1,5 +1,9 @@
 #define TILE_WIDTH 512
 
+/*
+    The desired effect after applying the pass
+*/
+
 __global__ void rgb_increase_brightness_coalesced(int *pixel_dst,
                                                   int *pixel_src, int size,
                                                   float factor) {

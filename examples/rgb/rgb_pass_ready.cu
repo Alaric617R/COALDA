@@ -1,5 +1,9 @@
 #define TILE_WIDTH 512
 
+/*
+  The intuitive kernel implementation
+*/
+
 __global__ void rgb_increase_brightness_pass_ready(int *pixel_dst,
                                                    int *pixel_src, int size,
                                                    float factor) {
@@ -12,7 +16,7 @@ __global__ void rgb_increase_brightness_pass_ready(int *pixel_dst,
   __shared__ int pixel_smem_dst[3 * TILE_WIDTH];
 
   /*
-    Read input pixels to shared memory
+    "Gather": Read input pixels to shared memory
   */
   pixel_smem_src[3 * local_tid + 0] = pixel_src[3 * global_tid + 0];  // r
   __syncthreads();
@@ -22,7 +26,7 @@ __global__ void rgb_increase_brightness_pass_ready(int *pixel_dst,
   __syncthreads();
 
   /*
-    Computation
+    Computation, very simple here but can be more complicated
   */
   pixel_smem_dst[3 * local_tid + 0] =
       min(255, (int)(factor * (pixel_smem_src[3 * local_tid + 0])));
@@ -33,7 +37,7 @@ __global__ void rgb_increase_brightness_pass_ready(int *pixel_dst,
   __syncthreads();
 
   /*
-    Write result to destination
+    "Scatter": Write result to destination
   */
   pixel_dst[3 * global_tid + 0] = pixel_smem_dst[3 * local_tid + 0];  // r
   __syncthreads();
