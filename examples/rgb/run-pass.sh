@@ -6,7 +6,10 @@
 PATH2LIB="../../build/coalpass/CoalPass.so" # Specify your build directory in the project
 PASS=coal
 
-opt -load-pass-plugin="${PATH2LIB}" -passes="${PASS}" main-cuda-nvptx64-nvidia-cuda-sm_86.bc -o main-cuda-nvptx64-nvidia-cuda-sm_86_opted.bc
+# opt -load-pass-plugin="${PATH2LIB}" -passes="${PASS}" main-cuda-nvptx64-nvidia-cuda-sm_86.bc -o main-cuda-nvptx64-nvidia-cuda-sm_86_opted.bc
+opt -load-pass-plugin="${PATH2LIB}" -passes="${PASS}" main_coalesced-cuda-nvptx64-nvidia-cuda-sm_86.bc -o main_coalesced-cuda-nvptx64-nvidia-cuda-sm_86_opted.bc;
+opt -load-pass-plugin="${PATH2LIB}" -passes="${PASS}" main-cuda-nvptx64-nvidia-cuda-sm_86.bc -o main-cuda-nvptx64-nvidia-cuda-sm_86_optedll.bc
+
 
 llvm-dis *.bc
 # rm -f tmp.bc.out

@@ -3,40 +3,40 @@ source_filename = "main_coalesced.cu"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
-%"class.std::__1::basic_ostream.2" = type { ptr, %"class.std::__1::basic_ios.base.1" }
-%"class.std::__1::basic_ios.base.1" = type <{ %"class.std::__1::ios_base.0", ptr, i32 }>
-%"class.std::__1::ios_base.0" = type { ptr, i32, i64, i64, i32, i32, ptr, ptr, ptr, ptr, i64, i64, ptr, i64, i64, ptr, i64, i64 }
-%"class.std::__1::locale::id.4" = type <{ %"struct.std::__1::once_flag.3", i32, [4 x i8] }>
-%"struct.std::__1::once_flag.3" = type { i64 }
-%"class.std::__1::basic_ifstream.11" = type { %"class.std::__1::basic_istream.base.6", %"class.std::__1::basic_filebuf.10", %"class.std::__1::basic_ios.base.1" }
-%"class.std::__1::basic_istream.base.6" = type { ptr, i64 }
-%"class.std::__1::basic_filebuf.10" = type <{ %"class.std::__1::basic_streambuf.7", ptr, ptr, ptr, [8 x i8], i64, ptr, i64, ptr, ptr, %struct.__mbstate_t.9, %struct.__mbstate_t.9, i32, i32, i8, i8, i8, [5 x i8] }>
-%"class.std::__1::basic_streambuf.7" = type { ptr, %"class.std::__1::locale.5", ptr, ptr, ptr, ptr, ptr, ptr }
-%"class.std::__1::locale.5" = type { ptr }
-%struct.__mbstate_t.9 = type { i32, %union.anon.2.8 }
-%union.anon.2.8 = type { i32 }
-%"class.std::__1::basic_ofstream.13" = type { %"class.std::__1::basic_ostream.base.12", %"class.std::__1::basic_filebuf.10", %"class.std::__1::basic_ios.base.1" }
-%"class.std::__1::basic_ostream.base.12" = type { ptr }
-%struct.dim3.14 = type { i32, i32, i32 }
-%"class.std::__1::basic_string.21" = type { %"class.std::__1::__compressed_pair.20" }
-%"class.std::__1::__compressed_pair.20" = type { %"struct.std::__1::__compressed_pair_elem.19" }
-%"struct.std::__1::__compressed_pair_elem.19" = type { %"struct.std::__1::basic_string<char>::__rep.18" }
-%"struct.std::__1::basic_string<char>::__rep.18" = type { %union.anon.17 }
-%union.anon.17 = type { %"struct.std::__1::basic_string<char>::__long.16" }
-%"struct.std::__1::basic_string<char>::__long.16" = type { %struct.anon.15, i64, ptr }
-%struct.anon.15 = type { i64 }
-%"struct.std::__1::__default_init_tag.22" = type { i8 }
-%"class.std::__1::unique_ptr.26" = type { %"class.std::__1::__compressed_pair.3.25" }
-%"class.std::__1::__compressed_pair.3.25" = type { %"struct.std::__1::__compressed_pair_elem.4.23", %"struct.std::__1::__compressed_pair_elem.5.24" }
-%"struct.std::__1::__compressed_pair_elem.4.23" = type { ptr }
-%"struct.std::__1::__compressed_pair_elem.5.24" = type { ptr }
-%"class.std::__1::fpos.27" = type { %struct.__mbstate_t.9, i64 }
-%"class.std::__1::basic_istream.28" = type { ptr, i64, %"class.std::__1::basic_ios.base.1" }
-%"class.std::__1::basic_ios.29" = type <{ %"class.std::__1::ios_base.0", ptr, i32, [4 x i8] }>
-%"struct.std::__1::basic_string<char>::__short.31" = type { %struct.anon.0.30, [0 x i8], [23 x i8] }
-%struct.anon.0.30 = type { i8 }
-%"class.std::__1::basic_ostream<char>::sentry.32" = type { i8, ptr }
-%"class.std::__1::ostreambuf_iterator.33" = type { ptr }
+%"class.std::__1::basic_ostream.11" = type { ptr, %"class.std::__1::basic_ios.base.10" }
+%"class.std::__1::basic_ios.base.10" = type <{ %"class.std::__1::ios_base.9", ptr, i32 }>
+%"class.std::__1::ios_base.9" = type { ptr, i32, i64, i64, i32, i32, ptr, ptr, ptr, ptr, i64, i64, ptr, i64, i64, ptr, i64, i64 }
+%"class.std::__1::locale::id.13" = type <{ %"struct.std::__1::once_flag.12", i32, [4 x i8] }>
+%"struct.std::__1::once_flag.12" = type { i64 }
+%"class.std::__1::basic_ifstream.20" = type { %"class.std::__1::basic_istream.base.15", %"class.std::__1::basic_filebuf.19", %"class.std::__1::basic_ios.base.10" }
+%"class.std::__1::basic_istream.base.15" = type { ptr, i64 }
+%"class.std::__1::basic_filebuf.19" = type <{ %"class.std::__1::basic_streambuf.16", ptr, ptr, ptr, [8 x i8], i64, ptr, i64, ptr, ptr, %struct.__mbstate_t.18, %struct.__mbstate_t.18, i32, i32, i8, i8, i8, [5 x i8] }>
+%"class.std::__1::basic_streambuf.16" = type { ptr, %"class.std::__1::locale.14", ptr, ptr, ptr, ptr, ptr, ptr }
+%"class.std::__1::locale.14" = type { ptr }
+%struct.__mbstate_t.18 = type { i32, %union.anon.2.17 }
+%union.anon.2.17 = type { i32 }
+%"class.std::__1::basic_ofstream.22" = type { %"class.std::__1::basic_ostream.base.21", %"class.std::__1::basic_filebuf.19", %"class.std::__1::basic_ios.base.10" }
+%"class.std::__1::basic_ostream.base.21" = type { ptr }
+%struct.dim3.23 = type { i32, i32, i32 }
+%"class.std::__1::basic_string.30" = type { %"class.std::__1::__compressed_pair.29" }
+%"class.std::__1::__compressed_pair.29" = type { %"struct.std::__1::__compressed_pair_elem.28" }
+%"struct.std::__1::__compressed_pair_elem.28" = type { %"struct.std::__1::basic_string<char>::__rep.27" }
+%"struct.std::__1::basic_string<char>::__rep.27" = type { %union.anon.26 }
+%union.anon.26 = type { %"struct.std::__1::basic_string<char>::__long.25" }
+%"struct.std::__1::basic_string<char>::__long.25" = type { %struct.anon.24, i64, ptr }
+%struct.anon.24 = type { i64 }
+%"struct.std::__1::__default_init_tag.31" = type { i8 }
+%"class.std::__1::unique_ptr.35" = type { %"class.std::__1::__compressed_pair.3.34" }
+%"class.std::__1::__compressed_pair.3.34" = type { %"struct.std::__1::__compressed_pair_elem.4.32", %"struct.std::__1::__compressed_pair_elem.5.33" }
+%"struct.std::__1::__compressed_pair_elem.4.32" = type { ptr }
+%"struct.std::__1::__compressed_pair_elem.5.33" = type { ptr }
+%"class.std::__1::fpos.36" = type { %struct.__mbstate_t.18, i64 }
+%"class.std::__1::basic_istream.37" = type { ptr, i64, %"class.std::__1::basic_ios.base.10" }
+%"class.std::__1::basic_ios.38" = type <{ %"class.std::__1::ios_base.9", ptr, i32, [4 x i8] }>
+%"struct.std::__1::basic_string<char>::__short.40" = type { %struct.anon.0.39, [0 x i8], [23 x i8] }
+%struct.anon.0.39 = type { i8 }
+%"class.std::__1::basic_ostream<char>::sentry.41" = type { i8, ptr }
+%"class.std::__1::ostreambuf_iterator.42" = type { ptr }
 
 $_ZNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEC1ERKNS_12basic_stringIcS2_NS_9allocatorIcEEEEj = comdat any
 
@@ -337,7 +337,7 @@ $_ZTSNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE = comdat any
 $_ZTINSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE = comdat any
 
 @.str = private unnamed_addr constant [21 x i8] c"Error opening file!\0A\00", align 1
-@_ZNSt3__14coutE = external global %"class.std::__1::basic_ostream.2", align 8
+@_ZNSt3__14coutE = external global %"class.std::__1::basic_ostream.11", align 8
 @.str.1 = private unnamed_addr constant [24 x i8] c"Skipping first line...\0A\00", align 1
 @.str.2 = private unnamed_addr constant [22 x i8] c"Skipping comments...\0A\00", align 1
 @.str.3 = private unnamed_addr constant [18 x i8] c"Reading width...\0A\00", align 1
@@ -365,7 +365,7 @@ $_ZTINSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE = comdat any
 @_ZTSNSt3__113basic_filebufIcNS_11char_traitsIcEEEE = linkonce_odr dso_local constant [47 x i8] c"NSt3__113basic_filebufIcNS_11char_traitsIcEEEE\00", comdat, align 1
 @_ZTINSt3__115basic_streambufIcNS_11char_traitsIcEEEE = external constant ptr
 @_ZTINSt3__113basic_filebufIcNS_11char_traitsIcEEEE = linkonce_odr dso_local constant { ptr, ptr, ptr } { ptr getelementptr inbounds (ptr, ptr @_ZTVN10__cxxabiv120__si_class_type_infoE, i64 2), ptr @_ZTSNSt3__113basic_filebufIcNS_11char_traitsIcEEEE, ptr @_ZTINSt3__115basic_streambufIcNS_11char_traitsIcEEEE }, comdat, align 8
-@_ZNSt3__17codecvtIcc11__mbstate_tE2idE = external global %"class.std::__1::locale::id.4", align 8
+@_ZNSt3__17codecvtIcc11__mbstate_tE2idE = external global %"class.std::__1::locale::id.13", align 8
 @_ZTISt8bad_cast = external constant ptr
 @_ZTVNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE = linkonce_odr dso_local unnamed_addr constant { [5 x ptr], [5 x ptr] } { [5 x ptr] [ptr inttoptr (i64 176 to ptr), ptr null, ptr @_ZTINSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, ptr @_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEEED1Ev, ptr @_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEEED0Ev], [5 x ptr] [ptr inttoptr (i64 -176 to ptr), ptr inttoptr (i64 -176 to ptr), ptr @_ZTINSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, ptr @_ZTv0_n24_NSt3__114basic_ofstreamIcNS_11char_traitsIcEEED1Ev, ptr @_ZTv0_n24_NSt3__114basic_ofstreamIcNS_11char_traitsIcEEED0Ev] }, comdat, align 8
 @_ZTTNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE = linkonce_odr dso_local unnamed_addr constant [4 x ptr] [ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 0, i32 3), ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTCNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE0_NS_13basic_ostreamIcS2_EE, i32 0, inrange i32 0, i32 3), ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTCNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE0_NS_13basic_ostreamIcS2_EE, i32 0, inrange i32 1, i32 3), ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 1, i32 3)], comdat, align 8
@@ -387,7 +387,7 @@ $_ZTINSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE = comdat any
 @.str.26 = private unnamed_addr constant [4 x i8] c"r+b\00", align 1
 @.str.27 = private unnamed_addr constant [4 x i8] c"w+b\00", align 1
 @.str.28 = private unnamed_addr constant [4 x i8] c"a+b\00", align 1
-@_ZNSt3__15ctypeIcE2idE = external global %"class.std::__1::locale::id.4", align 8
+@_ZNSt3__15ctypeIcE2idE = external global %"class.std::__1::locale::id.13", align 8
 
 ; Function Attrs: mustprogress noinline sspstrong uwtable
 define dso_local noundef ptr @_Z8read_ppmNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERiS6_(ptr noundef %0, ptr noundef nonnull align 4 dereferenceable(4) %1, ptr noundef nonnull align 4 dereferenceable(4) %2) #0 personality ptr @__gxx_personality_v0 {
@@ -396,7 +396,7 @@ define dso_local noundef ptr @_Z8read_ppmNSt3__112basic_stringIcNS_11char_traits
   %6 = alloca ptr, align 8
   %7 = alloca i8, align 1
   %8 = alloca i32, align 4
-  %9 = alloca %"class.std::__1::basic_ifstream.11", align 8
+  %9 = alloca %"class.std::__1::basic_ifstream.20", align 8
   %10 = alloca ptr, align 8
   %11 = alloca i32, align 4
   %12 = alloca i32, align 4
@@ -905,7 +905,7 @@ define linkonce_odr hidden void @_ZNSt3__114basic_ifstreamIcNS_11char_traitsIcEE
   store ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 0, i32 3), ptr %9, align 8
   %11 = getelementptr inbounds i8, ptr %9, i64 184
   store ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 1, i32 3), ptr %11, align 8
-  %12 = getelementptr inbounds %"class.std::__1::basic_ifstream.11", ptr %9, i32 0, i32 1
+  %12 = getelementptr inbounds %"class.std::__1::basic_ifstream.20", ptr %9, i32 0, i32 1
   invoke void @_ZNSt3__113basic_istreamIcNS_11char_traitsIcEEEC2B7v160006EPNS_15basic_streambufIcS2_EE(ptr noundef nonnull align 8 dereferenceable(16) %9, ptr noundef getelementptr inbounds ([4 x ptr], ptr @_ZTTNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE, i64 0, i64 1), ptr noundef %12)
           to label %13 unwind label %30
 
@@ -913,12 +913,12 @@ define linkonce_odr hidden void @_ZNSt3__114basic_ifstreamIcNS_11char_traitsIcEE
   store ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 0, i32 3), ptr %9, align 8
   %14 = getelementptr inbounds i8, ptr %9, i64 184
   store ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 1, i32 3), ptr %14, align 8
-  %15 = getelementptr inbounds %"class.std::__1::basic_ifstream.11", ptr %9, i32 0, i32 1
+  %15 = getelementptr inbounds %"class.std::__1::basic_ifstream.20", ptr %9, i32 0, i32 1
   invoke void @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev(ptr noundef nonnull align 8 dereferenceable(163) %15)
           to label %16 unwind label %34
 
 16:                                               ; preds = %13
-  %17 = getelementptr inbounds %"class.std::__1::basic_ifstream.11", ptr %9, i32 0, i32 1
+  %17 = getelementptr inbounds %"class.std::__1::basic_ifstream.20", ptr %9, i32 0, i32 1
   %18 = load ptr, ptr %5, align 8
   %19 = load i32, ptr %6, align 4
   %20 = or i32 %19, 8
@@ -993,7 +993,7 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNKSt3__114basic_ifstreamIcNS_11
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_ifstream.11", ptr %3, i32 0, i32 1
+  %4 = getelementptr inbounds %"class.std::__1::basic_ifstream.20", ptr %3, i32 0, i32 1
   %5 = call noundef zeroext i1 @_ZNKSt3__113basic_filebufIcNS_11char_traitsIcEEE7is_openEv(ptr noundef nonnull align 8 dereferenceable(163) %4)
   ret i1 %5
 }
@@ -1078,7 +1078,7 @@ define linkonce_odr hidden void @_ZNSt3__114basic_ifstreamIcNS_11char_traitsIcEE
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_ifstream.11", ptr %3, i32 0, i32 1
+  %4 = getelementptr inbounds %"class.std::__1::basic_ifstream.20", ptr %3, i32 0, i32 1
   %5 = call noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE5closeEv(ptr noundef nonnull align 8 dereferenceable(163) %4)
   %6 = icmp eq ptr %5, null
   br i1 %6, label %7, label %12
@@ -1111,7 +1111,7 @@ define dso_local void @_Z9write_ppmNSt3__112basic_stringIcNS_11char_traitsIcEENS
   %5 = alloca ptr, align 8
   %6 = alloca i32, align 4
   %7 = alloca i32, align 4
-  %8 = alloca %"class.std::__1::basic_ofstream.13", align 8
+  %8 = alloca %"class.std::__1::basic_ofstream.22", align 8
   %9 = alloca ptr, align 8
   %10 = alloca i32, align 4
   %11 = alloca i32, align 4
@@ -1310,7 +1310,7 @@ define linkonce_odr hidden void @_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEE
   store ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 0, i32 3), ptr %9, align 8
   %11 = getelementptr inbounds i8, ptr %9, i64 176
   store ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 1, i32 3), ptr %11, align 8
-  %12 = getelementptr inbounds %"class.std::__1::basic_ofstream.13", ptr %9, i32 0, i32 1
+  %12 = getelementptr inbounds %"class.std::__1::basic_ofstream.22", ptr %9, i32 0, i32 1
   invoke void @_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEEC2B7v160006EPNS_15basic_streambufIcS2_EE(ptr noundef nonnull align 8 dereferenceable(8) %9, ptr noundef getelementptr inbounds ([4 x ptr], ptr @_ZTTNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, i64 0, i64 1), ptr noundef %12)
           to label %13 unwind label %30
 
@@ -1318,12 +1318,12 @@ define linkonce_odr hidden void @_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEE
   store ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 0, i32 3), ptr %9, align 8
   %14 = getelementptr inbounds i8, ptr %9, i64 176
   store ptr getelementptr inbounds ({ [5 x ptr], [5 x ptr] }, ptr @_ZTVNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEE, i32 0, inrange i32 1, i32 3), ptr %14, align 8
-  %15 = getelementptr inbounds %"class.std::__1::basic_ofstream.13", ptr %9, i32 0, i32 1
+  %15 = getelementptr inbounds %"class.std::__1::basic_ofstream.22", ptr %9, i32 0, i32 1
   invoke void @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev(ptr noundef nonnull align 8 dereferenceable(163) %15)
           to label %16 unwind label %34
 
 16:                                               ; preds = %13
-  %17 = getelementptr inbounds %"class.std::__1::basic_ofstream.13", ptr %9, i32 0, i32 1
+  %17 = getelementptr inbounds %"class.std::__1::basic_ofstream.22", ptr %9, i32 0, i32 1
   %18 = load ptr, ptr %5, align 8
   %19 = load i32, ptr %6, align 4
   %20 = or i32 %19, 16
@@ -1398,7 +1398,7 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNKSt3__114basic_ofstreamIcNS_11
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_ofstream.13", ptr %3, i32 0, i32 1
+  %4 = getelementptr inbounds %"class.std::__1::basic_ofstream.22", ptr %3, i32 0, i32 1
   %5 = call noundef zeroext i1 @_ZNKSt3__113basic_filebufIcNS_11char_traitsIcEEE7is_openEv(ptr noundef nonnull align 8 dereferenceable(163) %4)
   ret i1 %5
 }
@@ -1410,7 +1410,7 @@ define linkonce_odr hidden void @_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEE
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_ofstream.13", ptr %3, i32 0, i32 1
+  %4 = getelementptr inbounds %"class.std::__1::basic_ofstream.22", ptr %3, i32 0, i32 1
   %5 = call noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE5closeEv(ptr noundef nonnull align 8 dereferenceable(163) %4)
   %6 = icmp eq ptr %5, null
   br i1 %6, label %7, label %12
@@ -1444,8 +1444,8 @@ define dso_local void @_Z59__device_stub__rgb_increase_brightness_pass_ready_coa
   %6 = alloca ptr, align 8
   %7 = alloca i32, align 4
   %8 = alloca float, align 4
-  %9 = alloca %struct.dim3.14, align 8
-  %10 = alloca %struct.dim3.14, align 8
+  %9 = alloca %struct.dim3.23, align 8
+  %10 = alloca %struct.dim3.23, align 8
   %11 = alloca i64, align 8
   %12 = alloca ptr, align 8
   %13 = alloca { i64, i32 }, align 8
@@ -1495,23 +1495,23 @@ define dso_local void @_Z45test_increase_brightness_pass_ready_coalescedv() #0 p
   %1 = alloca i32, align 4
   %2 = alloca i32, align 4
   %3 = alloca ptr, align 8
-  %4 = alloca %"class.std::__1::basic_string.21", align 8
+  %4 = alloca %"class.std::__1::basic_string.30", align 8
   %5 = alloca ptr, align 8
   %6 = alloca i32, align 4
   %7 = alloca i64, align 8
   %8 = alloca i32, align 4
-  %9 = alloca %struct.dim3.14, align 4
-  %10 = alloca %struct.dim3.14, align 4
+  %9 = alloca %struct.dim3.23, align 4
+  %10 = alloca %struct.dim3.23, align 4
   %11 = alloca i32, align 4
   %12 = alloca ptr, align 8
   %13 = alloca i64, align 8
   %14 = alloca ptr, align 8
   %15 = alloca ptr, align 8
-  %16 = alloca %struct.dim3.14, align 4
-  %17 = alloca %struct.dim3.14, align 4
+  %16 = alloca %struct.dim3.23, align 4
+  %17 = alloca %struct.dim3.23, align 4
   %18 = alloca { i64, i32 }, align 4
   %19 = alloca { i64, i32 }, align 4
-  %20 = alloca %"class.std::__1::basic_string.21", align 8
+  %20 = alloca %"class.std::__1::basic_string.30", align 8
   call void @_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2B7v160006IDnEEPKc(ptr noundef nonnull align 8 dereferenceable(24) %4, ptr noundef @.str.15)
   %21 = invoke noundef ptr @_Z8read_ppmNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERiS6_(ptr noundef %4, ptr noundef nonnull align 4 dereferenceable(4) %1, ptr noundef nonnull align 4 dereferenceable(4) %2)
           to label %22 unwind label %74
@@ -1652,12 +1652,12 @@ define dso_local void @_Z45test_increase_brightness_pass_ready_coalescedv() #0 p
 define linkonce_odr dso_local void @_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2B7v160006IDnEEPKc(ptr noundef nonnull align 8 dereferenceable(24) %0, ptr noundef %1) unnamed_addr #1 comdat align 2 {
   %3 = alloca ptr, align 8
   %4 = alloca ptr, align 8
-  %5 = alloca %"struct.std::__1::__default_init_tag.22", align 1
-  %6 = alloca %"struct.std::__1::__default_init_tag.22", align 1
+  %5 = alloca %"struct.std::__1::__default_init_tag.31", align 1
+  %6 = alloca %"struct.std::__1::__default_init_tag.31", align 1
   store ptr %0, ptr %3, align 8
   store ptr %1, ptr %4, align 8
   %7 = load ptr, ptr %3, align 8
-  %8 = getelementptr inbounds %"class.std::__1::basic_string.21", ptr %7, i32 0, i32 0
+  %8 = getelementptr inbounds %"class.std::__1::basic_string.30", ptr %7, i32 0, i32 0
   call void @_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_EC2B7v160006INS_18__default_init_tagESA_EEOT_OT0_(ptr noundef nonnull align 8 dereferenceable(24) %8, ptr noundef nonnull align 1 dereferenceable(1) %5, ptr noundef nonnull align 1 dereferenceable(1) %6)
   %9 = load ptr, ptr %4, align 8
   %10 = icmp ne ptr %9, null
@@ -1684,13 +1684,13 @@ define linkonce_odr dso_local void @_ZN4dim3C2Ejjj(ptr noundef nonnull align 4 d
   store i32 %2, ptr %7, align 4
   store i32 %3, ptr %8, align 4
   %9 = load ptr, ptr %5, align 8
-  %10 = getelementptr inbounds %struct.dim3.14, ptr %9, i32 0, i32 0
+  %10 = getelementptr inbounds %struct.dim3.23, ptr %9, i32 0, i32 0
   %11 = load i32, ptr %6, align 4
   store i32 %11, ptr %10, align 4
-  %12 = getelementptr inbounds %struct.dim3.14, ptr %9, i32 0, i32 1
+  %12 = getelementptr inbounds %struct.dim3.23, ptr %9, i32 0, i32 1
   %13 = load i32, ptr %7, align 4
   store i32 %13, ptr %12, align 4
-  %14 = getelementptr inbounds %struct.dim3.14, ptr %9, i32 0, i32 2
+  %14 = getelementptr inbounds %struct.dim3.23, ptr %9, i32 0, i32 2
   %15 = load i32, ptr %8, align 4
   store i32 %15, ptr %14, align 4
   ret void
@@ -1750,7 +1750,7 @@ define linkonce_odr dso_local void @_ZNSt3__114basic_ifstreamIcNS_11char_traitsI
   %12 = load i64, ptr %11, align 8
   %13 = getelementptr inbounds i8, ptr %5, i64 %12
   store ptr %9, ptr %13, align 8
-  %14 = getelementptr inbounds %"class.std::__1::basic_ifstream.11", ptr %5, i32 0, i32 1
+  %14 = getelementptr inbounds %"class.std::__1::basic_ifstream.20", ptr %5, i32 0, i32 1
   call void @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEED2Ev(ptr noundef nonnull align 8 dereferenceable(163) %14) #17
   %15 = getelementptr inbounds ptr, ptr %6, i64 1
   call void @_ZNSt3__113basic_istreamIcNS_11char_traitsIcEEED2Ev(ptr noundef nonnull align 8 dereferenceable(16) %5, ptr noundef %15) #17
@@ -1841,13 +1841,13 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
   br label %16
 
 16:                                               ; preds = %15, %7
-  %17 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %5, i32 0, i32 14
+  %17 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %5, i32 0, i32 14
   %18 = load i8, ptr %17, align 8
   %19 = trunc i8 %18 to i1
   br i1 %19, label %20, label %26
 
 20:                                               ; preds = %16
-  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %5, i32 0, i32 1
+  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %5, i32 0, i32 1
   %22 = load ptr, ptr %21, align 8
   %23 = icmp eq ptr %22, null
   br i1 %23, label %25, label %24
@@ -1860,13 +1860,13 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
   br label %26
 
 26:                                               ; preds = %25, %16
-  %27 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %5, i32 0, i32 15
+  %27 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %5, i32 0, i32 15
   %28 = load i8, ptr %27, align 1
   %29 = trunc i8 %28 to i1
   br i1 %29, label %30, label %36
 
 30:                                               ; preds = %26
-  %31 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %5, i32 0, i32 6
+  %31 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %5, i32 0, i32 6
   %32 = load ptr, ptr %31, align 8
   %33 = icmp eq ptr %32, null
   br i1 %33, label %35, label %34
@@ -1897,21 +1897,21 @@ declare void @_ZNSt3__113basic_istreamIcNS_11char_traitsIcEEED2Ev(ptr noundef no
 define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE5closeEv(ptr noundef nonnull align 8 dereferenceable(163) %0) #0 comdat align 2 personality ptr @__gxx_personality_v0 {
   %2 = alloca ptr, align 8
   %3 = alloca ptr, align 8
-  %4 = alloca %"class.std::__1::unique_ptr.26", align 8
+  %4 = alloca %"class.std::__1::unique_ptr.35", align 8
   %5 = alloca ptr, align 8
   %6 = alloca ptr, align 8
   %7 = alloca i32, align 4
   store ptr %0, ptr %2, align 8
   %8 = load ptr, ptr %2, align 8
   store ptr null, ptr %3, align 8
-  %9 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 8
+  %9 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 8
   %10 = load ptr, ptr %9, align 8
   %11 = icmp ne ptr %10, null
   br i1 %11, label %12, label %39
 
 12:                                               ; preds = %1
   store ptr %8, ptr %3, align 8
-  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 8
+  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 8
   %14 = load ptr, ptr %13, align 8
   store ptr @fclose, ptr %5, align 8
   call void @_ZNSt3__110unique_ptrI8_IO_FILEPFiPS1_EEC2B7v160006ILb1EvEES2_NS_16__dependent_typeINS_27__unique_ptr_deleter_sfinaeIS4_EEXT_EE20__good_rval_ref_typeE(ptr noundef nonnull align 8 dereferenceable(16) %4, ptr noundef %14, ptr noundef nonnull align 8 dereferenceable(8) %5) #17
@@ -1953,7 +1953,7 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %32
 
 32:                                               ; preds = %31, %29
-  %33 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 8
+  %33 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 8
   store ptr null, ptr %33, align 8
   %34 = load ptr, ptr %8, align 8
   %35 = getelementptr inbounds ptr, ptr %34, i64 3
@@ -2017,23 +2017,23 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
   %10 = call noundef i32 %9(ptr noundef nonnull align 8 dereferenceable(163) %6)
   %11 = load ptr, ptr %4, align 8
   %12 = call noundef nonnull align 8 dereferenceable(16) ptr @_ZNSt3__19use_facetB7v160006INS_7codecvtIcc11__mbstate_tEEEERKT_RKNS_6localeE(ptr noundef nonnull align 8 dereferenceable(8) %11)
-  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 9
+  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 9
   store ptr %12, ptr %13, align 8
-  %14 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 16
+  %14 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 16
   %15 = load i8, ptr %14, align 2
   %16 = trunc i8 %15 to i1
   %17 = zext i1 %16 to i8
   store i8 %17, ptr %5, align 1
-  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 9
+  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 9
   %19 = load ptr, ptr %18, align 8
   %20 = call noundef zeroext i1 @_ZNKSt3__17codecvtIcc11__mbstate_tE13always_noconvB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %19) #17
-  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 16
+  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 16
   %22 = zext i1 %20 to i8
   store i8 %22, ptr %21, align 2
   %23 = load i8, ptr %5, align 1
   %24 = trunc i8 %23 to i1
   %25 = zext i1 %24 to i32
-  %26 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 16
+  %26 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 16
   %27 = load i8, ptr %26, align 2
   %28 = trunc i8 %27 to i1
   %29 = zext i1 %28 to i32
@@ -2043,19 +2043,19 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
 31:                                               ; preds = %2
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgB7v160006EPcS4_S4_(ptr noundef nonnull align 8 dereferenceable(64) %6, ptr noundef null, ptr noundef null, ptr noundef null)
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpB7v160006EPcS4_(ptr noundef nonnull align 8 dereferenceable(64) %6, ptr noundef null, ptr noundef null)
-  %32 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 16
+  %32 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 16
   %33 = load i8, ptr %32, align 2
   %34 = trunc i8 %33 to i1
   br i1 %34, label %35, label %60
 
 35:                                               ; preds = %31
-  %36 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 14
+  %36 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 14
   %37 = load i8, ptr %36, align 8
   %38 = trunc i8 %37 to i1
   br i1 %38, label %39, label %45
 
 39:                                               ; preds = %35
-  %40 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 1
+  %40 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 1
   %41 = load ptr, ptr %40, align 8
   %42 = icmp eq ptr %41, null
   br i1 %42, label %44, label %43
@@ -2068,73 +2068,73 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
   br label %45
 
 45:                                               ; preds = %44, %35
-  %46 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 15
+  %46 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 15
   %47 = load i8, ptr %46, align 1
   %48 = trunc i8 %47 to i1
-  %49 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 14
+  %49 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 14
   %50 = zext i1 %48 to i8
   store i8 %50, ptr %49, align 8
-  %51 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 7
+  %51 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 7
   %52 = load i64, ptr %51, align 8
-  %53 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 5
+  %53 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 5
   store i64 %52, ptr %53, align 8
-  %54 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 6
+  %54 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 6
   %55 = load ptr, ptr %54, align 8
-  %56 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 1
+  %56 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 1
   store ptr %55, ptr %56, align 8
-  %57 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 7
+  %57 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 7
   store i64 0, ptr %57, align 8
-  %58 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 6
+  %58 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 6
   store ptr null, ptr %58, align 8
-  %59 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 15
+  %59 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 15
   store i8 0, ptr %59, align 1
   br label %93
 
 60:                                               ; preds = %31
-  %61 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 14
+  %61 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 14
   %62 = load i8, ptr %61, align 8
   %63 = trunc i8 %62 to i1
   br i1 %63, label %83, label %64
 
 64:                                               ; preds = %60
-  %65 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 1
+  %65 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 1
   %66 = load ptr, ptr %65, align 8
-  %67 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 4
+  %67 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 4
   %68 = getelementptr inbounds [8 x i8], ptr %67, i64 0, i64 0
   %69 = icmp ne ptr %66, %68
   br i1 %69, label %70, label %83
 
 70:                                               ; preds = %64
-  %71 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 5
+  %71 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 5
   %72 = load i64, ptr %71, align 8
-  %73 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 7
+  %73 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 7
   store i64 %72, ptr %73, align 8
-  %74 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 1
+  %74 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 1
   %75 = load ptr, ptr %74, align 8
-  %76 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 6
+  %76 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 6
   store ptr %75, ptr %76, align 8
-  %77 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 15
+  %77 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 15
   store i8 0, ptr %77, align 1
-  %78 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 5
+  %78 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 5
   %79 = load i64, ptr %78, align 8
   %80 = call noalias noundef nonnull ptr @_Znam(i64 noundef %79) #18
-  %81 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 1
+  %81 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 1
   store ptr %80, ptr %81, align 8
-  %82 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 14
+  %82 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 14
   store i8 1, ptr %82, align 8
   br label %92
 
 83:                                               ; preds = %64, %60
-  %84 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 5
+  %84 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 5
   %85 = load i64, ptr %84, align 8
-  %86 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 7
+  %86 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 7
   store i64 %85, ptr %86, align 8
-  %87 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 7
+  %87 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 7
   %88 = load i64, ptr %87, align 8
   %89 = call noalias noundef nonnull ptr @_Znam(i64 noundef %88) #18
-  %90 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 6
+  %90 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 6
   store ptr %89, ptr %90, align 8
-  %91 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 15
+  %91 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 15
   store i8 1, ptr %91, align 1
   br label %92
 
@@ -2160,13 +2160,13 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   %8 = load ptr, ptr %4, align 8
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgB7v160006EPcS4_S4_(ptr noundef nonnull align 8 dereferenceable(64) %8, ptr noundef null, ptr noundef null, ptr noundef null)
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpB7v160006EPcS4_(ptr noundef nonnull align 8 dereferenceable(64) %8, ptr noundef null, ptr noundef null)
-  %9 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 14
+  %9 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 14
   %10 = load i8, ptr %9, align 8
   %11 = trunc i8 %10 to i1
   br i1 %11, label %12, label %18
 
 12:                                               ; preds = %3
-  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 1
+  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 1
   %14 = load ptr, ptr %13, align 8
   %15 = icmp eq ptr %14, null
   br i1 %15, label %17, label %16
@@ -2179,13 +2179,13 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %18
 
 18:                                               ; preds = %17, %3
-  %19 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 15
+  %19 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 15
   %20 = load i8, ptr %19, align 1
   %21 = trunc i8 %20 to i1
   br i1 %21, label %22, label %28
 
 22:                                               ; preds = %18
-  %23 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 6
+  %23 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 6
   %24 = load ptr, ptr %23, align 8
   %25 = icmp eq ptr %24, null
   br i1 %25, label %27, label %26
@@ -2199,15 +2199,15 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
 
 28:                                               ; preds = %27, %18
   %29 = load i64, ptr %6, align 8
-  %30 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 5
+  %30 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 5
   store i64 %29, ptr %30, align 8
-  %31 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 5
+  %31 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 5
   %32 = load i64, ptr %31, align 8
   %33 = icmp ugt i64 %32, 8
   br i1 %33, label %34, label %52
 
 34:                                               ; preds = %28
-  %35 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 16
+  %35 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 16
   %36 = load i8, ptr %35, align 2
   %37 = trunc i8 %36 to i1
   br i1 %37, label %38, label %45
@@ -2219,19 +2219,19 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
 
 41:                                               ; preds = %38
   %42 = load ptr, ptr %5, align 8
-  %43 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 1
+  %43 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 1
   store ptr %42, ptr %43, align 8
-  %44 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 14
+  %44 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 14
   store i8 0, ptr %44, align 8
   br label %51
 
 45:                                               ; preds = %38, %34
-  %46 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 5
+  %46 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 5
   %47 = load i64, ptr %46, align 8
   %48 = call noalias noundef nonnull ptr @_Znam(i64 noundef %47) #18
-  %49 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 1
+  %49 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 1
   store ptr %48, ptr %49, align 8
-  %50 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 14
+  %50 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 14
   store i8 1, ptr %50, align 8
   br label %51
 
@@ -2239,18 +2239,18 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %58
 
 52:                                               ; preds = %28
-  %53 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 4
+  %53 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 4
   %54 = getelementptr inbounds [8 x i8], ptr %53, i64 0, i64 0
-  %55 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 1
+  %55 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 1
   store ptr %54, ptr %55, align 8
-  %56 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 5
+  %56 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 5
   store i64 8, ptr %56, align 8
-  %57 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 14
+  %57 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 14
   store i8 0, ptr %57, align 8
   br label %58
 
 58:                                               ; preds = %52, %51
-  %59 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 16
+  %59 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 16
   %60 = load i8, ptr %59, align 2
   %61 = trunc i8 %60 to i1
   br i1 %61, label %83, label %62
@@ -2259,33 +2259,33 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   store i64 8, ptr %7, align 8
   %63 = call noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt3__13maxIlEEUa9enable_ifILb1EERKT_S3_S3_(ptr noundef nonnull align 8 dereferenceable(8) %6, ptr noundef nonnull align 8 dereferenceable(8) %7)
   %64 = load i64, ptr %63, align 8
-  %65 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 7
+  %65 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 7
   store i64 %64, ptr %65, align 8
   %66 = load ptr, ptr %5, align 8
   %67 = icmp ne ptr %66, null
   br i1 %67, label %68, label %76
 
 68:                                               ; preds = %62
-  %69 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 7
+  %69 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 7
   %70 = load i64, ptr %69, align 8
   %71 = icmp uge i64 %70, 8
   br i1 %71, label %72, label %76
 
 72:                                               ; preds = %68
   %73 = load ptr, ptr %5, align 8
-  %74 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 6
+  %74 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 6
   store ptr %73, ptr %74, align 8
-  %75 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 15
+  %75 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 15
   store i8 0, ptr %75, align 1
   br label %82
 
 76:                                               ; preds = %68, %62
-  %77 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 7
+  %77 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 7
   %78 = load i64, ptr %77, align 8
   %79 = call noalias noundef nonnull ptr @_Znam(i64 noundef %78) #18
-  %80 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 6
+  %80 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 6
   store ptr %79, ptr %80, align 8
-  %81 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 15
+  %81 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 15
   store i8 1, ptr %81, align 1
   br label %82
 
@@ -2293,11 +2293,11 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %87
 
 83:                                               ; preds = %58
-  %84 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 7
+  %84 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 7
   store i64 0, ptr %84, align 8
-  %85 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 6
+  %85 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 6
   store ptr null, ptr %85, align 8
-  %86 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %8, i32 0, i32 15
+  %86 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %8, i32 0, i32 15
   store i8 0, ptr %86, align 1
   br label %87
 
@@ -2307,20 +2307,20 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
 
 ; Function Attrs: mustprogress noinline sspstrong uwtable
 define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE7seekoffExNS_8ios_base7seekdirEj(ptr noundef nonnull align 8 dereferenceable(163) %0, i64 noundef %1, i32 noundef %2, i32 noundef %3) unnamed_addr #0 comdat align 2 {
-  %5 = alloca %"class.std::__1::fpos.27", align 8
+  %5 = alloca %"class.std::__1::fpos.36", align 8
   %6 = alloca ptr, align 8
   %7 = alloca i64, align 8
   %8 = alloca i32, align 4
   %9 = alloca i32, align 4
   %10 = alloca i32, align 4
   %11 = alloca i32, align 4
-  %12 = alloca %struct.__mbstate_t.9, align 4
+  %12 = alloca %struct.__mbstate_t.18, align 4
   store ptr %0, ptr %6, align 8
   store i64 %1, ptr %7, align 8
   store i32 %2, ptr %8, align 4
   store i32 %3, ptr %9, align 4
   %13 = load ptr, ptr %6, align 8
-  %14 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %13, i32 0, i32 9
+  %14 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %13, i32 0, i32 9
   %15 = load ptr, ptr %14, align 8
   %16 = icmp ne ptr %15, null
   br i1 %16, label %18, label %17
@@ -2330,11 +2330,11 @@ define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_
   unreachable
 
 18:                                               ; preds = %4
-  %19 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %13, i32 0, i32 9
+  %19 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %13, i32 0, i32 9
   %20 = load ptr, ptr %19, align 8
   %21 = call noundef i32 @_ZNKSt3__17codecvtIcc11__mbstate_tE8encodingB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %20) #17
   store i32 %21, ptr %10, align 4
-  %22 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %13, i32 0, i32 8
+  %22 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %13, i32 0, i32 8
   %23 = load ptr, ptr %22, align 8
   %24 = icmp eq ptr %23, null
   br i1 %24, label %37, label %25
@@ -2386,7 +2386,7 @@ define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_
   br label %67
 
 44:                                               ; preds = %42, %41, %40
-  %45 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %13, i32 0, i32 8
+  %45 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %13, i32 0, i32 8
   %46 = load ptr, ptr %45, align 8
   %47 = load i32, ptr %10, align 4
   %48 = icmp sgt i32 %47, 0
@@ -2414,11 +2414,11 @@ define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_
   br label %67
 
 61:                                               ; preds = %55
-  %62 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %13, i32 0, i32 8
+  %62 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %13, i32 0, i32 8
   %63 = load ptr, ptr %62, align 8
   %64 = call i64 @ftello(ptr noundef %63)
   call void @_ZNSt3__14fposI11__mbstate_tEC2B7v160006Ex(ptr noundef nonnull align 8 dereferenceable(16) %5, i64 noundef %64)
-  %65 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %13, i32 0, i32 10
+  %65 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %13, i32 0, i32 10
   call void @llvm.memcpy.p0.p0.i64(ptr align 4 %12, ptr align 8 %65, i64 8, i1 false)
   %66 = load i64, ptr %12, align 4
   call void @_ZNSt3__14fposI11__mbstate_tE5stateB7v160006ES1_(ptr noundef nonnull align 8 dereferenceable(16) %5, i64 %66)
@@ -2431,11 +2431,11 @@ define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_
 
 ; Function Attrs: mustprogress noinline sspstrong uwtable
 define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE7seekposENS_4fposI11__mbstate_tEEj(ptr noundef nonnull align 8 dereferenceable(163) %0, i64 %1, i64 %2, i32 noundef %3) unnamed_addr #0 comdat align 2 {
-  %5 = alloca %"class.std::__1::fpos.27", align 8
-  %6 = alloca %"class.std::__1::fpos.27", align 8
+  %5 = alloca %"class.std::__1::fpos.36", align 8
+  %6 = alloca %"class.std::__1::fpos.36", align 8
   %7 = alloca ptr, align 8
   %8 = alloca i32, align 4
-  %9 = alloca %struct.__mbstate_t.9, align 4
+  %9 = alloca %struct.__mbstate_t.18, align 4
   %10 = getelementptr inbounds { i64, i64 }, ptr %6, i32 0, i32 0
   store i64 %1, ptr %10, align 8
   %11 = getelementptr inbounds { i64, i64 }, ptr %6, i32 0, i32 1
@@ -2443,7 +2443,7 @@ define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_
   store ptr %0, ptr %7, align 8
   store i32 %3, ptr %8, align 4
   %12 = load ptr, ptr %7, align 8
-  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 8
+  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 8
   %14 = load ptr, ptr %13, align 8
   %15 = icmp eq ptr %14, null
   br i1 %15, label %22, label %16
@@ -2461,7 +2461,7 @@ define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_
   br label %33
 
 23:                                               ; preds = %16
-  %24 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 8
+  %24 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 8
   %25 = load ptr, ptr %24, align 8
   %26 = call noundef i64 @_ZNKSt3__14fposI11__mbstate_tEcvxB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %6)
   %27 = call i32 @fseeko(ptr noundef %25, i64 noundef %26, i32 noundef 0)
@@ -2475,7 +2475,7 @@ define linkonce_odr dso_local { i64, i64 } @_ZNSt3__113basic_filebufIcNS_11char_
 30:                                               ; preds = %23
   %31 = call i64 @_ZNKSt3__14fposI11__mbstate_tE5stateB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %6)
   store i64 %31, ptr %9, align 4
-  %32 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 10
+  %32 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 10
   call void @llvm.memcpy.p0.p0.i64(ptr align 8 %32, ptr align 4 %9, i64 8, i1 false)
   call void @llvm.memcpy.p0.p0.i64(ptr align 8 %5, ptr align 8 %6, i64 16, i1 false)
   br label %33
@@ -2493,13 +2493,13 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   %5 = alloca ptr, align 8
   %6 = alloca i64, align 8
   %7 = alloca i64, align 8
-  %8 = alloca %struct.__mbstate_t.9, align 4
+  %8 = alloca %struct.__mbstate_t.18, align 4
   %9 = alloca i8, align 1
   %10 = alloca i32, align 4
   %11 = alloca i32, align 4
   store ptr %0, ptr %3, align 8
   %12 = load ptr, ptr %3, align 8
-  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 8
+  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 8
   %14 = load ptr, ptr %13, align 8
   %15 = icmp eq ptr %14, null
   br i1 %15, label %16, label %17
@@ -2509,7 +2509,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %176
 
 17:                                               ; preds = %1
-  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 9
+  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 9
   %19 = load ptr, ptr %18, align 8
   %20 = icmp ne ptr %19, null
   br i1 %20, label %22, label %21
@@ -2519,7 +2519,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   unreachable
 
 22:                                               ; preds = %17
-  %23 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 13
+  %23 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 13
   %24 = load i32, ptr %23, align 4
   %25 = and i32 %24, 16
   %26 = icmp ne i32 %25, 0
@@ -2552,29 +2552,29 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %42
 
 42:                                               ; preds = %70, %41
-  %43 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 9
+  %43 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 9
   %44 = load ptr, ptr %43, align 8
-  %45 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 10
-  %46 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 1
+  %45 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 10
+  %46 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 1
   %47 = load ptr, ptr %46, align 8
-  %48 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 1
+  %48 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 1
   %49 = load ptr, ptr %48, align 8
-  %50 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 5
+  %50 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 5
   %51 = load i64, ptr %50, align 8
   %52 = getelementptr inbounds i8, ptr %49, i64 %51
   %53 = call noundef i32 @_ZNKSt3__17codecvtIcc11__mbstate_tE7unshiftB7v160006ERS1_PcS4_RS4_(ptr noundef nonnull align 8 dereferenceable(16) %44, ptr noundef nonnull align 4 dereferenceable(8) %45, ptr noundef %47, ptr noundef %52, ptr noundef nonnull align 8 dereferenceable(8) %5)
   store i32 %53, ptr %4, align 4
   %54 = load ptr, ptr %5, align 8
-  %55 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 1
+  %55 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 1
   %56 = load ptr, ptr %55, align 8
   %57 = ptrtoint ptr %54 to i64
   %58 = ptrtoint ptr %56 to i64
   %59 = sub i64 %57, %58
   store i64 %59, ptr %6, align 8
-  %60 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 1
+  %60 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 1
   %61 = load ptr, ptr %60, align 8
   %62 = load i64, ptr %6, align 8
-  %63 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 8
+  %63 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 8
   %64 = load ptr, ptr %63, align 8
   %65 = call i64 @fwrite(ptr noundef %61, i64 noundef 1, i64 noundef %62, ptr noundef %64)
   %66 = load i64, ptr %6, align 8
@@ -2603,7 +2603,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %176
 
 77:                                               ; preds = %73
-  %78 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 8
+  %78 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 8
   %79 = load ptr, ptr %78, align 8
   %80 = call i32 @fflush(ptr noundef %79)
   %81 = icmp ne i32 %80, 0
@@ -2617,17 +2617,17 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %175
 
 84:                                               ; preds = %22
-  %85 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 13
+  %85 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 13
   %86 = load i32, ptr %85, align 4
   %87 = and i32 %86, 8
   %88 = icmp ne i32 %87, 0
   br i1 %88, label %89, label %174
 
 89:                                               ; preds = %84
-  %90 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 11
+  %90 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 11
   call void @llvm.memcpy.p0.p0.i64(ptr align 4 %8, ptr align 8 %90, i64 8, i1 false)
   store i8 0, ptr %9, align 1
-  %91 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 16
+  %91 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 16
   %92 = load i8, ptr %91, align 2
   %93 = trunc i8 %92 to i1
   br i1 %93, label %94, label %100
@@ -2642,13 +2642,13 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %155
 
 100:                                              ; preds = %89
-  %101 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 9
+  %101 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 9
   %102 = load ptr, ptr %101, align 8
   %103 = call noundef i32 @_ZNKSt3__17codecvtIcc11__mbstate_tE8encodingB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %102) #17
   store i32 %103, ptr %10, align 4
-  %104 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 3
+  %104 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 3
   %105 = load ptr, ptr %104, align 8
-  %106 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 2
+  %106 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 2
   %107 = load ptr, ptr %106, align 8
   %108 = ptrtoint ptr %105 to i64
   %109 = ptrtoint ptr %107 to i64
@@ -2679,11 +2679,11 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br i1 %127, label %128, label %153
 
 128:                                              ; preds = %124
-  %129 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 9
+  %129 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 9
   %130 = load ptr, ptr %129, align 8
-  %131 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 1
+  %131 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 1
   %132 = load ptr, ptr %131, align 8
-  %133 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 2
+  %133 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 2
   %134 = load ptr, ptr %133, align 8
   %135 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %12)
   %136 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %12)
@@ -2692,9 +2692,9 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   %139 = sub i64 %137, %138
   %140 = call noundef i32 @_ZNKSt3__17codecvtIcc11__mbstate_tE6lengthB7v160006ERS1_PKcS5_m(ptr noundef nonnull align 8 dereferenceable(16) %130, ptr noundef nonnull align 4 dereferenceable(8) %8, ptr noundef %132, ptr noundef %134, i64 noundef %139)
   store i32 %140, ptr %11, align 4
-  %141 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 2
+  %141 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 2
   %142 = load ptr, ptr %141, align 8
-  %143 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 1
+  %143 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 1
   %144 = load ptr, ptr %143, align 8
   %145 = ptrtoint ptr %142 to i64
   %146 = ptrtoint ptr %144 to i64
@@ -2715,7 +2715,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %155
 
 155:                                              ; preds = %154, %94
-  %156 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 8
+  %156 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 8
   %157 = load ptr, ptr %156, align 8
   %158 = load i64, ptr %7, align 8
   %159 = sub nsw i64 0, %158
@@ -2733,19 +2733,19 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br i1 %165, label %166, label %168
 
 166:                                              ; preds = %163
-  %167 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 10
+  %167 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 10
   call void @llvm.memcpy.p0.p0.i64(ptr align 8 %167, ptr align 4 %8, i64 8, i1 false)
   br label %168
 
 168:                                              ; preds = %166, %163
-  %169 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 1
+  %169 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 1
   %170 = load ptr, ptr %169, align 8
-  %171 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 3
+  %171 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 3
   store ptr %170, ptr %171, align 8
-  %172 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 2
+  %172 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 2
   store ptr %170, ptr %172, align 8
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgB7v160006EPcS4_S4_(ptr noundef nonnull align 8 dereferenceable(64) %12, ptr noundef null, ptr noundef null, ptr noundef null)
-  %173 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %12, i32 0, i32 13
+  %173 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %12, i32 0, i32 13
   store i32 0, ptr %173, align 4
   br label %174
 
@@ -2784,7 +2784,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   %16 = alloca ptr, align 8
   store ptr %0, ptr %3, align 8
   %17 = load ptr, ptr %3, align 8
-  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 8
+  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 8
   %19 = load ptr, ptr %18, align 8
   %20 = icmp eq ptr %19, null
   br i1 %20, label %21, label %23
@@ -2848,7 +2848,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   %56 = load i64, ptr %6, align 8
   %57 = mul i64 %56, 1
   call void @llvm.memmove.p0.p0.i64(ptr align 1 %51, ptr align 1 %55, i64 %57, i1 false)
-  %58 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 16
+  %58 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 16
   %59 = load i8, ptr %58, align 2
   %60 = trunc i8 %59 to i1
   br i1 %60, label %61, label %92
@@ -2866,7 +2866,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   %70 = load i64, ptr %6, align 8
   %71 = getelementptr inbounds i8, ptr %69, i64 %70
   %72 = load i64, ptr %10, align 8
-  %73 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 8
+  %73 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 8
   %74 = load ptr, ptr %73, align 8
   %75 = call i64 @fread(ptr noundef %71, i64 noundef 1, i64 noundef %72, ptr noundef %74)
   store i64 %75, ptr %10, align 8
@@ -2895,29 +2895,29 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %223
 
 92:                                               ; preds = %50
-  %93 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 3
+  %93 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 3
   %94 = load ptr, ptr %93, align 8
-  %95 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %95 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %96 = load ptr, ptr %95, align 8
   %97 = icmp ne ptr %94, %96
   br i1 %97, label %98, label %116
 
 98:                                               ; preds = %92
-  %99 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %99 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %100 = load ptr, ptr %99, align 8
   %101 = icmp ne ptr %100, null
   call void @llvm.assume(i1 %101)
-  %102 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 1
+  %102 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 1
   %103 = load ptr, ptr %102, align 8
   %104 = icmp ne ptr %103, null
   call void @llvm.assume(i1 %104)
-  %105 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 1
+  %105 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 1
   %106 = load ptr, ptr %105, align 8
-  %107 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %107 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %108 = load ptr, ptr %107, align 8
-  %109 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 3
+  %109 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 3
   %110 = load ptr, ptr %109, align 8
-  %111 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %111 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %112 = load ptr, ptr %111, align 8
   %113 = ptrtoint ptr %110 to i64
   %114 = ptrtoint ptr %112 to i64
@@ -2926,23 +2926,23 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %116
 
 116:                                              ; preds = %98, %92
-  %117 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 1
+  %117 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 1
   %118 = load ptr, ptr %117, align 8
-  %119 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 3
+  %119 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 3
   %120 = load ptr, ptr %119, align 8
-  %121 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %121 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %122 = load ptr, ptr %121, align 8
   %123 = ptrtoint ptr %120 to i64
   %124 = ptrtoint ptr %122 to i64
   %125 = sub i64 %123, %124
   %126 = getelementptr inbounds i8, ptr %118, i64 %125
-  %127 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %127 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   store ptr %126, ptr %127, align 8
-  %128 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 1
+  %128 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 1
   %129 = load ptr, ptr %128, align 8
-  %130 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 1
+  %130 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 1
   %131 = load ptr, ptr %130, align 8
-  %132 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 4
+  %132 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 4
   %133 = getelementptr inbounds [8 x i8], ptr %132, i64 0, i64 0
   %134 = icmp eq ptr %131, %133
   br i1 %134, label %135, label %136
@@ -2951,23 +2951,23 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %139
 
 136:                                              ; preds = %116
-  %137 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 5
+  %137 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 5
   %138 = load i64, ptr %137, align 8
   br label %139
 
 139:                                              ; preds = %136, %135
   %140 = phi i64 [ 8, %135 ], [ %138, %136 ]
   %141 = getelementptr inbounds i8, ptr %129, i64 %140
-  %142 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 3
+  %142 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 3
   store ptr %141, ptr %142, align 8
-  %143 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 7
+  %143 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 7
   %144 = load i64, ptr %143, align 8
   %145 = load i64, ptr %6, align 8
   %146 = sub i64 %144, %145
   store i64 %146, ptr %12, align 8
-  %147 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 3
+  %147 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 3
   %148 = load ptr, ptr %147, align 8
-  %149 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %149 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %150 = load ptr, ptr %149, align 8
   %151 = ptrtoint ptr %148 to i64
   %152 = ptrtoint ptr %150 to i64
@@ -2976,13 +2976,13 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   %154 = call noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt3__13minImEEUa9enable_ifILb1EERKT_S3_S3_(ptr noundef nonnull align 8 dereferenceable(8) %12, ptr noundef nonnull align 8 dereferenceable(8) %13)
   %155 = load i64, ptr %154, align 8
   store i64 %155, ptr %11, align 8
-  %156 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 10
-  %157 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 11
+  %156 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 10
+  %157 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 11
   call void @llvm.memcpy.p0.p0.i64(ptr align 8 %157, ptr align 8 %156, i64 8, i1 false)
-  %158 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %158 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %159 = load ptr, ptr %158, align 8
   %160 = load i64, ptr %11, align 8
-  %161 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 8
+  %161 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 8
   %162 = load ptr, ptr %161, align 8
   %163 = call i64 @fread(ptr noundef %159, i64 noundef 1, i64 noundef %160, ptr noundef %162)
   store i64 %163, ptr %15, align 8
@@ -2991,7 +2991,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br i1 %165, label %166, label %222
 
 166:                                              ; preds = %139
-  %167 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 9
+  %167 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 9
   %168 = load ptr, ptr %167, align 8
   %169 = icmp ne ptr %168, null
   br i1 %169, label %171, label %170
@@ -3001,25 +3001,25 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   unreachable
 
 171:                                              ; preds = %166
-  %172 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %172 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %173 = load ptr, ptr %172, align 8
   %174 = load i64, ptr %15, align 8
   %175 = getelementptr inbounds i8, ptr %173, i64 %174
-  %176 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 3
+  %176 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 3
   store ptr %175, ptr %176, align 8
-  %177 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 9
+  %177 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 9
   %178 = load ptr, ptr %177, align 8
-  %179 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 10
-  %180 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 1
+  %179 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 10
+  %180 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 1
   %181 = load ptr, ptr %180, align 8
-  %182 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 3
+  %182 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 3
   %183 = load ptr, ptr %182, align 8
-  %184 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 2
+  %184 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 2
   %185 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %17)
   %186 = load i64, ptr %6, align 8
   %187 = getelementptr inbounds i8, ptr %185, i64 %186
   %188 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %17)
-  %189 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 7
+  %189 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 7
   %190 = load i64, ptr %189, align 8
   %191 = getelementptr inbounds i8, ptr %188, i64 %190
   %192 = call noundef i32 @_ZNKSt3__17codecvtIcc11__mbstate_tE2inB7v160006ERS1_PKcS5_RS5_PcS7_RS7_(ptr noundef nonnull align 8 dereferenceable(16) %178, ptr noundef nonnull align 4 dereferenceable(8) %179, ptr noundef %181, ptr noundef %183, ptr noundef nonnull align 8 dereferenceable(8) %184, ptr noundef %187, ptr noundef %191, ptr noundef nonnull align 8 dereferenceable(8) %16)
@@ -3029,11 +3029,11 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br i1 %194, label %195, label %205
 
 195:                                              ; preds = %171
-  %196 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 1
+  %196 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 1
   %197 = load ptr, ptr %196, align 8
-  %198 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 1
+  %198 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 1
   %199 = load ptr, ptr %198, align 8
-  %200 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %17, i32 0, i32 3
+  %200 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %17, i32 0, i32 3
   %201 = load ptr, ptr %200, align 8
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgB7v160006EPcS4_S4_(ptr noundef nonnull align 8 dereferenceable(64) %17, ptr noundef %197, ptr noundef %199, ptr noundef %201)
   %202 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %17)
@@ -3111,7 +3111,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   store ptr %0, ptr %4, align 8
   store i32 %1, ptr %5, align 4
   %6 = load ptr, ptr %4, align 8
-  %7 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 8
+  %7 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 8
   %8 = load ptr, ptr %7, align 8
   %9 = icmp ne ptr %8, null
   br i1 %9, label %10, label %39
@@ -3136,7 +3136,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %41
 
 21:                                               ; preds = %14
-  %22 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %6, i32 0, i32 12
+  %22 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %6, i32 0, i32 12
   %23 = load i32, ptr %22, align 8
   %24 = and i32 %23, 16
   %25 = icmp ne i32 %24, 0
@@ -3193,7 +3193,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   store ptr %0, ptr %4, align 8
   store i32 %1, ptr %5, align 4
   %15 = load ptr, ptr %4, align 8
-  %16 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 8
+  %16 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 8
   %17 = load ptr, ptr %16, align 8
   %18 = icmp eq ptr %17, null
   br i1 %18, label %19, label %21
@@ -3239,7 +3239,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br i1 %39, label %40, label %152
 
 40:                                               ; preds = %36
-  %41 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 16
+  %41 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 16
   %42 = load i8, ptr %41, align 2
   %43 = trunc i8 %42 to i1
   br i1 %43, label %44, label %60
@@ -3253,7 +3253,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   store i64 %49, ptr %9, align 8
   %50 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %15)
   %51 = load i64, ptr %9, align 8
-  %52 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 8
+  %52 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 8
   %53 = load ptr, ptr %52, align 8
   %54 = call i64 @fwrite(ptr noundef %50, i64 noundef 1, i64 noundef %51, ptr noundef %53)
   %55 = load i64, ptr %9, align 8
@@ -3269,13 +3269,13 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   br label %149
 
 60:                                               ; preds = %40
-  %61 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 1
+  %61 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 1
   %62 = load ptr, ptr %61, align 8
   store ptr %62, ptr %10, align 8
   br label %63
 
 63:                                               ; preds = %145, %60
-  %64 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 9
+  %64 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 9
   %65 = load ptr, ptr %64, align 8
   %66 = icmp ne ptr %65, null
   br i1 %66, label %68, label %67
@@ -3285,16 +3285,16 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   unreachable
 
 68:                                               ; preds = %63
-  %69 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 9
+  %69 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 9
   %70 = load ptr, ptr %69, align 8
-  %71 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 10
+  %71 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 10
   %72 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %15)
   %73 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %15)
-  %74 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 1
+  %74 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 1
   %75 = load ptr, ptr %74, align 8
-  %76 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 1
+  %76 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 1
   %77 = load ptr, ptr %76, align 8
-  %78 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 5
+  %78 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 5
   %79 = load i64, ptr %78, align 8
   %80 = getelementptr inbounds i8, ptr %77, i64 %79
   %81 = call noundef i32 @_ZNKSt3__17codecvtIcc11__mbstate_tE3outB7v160006ERS1_PKcS5_RS5_PcS7_RS7_(ptr noundef nonnull align 8 dereferenceable(16) %70, ptr noundef nonnull align 4 dereferenceable(8) %71, ptr noundef %72, ptr noundef %73, ptr noundef nonnull align 8 dereferenceable(8) %12, ptr noundef %75, ptr noundef %80, ptr noundef nonnull align 8 dereferenceable(8) %10)
@@ -3323,7 +3323,7 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
   store i64 %95, ptr %13, align 8
   %96 = call noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(64) %15)
   %97 = load i64, ptr %13, align 8
-  %98 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 8
+  %98 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 8
   %99 = load ptr, ptr %98, align 8
   %100 = call i64 @fwrite(ptr noundef %96, i64 noundef 1, i64 noundef %97, ptr noundef %99)
   %101 = load i64, ptr %13, align 8
@@ -3350,16 +3350,16 @@ define linkonce_odr dso_local noundef i32 @_ZNSt3__113basic_filebufIcNS_11char_t
 
 112:                                              ; preds = %109, %106
   %113 = load ptr, ptr %10, align 8
-  %114 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 1
+  %114 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 1
   %115 = load ptr, ptr %114, align 8
   %116 = ptrtoint ptr %113 to i64
   %117 = ptrtoint ptr %115 to i64
   %118 = sub i64 %116, %117
   store i64 %118, ptr %14, align 8
-  %119 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 1
+  %119 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 1
   %120 = load ptr, ptr %119, align 8
   %121 = load i64, ptr %14, align 8
-  %122 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %15, i32 0, i32 8
+  %122 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %15, i32 0, i32 8
   %123 = load ptr, ptr %122, align 8
   %124 = call i64 @fwrite(ptr noundef %120, i64 noundef 1, i64 noundef %121, ptr noundef %123)
   %125 = load i64, ptr %14, align 8
@@ -3438,7 +3438,7 @@ define linkonce_odr dso_local void @_ZNSt3__110unique_ptrI8_IO_FILEPFiPS1_EEC2B7
   store ptr %1, ptr %5, align 8
   store ptr %2, ptr %6, align 8
   %7 = load ptr, ptr %4, align 8
-  %8 = getelementptr inbounds %"class.std::__1::unique_ptr.26", ptr %7, i32 0, i32 0
+  %8 = getelementptr inbounds %"class.std::__1::unique_ptr.35", ptr %7, i32 0, i32 0
   %9 = load ptr, ptr %6, align 8
   invoke void @_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EEC2B7v160006IRS2_S4_EEOT_OT0_(ptr noundef nonnull align 8 dereferenceable(16) %8, ptr noundef nonnull align 8 dereferenceable(8) %5, ptr noundef nonnull align 8 dereferenceable(8) %9)
           to label %10 unwind label %11
@@ -3460,11 +3460,11 @@ define linkonce_odr hidden noundef ptr @_ZNSt3__110unique_ptrI8_IO_FILEPFiPS1_EE
   %3 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %4 = load ptr, ptr %2, align 8
-  %5 = getelementptr inbounds %"class.std::__1::unique_ptr.26", ptr %4, i32 0, i32 0
+  %5 = getelementptr inbounds %"class.std::__1::unique_ptr.35", ptr %4, i32 0, i32 0
   %6 = call noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %5) #17
   %7 = load ptr, ptr %6, align 8
   store ptr %7, ptr %3, align 8
-  %8 = getelementptr inbounds %"class.std::__1::unique_ptr.26", ptr %4, i32 0, i32 0
+  %8 = getelementptr inbounds %"class.std::__1::unique_ptr.35", ptr %4, i32 0, i32 0
   %9 = call noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %8) #17
   store ptr null, ptr %9, align 8
   %10 = load ptr, ptr %3, align 8
@@ -3504,7 +3504,7 @@ define linkonce_odr dso_local void @_ZNSt3__122__compressed_pair_elemIP8_IO_FILE
   store ptr %0, ptr %3, align 8
   store ptr %1, ptr %4, align 8
   %5 = load ptr, ptr %3, align 8
-  %6 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.4.23", ptr %5, i32 0, i32 0
+  %6 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.4.32", ptr %5, i32 0, i32 0
   %7 = load ptr, ptr %4, align 8
   %8 = load ptr, ptr %7, align 8
   store ptr %8, ptr %6, align 8
@@ -3518,7 +3518,7 @@ define linkonce_odr dso_local void @_ZNSt3__122__compressed_pair_elemIPFiP8_IO_F
   store ptr %0, ptr %3, align 8
   store ptr %1, ptr %4, align 8
   %5 = load ptr, ptr %3, align 8
-  %6 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.5.24", ptr %5, i32 0, i32 0
+  %6 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.5.33", ptr %5, i32 0, i32 0
   %7 = load ptr, ptr %4, align 8
   %8 = load ptr, ptr %7, align 8
   store ptr %8, ptr %6, align 8
@@ -3539,7 +3539,7 @@ define linkonce_odr hidden noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.4.23", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.4.32", ptr %3, i32 0, i32 0
   ret ptr %4
 }
 
@@ -3551,12 +3551,12 @@ define linkonce_odr hidden void @_ZNSt3__110unique_ptrI8_IO_FILEPFiPS1_EE5resetB
   store ptr %0, ptr %3, align 8
   store ptr %1, ptr %4, align 8
   %6 = load ptr, ptr %3, align 8
-  %7 = getelementptr inbounds %"class.std::__1::unique_ptr.26", ptr %6, i32 0, i32 0
+  %7 = getelementptr inbounds %"class.std::__1::unique_ptr.35", ptr %6, i32 0, i32 0
   %8 = call noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %7) #17
   %9 = load ptr, ptr %8, align 8
   store ptr %9, ptr %5, align 8
   %10 = load ptr, ptr %4, align 8
-  %11 = getelementptr inbounds %"class.std::__1::unique_ptr.26", ptr %6, i32 0, i32 0
+  %11 = getelementptr inbounds %"class.std::__1::unique_ptr.35", ptr %6, i32 0, i32 0
   %12 = call noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %11) #17
   store ptr %10, ptr %12, align 8
   %13 = load ptr, ptr %5, align 8
@@ -3564,7 +3564,7 @@ define linkonce_odr hidden void @_ZNSt3__110unique_ptrI8_IO_FILEPFiPS1_EE5resetB
   br i1 %14, label %15, label %22
 
 15:                                               ; preds = %2
-  %16 = getelementptr inbounds %"class.std::__1::unique_ptr.26", ptr %6, i32 0, i32 0
+  %16 = getelementptr inbounds %"class.std::__1::unique_ptr.35", ptr %6, i32 0, i32 0
   %17 = call noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE6secondB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %16) #17
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %5, align 8
@@ -3600,7 +3600,7 @@ define linkonce_odr hidden noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.5.24", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.5.33", ptr %3, i32 0, i32 0
   ret ptr %4
 }
 
@@ -3640,13 +3640,13 @@ define linkonce_odr hidden void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcE
   store ptr %3, ptr %8, align 8
   %9 = load ptr, ptr %5, align 8
   %10 = load ptr, ptr %6, align 8
-  %11 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %9, i32 0, i32 2
+  %11 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %9, i32 0, i32 2
   store ptr %10, ptr %11, align 8
   %12 = load ptr, ptr %7, align 8
-  %13 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %9, i32 0, i32 3
+  %13 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %9, i32 0, i32 3
   store ptr %12, ptr %13, align 8
   %14 = load ptr, ptr %8, align 8
-  %15 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %9, i32 0, i32 4
+  %15 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %9, i32 0, i32 4
   store ptr %14, ptr %15, align 8
   ret void
 }
@@ -3661,12 +3661,12 @@ define linkonce_odr hidden void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcE
   store ptr %2, ptr %6, align 8
   %7 = load ptr, ptr %4, align 8
   %8 = load ptr, ptr %5, align 8
-  %9 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %7, i32 0, i32 6
+  %9 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %7, i32 0, i32 6
   store ptr %8, ptr %9, align 8
-  %10 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %7, i32 0, i32 5
+  %10 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %7, i32 0, i32 5
   store ptr %8, ptr %10, align 8
   %11 = load ptr, ptr %6, align 8
-  %12 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %7, i32 0, i32 7
+  %12 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %7, i32 0, i32 7
   store ptr %11, ptr %12, align 8
   ret void
 }
@@ -3726,9 +3726,9 @@ define linkonce_odr hidden void @_ZNSt3__14fposI11__mbstate_tEC2B7v160006Ex(ptr 
   store ptr %0, ptr %3, align 8
   store i64 %1, ptr %4, align 8
   %5 = load ptr, ptr %3, align 8
-  %6 = getelementptr inbounds %"class.std::__1::fpos.27", ptr %5, i32 0, i32 0
+  %6 = getelementptr inbounds %"class.std::__1::fpos.36", ptr %5, i32 0, i32 0
   call void @llvm.memset.p0.i64(ptr align 8 %6, i8 0, i64 8, i1 false)
-  %7 = getelementptr inbounds %"class.std::__1::fpos.27", ptr %5, i32 0, i32 1
+  %7 = getelementptr inbounds %"class.std::__1::fpos.36", ptr %5, i32 0, i32 1
   %8 = load i64, ptr %4, align 8
   store i64 %8, ptr %7, align 8
   ret void
@@ -3740,12 +3740,12 @@ declare i64 @ftello(ptr noundef) #2
 
 ; Function Attrs: mustprogress noinline nounwind sspstrong uwtable
 define linkonce_odr hidden void @_ZNSt3__14fposI11__mbstate_tE5stateB7v160006ES1_(ptr noundef nonnull align 8 dereferenceable(16) %0, i64 %1) #6 comdat align 2 {
-  %3 = alloca %struct.__mbstate_t.9, align 4
+  %3 = alloca %struct.__mbstate_t.18, align 4
   %4 = alloca ptr, align 8
   store i64 %1, ptr %3, align 4
   store ptr %0, ptr %4, align 8
   %5 = load ptr, ptr %4, align 8
-  %6 = getelementptr inbounds %"class.std::__1::fpos.27", ptr %5, i32 0, i32 0
+  %6 = getelementptr inbounds %"class.std::__1::fpos.36", ptr %5, i32 0, i32 0
   call void @llvm.memcpy.p0.p0.i64(ptr align 8 %6, ptr align 4 %3, i64 8, i1 false)
   ret void
 }
@@ -3768,18 +3768,18 @@ define linkonce_odr hidden noundef i64 @_ZNKSt3__14fposI11__mbstate_tEcvxB7v1600
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::fpos.27", ptr %3, i32 0, i32 1
+  %4 = getelementptr inbounds %"class.std::__1::fpos.36", ptr %3, i32 0, i32 1
   %5 = load i64, ptr %4, align 8
   ret i64 %5
 }
 
 ; Function Attrs: mustprogress noinline nounwind sspstrong uwtable
 define linkonce_odr hidden i64 @_ZNKSt3__14fposI11__mbstate_tE5stateB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %0) #6 comdat align 2 {
-  %2 = alloca %struct.__mbstate_t.9, align 4
+  %2 = alloca %struct.__mbstate_t.18, align 4
   %3 = alloca ptr, align 8
   store ptr %0, ptr %3, align 8
   %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr inbounds %"class.std::__1::fpos.27", ptr %4, i32 0, i32 0
+  %5 = getelementptr inbounds %"class.std::__1::fpos.36", ptr %4, i32 0, i32 0
   call void @llvm.memcpy.p0.p0.i64(ptr align 4 %2, ptr align 8 %5, i64 8, i1 false)
   %6 = load i64, ptr %2, align 4
   ret i64 %6
@@ -3790,7 +3790,7 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_t
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %3, i32 0, i32 6
+  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %3, i32 0, i32 6
   %5 = load ptr, ptr %4, align 8
   ret ptr %5
 }
@@ -3800,7 +3800,7 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_t
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %3, i32 0, i32 5
+  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %3, i32 0, i32 5
   %5 = load ptr, ptr %4, align 8
   ret ptr %5
 }
@@ -3843,7 +3843,7 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_t
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %3, i32 0, i32 4
+  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %3, i32 0, i32 4
   %5 = load ptr, ptr %4, align 8
   ret ptr %5
 }
@@ -3853,7 +3853,7 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_t
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %3, i32 0, i32 3
+  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %3, i32 0, i32 3
   %5 = load ptr, ptr %4, align 8
   ret ptr %5
 }
@@ -3887,7 +3887,7 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_t
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %3, i32 0, i32 2
+  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %3, i32 0, i32 2
   %5 = load ptr, ptr %4, align 8
   ret ptr %5
 }
@@ -3898,7 +3898,7 @@ define linkonce_odr dso_local noundef zeroext i1 @_ZNSt3__113basic_filebufIcNS_1
   %3 = alloca ptr, align 8
   store ptr %0, ptr %3, align 8
   %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 13
+  %5 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 13
   %6 = load i32, ptr %5, align 4
   %7 = and i32 %6, 8
   %8 = icmp ne i32 %7, 0
@@ -3906,45 +3906,45 @@ define linkonce_odr dso_local noundef zeroext i1 @_ZNSt3__113basic_filebufIcNS_1
 
 9:                                                ; preds = %1
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpB7v160006EPcS4_(ptr noundef nonnull align 8 dereferenceable(64) %4, ptr noundef null, ptr noundef null)
-  %10 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 16
+  %10 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 16
   %11 = load i8, ptr %10, align 2
   %12 = trunc i8 %11 to i1
   br i1 %12, label %13, label %26
 
 13:                                               ; preds = %9
-  %14 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 1
+  %14 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 1
   %15 = load ptr, ptr %14, align 8
-  %16 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 1
+  %16 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 1
   %17 = load ptr, ptr %16, align 8
-  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 5
+  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 5
   %19 = load i64, ptr %18, align 8
   %20 = getelementptr inbounds i8, ptr %17, i64 %19
-  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 1
+  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 1
   %22 = load ptr, ptr %21, align 8
-  %23 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 5
+  %23 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 5
   %24 = load i64, ptr %23, align 8
   %25 = getelementptr inbounds i8, ptr %22, i64 %24
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgB7v160006EPcS4_S4_(ptr noundef nonnull align 8 dereferenceable(64) %4, ptr noundef %15, ptr noundef %20, ptr noundef %25)
   br label %39
 
 26:                                               ; preds = %9
-  %27 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 6
+  %27 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 6
   %28 = load ptr, ptr %27, align 8
-  %29 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 6
+  %29 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 6
   %30 = load ptr, ptr %29, align 8
-  %31 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 7
+  %31 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 7
   %32 = load i64, ptr %31, align 8
   %33 = getelementptr inbounds i8, ptr %30, i64 %32
-  %34 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 6
+  %34 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 6
   %35 = load ptr, ptr %34, align 8
-  %36 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 7
+  %36 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 7
   %37 = load i64, ptr %36, align 8
   %38 = getelementptr inbounds i8, ptr %35, i64 %37
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgB7v160006EPcS4_S4_(ptr noundef nonnull align 8 dereferenceable(64) %4, ptr noundef %28, ptr noundef %33, ptr noundef %38)
   br label %39
 
 39:                                               ; preds = %26, %13
-  %40 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %4, i32 0, i32 13
+  %40 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %4, i32 0, i32 13
   store i32 8, ptr %40, align 4
   store i1 true, ptr %2, align 1
   br label %42
@@ -4054,7 +4054,7 @@ define linkonce_odr hidden void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcE
   store i32 %1, ptr %4, align 4
   %5 = load ptr, ptr %3, align 8
   %6 = load i32, ptr %4, align 4
-  %7 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %5, i32 0, i32 3
+  %7 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %5, i32 0, i32 3
   %8 = load ptr, ptr %7, align 8
   %9 = sext i32 %6 to i64
   %10 = getelementptr inbounds i8, ptr %8, i64 %9
@@ -4113,7 +4113,7 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 13
+  %4 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 13
   %5 = load i32, ptr %4, align 4
   %6 = and i32 %5, 16
   %7 = icmp ne i32 %6, 0
@@ -4121,23 +4121,23 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
 
 8:                                                ; preds = %1
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgB7v160006EPcS4_S4_(ptr noundef nonnull align 8 dereferenceable(64) %3, ptr noundef null, ptr noundef null, ptr noundef null)
-  %9 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 5
+  %9 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 5
   %10 = load i64, ptr %9, align 8
   %11 = icmp ugt i64 %10, 8
   br i1 %11, label %12, label %35
 
 12:                                               ; preds = %8
-  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 16
+  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 16
   %14 = load i8, ptr %13, align 2
   %15 = trunc i8 %14 to i1
   br i1 %15, label %16, label %25
 
 16:                                               ; preds = %12
-  %17 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 1
+  %17 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 1
   %18 = load ptr, ptr %17, align 8
-  %19 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 1
+  %19 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 1
   %20 = load ptr, ptr %19, align 8
-  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 5
+  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 5
   %22 = load i64, ptr %21, align 8
   %23 = sub i64 %22, 1
   %24 = getelementptr inbounds i8, ptr %20, i64 %23
@@ -4145,11 +4145,11 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
   br label %34
 
 25:                                               ; preds = %12
-  %26 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 6
+  %26 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 6
   %27 = load ptr, ptr %26, align 8
-  %28 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 6
+  %28 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 6
   %29 = load ptr, ptr %28, align 8
-  %30 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 7
+  %30 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 7
   %31 = load i64, ptr %30, align 8
   %32 = sub i64 %31, 1
   %33 = getelementptr inbounds i8, ptr %29, i64 %32
@@ -4164,7 +4164,7 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
   br label %36
 
 36:                                               ; preds = %35, %34
-  %37 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 13
+  %37 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 13
   store i32 16, ptr %37, align 4
   br label %38
 
@@ -4177,7 +4177,7 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__115basic_streambufIcNS_11char_t
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %3, i32 0, i32 7
+  %4 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %3, i32 0, i32 7
   %5 = load ptr, ptr %4, align 8
   ret ptr %5
 }
@@ -4190,7 +4190,7 @@ define linkonce_odr hidden void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcE
   store i32 %1, ptr %4, align 4
   %5 = load ptr, ptr %3, align 8
   %6 = load i32, ptr %4, align 4
-  %7 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %5, i32 0, i32 6
+  %7 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %5, i32 0, i32 6
   %8 = load ptr, ptr %7, align 8
   %9 = sext i32 %6 to i64
   %10 = getelementptr inbounds i8, ptr %8, i64 %9
@@ -4239,7 +4239,7 @@ define linkonce_odr hidden void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcE
   store i64 %1, ptr %4, align 8
   %5 = load ptr, ptr %3, align 8
   %6 = load i64, ptr %4, align 8
-  %7 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %5, i32 0, i32 6
+  %7 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %5, i32 0, i32 6
   %8 = load ptr, ptr %7, align 8
   %9 = getelementptr inbounds i8, ptr %8, i64 %6
   store ptr %9, ptr %7, align 8
@@ -4263,7 +4263,7 @@ define linkonce_odr dso_local void @_ZNSt3__114basic_ofstreamIcNS_11char_traitsI
   %12 = load i64, ptr %11, align 8
   %13 = getelementptr inbounds i8, ptr %5, i64 %12
   store ptr %9, ptr %13, align 8
-  %14 = getelementptr inbounds %"class.std::__1::basic_ofstream.13", ptr %5, i32 0, i32 1
+  %14 = getelementptr inbounds %"class.std::__1::basic_ofstream.22", ptr %5, i32 0, i32 1
   call void @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEED2Ev(ptr noundef nonnull align 8 dereferenceable(163) %14) #17
   %15 = getelementptr inbounds ptr, ptr %6, i64 1
   call void @_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEED2Ev(ptr noundef nonnull align 8 dereferenceable(8) %5, ptr noundef %15) #17
@@ -4326,8 +4326,8 @@ define linkonce_odr dso_local void @_ZNSt3__117__compressed_pairINS_12basic_stri
   %4 = alloca ptr, align 8
   %5 = alloca ptr, align 8
   %6 = alloca ptr, align 8
-  %7 = alloca %"struct.std::__1::__default_init_tag.22", align 1
-  %8 = alloca %"struct.std::__1::__default_init_tag.22", align 1
+  %7 = alloca %"struct.std::__1::__default_init_tag.31", align 1
+  %8 = alloca %"struct.std::__1::__default_init_tag.31", align 1
   store ptr %0, ptr %4, align 8
   store ptr %1, ptr %5, align 8
   store ptr %2, ptr %6, align 8
@@ -4369,17 +4369,17 @@ define linkonce_odr hidden void @_ZNSt3__119__debug_db_insert_cB7v160006INS_12ba
 
 ; Function Attrs: noinline nounwind sspstrong uwtable
 define linkonce_odr hidden void @_ZNSt3__122__compressed_pair_elemINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repELi0ELb0EEC2B7v160006ENS_18__default_init_tagE(ptr noundef nonnull align 8 dereferenceable(24) %0) unnamed_addr #5 comdat align 2 {
-  %2 = alloca %"struct.std::__1::__default_init_tag.22", align 1
+  %2 = alloca %"struct.std::__1::__default_init_tag.31", align 1
   %3 = alloca ptr, align 8
   store ptr %0, ptr %3, align 8
   %4 = load ptr, ptr %3, align 8
-  %5 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.19", ptr %4, i32 0, i32 0
+  %5 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.28", ptr %4, i32 0, i32 0
   ret void
 }
 
 ; Function Attrs: noinline nounwind sspstrong uwtable
 define linkonce_odr hidden void @_ZNSt3__122__compressed_pair_elemINS_9allocatorIcEELi1ELb1EEC2B7v160006ENS_18__default_init_tagE(ptr noundef nonnull align 1 dereferenceable(1) %0) unnamed_addr #5 comdat align 2 {
-  %2 = alloca %"struct.std::__1::__default_init_tag.22", align 1
+  %2 = alloca %"struct.std::__1::__default_init_tag.31", align 1
   %3 = alloca ptr, align 8
   store ptr %0, ptr %3, align 8
   %4 = load ptr, ptr %3, align 8
@@ -4445,7 +4445,7 @@ define linkonce_odr hidden void @_ZNSt3__113basic_istreamIcNS_11char_traitsIcEEE
   %14 = load i64, ptr %13, align 8
   %15 = getelementptr inbounds i8, ptr %7, i64 %14
   store ptr %11, ptr %15, align 8
-  %16 = getelementptr inbounds %"class.std::__1::basic_istream.28", ptr %7, i32 0, i32 1
+  %16 = getelementptr inbounds %"class.std::__1::basic_istream.37", ptr %7, i32 0, i32 1
   store i64 0, ptr %16, align 8
   %17 = load ptr, ptr %7, align 8
   %18 = getelementptr i8, ptr %17, i64 -24
@@ -4459,45 +4459,45 @@ define linkonce_odr hidden void @_ZNSt3__113basic_istreamIcNS_11char_traitsIcEEE
 ; Function Attrs: noinline sspstrong uwtable
 define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev(ptr noundef nonnull align 8 dereferenceable(163) %0) unnamed_addr #1 comdat align 2 personality ptr @__gxx_personality_v0 {
   %2 = alloca ptr, align 8
-  %3 = alloca %"class.std::__1::locale.5", align 8
+  %3 = alloca %"class.std::__1::locale.14", align 8
   %4 = alloca ptr, align 8
   %5 = alloca i32, align 4
-  %6 = alloca %"class.std::__1::locale.5", align 8
+  %6 = alloca %"class.std::__1::locale.14", align 8
   store ptr %0, ptr %2, align 8
   %7 = load ptr, ptr %2, align 8
   call void @_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEEC2Ev(ptr noundef nonnull align 8 dereferenceable(64) %7)
   store ptr getelementptr inbounds ({ [16 x ptr] }, ptr @_ZTVNSt3__113basic_filebufIcNS_11char_traitsIcEEEE, i32 0, inrange i32 0, i32 2), ptr %7, align 8
-  %8 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 1
+  %8 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 1
   store ptr null, ptr %8, align 8
-  %9 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 2
+  %9 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 2
   store ptr null, ptr %9, align 8
-  %10 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 3
+  %10 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 3
   store ptr null, ptr %10, align 8
-  %11 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 5
+  %11 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 5
   store i64 0, ptr %11, align 8
-  %12 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 6
+  %12 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 6
   store ptr null, ptr %12, align 8
-  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 7
+  %13 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 7
   store i64 0, ptr %13, align 8
-  %14 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 8
+  %14 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 8
   store ptr null, ptr %14, align 8
-  %15 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 9
+  %15 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 9
   store ptr null, ptr %15, align 8
-  %16 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 10
+  %16 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 10
   call void @llvm.memset.p0.i64(ptr align 8 %16, i8 0, i64 8, i1 false)
-  %17 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 11
+  %17 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 11
   call void @llvm.memset.p0.i64(ptr align 8 %17, i8 0, i64 8, i1 false)
-  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 12
+  %18 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 12
   store i32 0, ptr %18, align 8
-  %19 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 13
+  %19 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 13
   store i32 0, ptr %19, align 4
-  %20 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 14
+  %20 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 14
   store i8 0, ptr %20, align 8
-  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 15
+  %21 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 15
   store i8 0, ptr %21, align 1
-  %22 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 16
+  %22 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 16
   store i8 0, ptr %22, align 2
-  invoke void @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE6getlocB7v160006Ev(ptr sret(%"class.std::__1::locale.5") align 8 %3, ptr noundef nonnull align 8 dereferenceable(64) %7)
+  invoke void @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE6getlocB7v160006Ev(ptr sret(%"class.std::__1::locale.14") align 8 %3, ptr noundef nonnull align 8 dereferenceable(64) %7)
           to label %23 unwind label %35
 
 23:                                               ; preds = %1
@@ -4506,7 +4506,7 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
   br i1 %24, label %25, label %43
 
 25:                                               ; preds = %23
-  invoke void @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE6getlocB7v160006Ev(ptr sret(%"class.std::__1::locale.5") align 8 %6, ptr noundef nonnull align 8 dereferenceable(64) %7)
+  invoke void @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE6getlocB7v160006Ev(ptr sret(%"class.std::__1::locale.14") align 8 %6, ptr noundef nonnull align 8 dereferenceable(64) %7)
           to label %26 unwind label %35
 
 26:                                               ; preds = %25
@@ -4514,13 +4514,13 @@ define linkonce_odr dso_local void @_ZNSt3__113basic_filebufIcNS_11char_traitsIc
           to label %28 unwind label %39
 
 28:                                               ; preds = %26
-  %29 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 9
+  %29 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 9
   store ptr %27, ptr %29, align 8
   call void @_ZNSt3__16localeD1Ev(ptr noundef nonnull align 8 dereferenceable(8) %6) #17
-  %30 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 9
+  %30 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 9
   %31 = load ptr, ptr %30, align 8
   %32 = call noundef zeroext i1 @_ZNKSt3__17codecvtIcc11__mbstate_tE13always_noconvB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(16) %31) #17
-  %33 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %7, i32 0, i32 16
+  %33 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %7, i32 0, i32 16
   %34 = zext i1 %32 to i8
   store i8 %34, ptr %33, align 2
   br label %43
@@ -4612,10 +4612,10 @@ define linkonce_odr hidden void @_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE4init
   %5 = load ptr, ptr %3, align 8
   %6 = load ptr, ptr %4, align 8
   call void @_ZNSt3__18ios_base4initEPv(ptr noundef nonnull align 8 dereferenceable(136) %5, ptr noundef %6)
-  %7 = getelementptr inbounds %"class.std::__1::basic_ios.29", ptr %5, i32 0, i32 1
+  %7 = getelementptr inbounds %"class.std::__1::basic_ios.38", ptr %5, i32 0, i32 1
   store ptr null, ptr %7, align 8
   %8 = call noundef i32 @_ZNSt3__111char_traitsIcE3eofEv() #17
-  %9 = getelementptr inbounds %"class.std::__1::basic_ios.29", ptr %5, i32 0, i32 2
+  %9 = getelementptr inbounds %"class.std::__1::basic_ios.38", ptr %5, i32 0, i32 2
   store i32 %8, ptr %9, align 8
   ret void
 }
@@ -4644,13 +4644,13 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNSt3__19has_facetB7v160006INS_7
 }
 
 ; Function Attrs: mustprogress noinline nounwind sspstrong uwtable
-define linkonce_odr hidden void @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE6getlocB7v160006Ev(ptr noalias sret(%"class.std::__1::locale.5") align 8 %0, ptr noundef nonnull align 8 dereferenceable(64) %1) #6 comdat align 2 {
+define linkonce_odr hidden void @_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE6getlocB7v160006Ev(ptr noalias sret(%"class.std::__1::locale.14") align 8 %0, ptr noundef nonnull align 8 dereferenceable(64) %1) #6 comdat align 2 {
   %3 = alloca ptr, align 8
   %4 = alloca ptr, align 8
   store ptr %0, ptr %3, align 8
   store ptr %1, ptr %4, align 8
   %5 = load ptr, ptr %4, align 8
-  %6 = getelementptr inbounds %"class.std::__1::basic_streambuf.7", ptr %5, i32 0, i32 1
+  %6 = getelementptr inbounds %"class.std::__1::basic_streambuf.16", ptr %5, i32 0, i32 1
   call void @_ZNSt3__16localeC1ERKS0_(ptr noundef nonnull align 8 dereferenceable(8) %0, ptr noundef nonnull align 8 dereferenceable(8) %6) #17
   ret void
 }
@@ -4675,7 +4675,7 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   store i32 %2, ptr %6, align 4
   %9 = load ptr, ptr %4, align 8
   store ptr null, ptr %7, align 8
-  %10 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %9, i32 0, i32 8
+  %10 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %9, i32 0, i32 8
   %11 = load ptr, ptr %10, align 8
   %12 = icmp eq ptr %11, null
   br i1 %12, label %13, label %47
@@ -4693,16 +4693,16 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   %19 = load ptr, ptr %5, align 8
   %20 = load ptr, ptr %8, align 8
   %21 = call noalias ptr @fopen(ptr noundef %19, ptr noundef %20)
-  %22 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %9, i32 0, i32 8
+  %22 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %9, i32 0, i32 8
   store ptr %21, ptr %22, align 8
-  %23 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %9, i32 0, i32 8
+  %23 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %9, i32 0, i32 8
   %24 = load ptr, ptr %23, align 8
   %25 = icmp ne ptr %24, null
   br i1 %25, label %26, label %44
 
 26:                                               ; preds = %18
   %27 = load i32, ptr %6, align 4
-  %28 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %9, i32 0, i32 12
+  %28 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %9, i32 0, i32 12
   store i32 %27, ptr %28, align 8
   %29 = load i32, ptr %6, align 4
   %30 = and i32 %29, 2
@@ -4710,17 +4710,17 @@ define linkonce_odr dso_local noundef ptr @_ZNSt3__113basic_filebufIcNS_11char_t
   br i1 %31, label %32, label %43
 
 32:                                               ; preds = %26
-  %33 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %9, i32 0, i32 8
+  %33 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %9, i32 0, i32 8
   %34 = load ptr, ptr %33, align 8
   %35 = call i32 @fseek(ptr noundef %34, i64 noundef 0, i32 noundef 2)
   %36 = icmp ne i32 %35, 0
   br i1 %36, label %37, label %42
 
 37:                                               ; preds = %32
-  %38 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %9, i32 0, i32 8
+  %38 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %9, i32 0, i32 8
   %39 = load ptr, ptr %38, align 8
   %40 = call i32 @fclose(ptr noundef %39)
-  %41 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %9, i32 0, i32 8
+  %41 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %9, i32 0, i32 8
   store ptr null, ptr %41, align 8
   store ptr null, ptr %7, align 8
   br label %42
@@ -4888,10 +4888,10 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNKSt3__112basic_stringIcNS_11ch
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_string.21", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"class.std::__1::basic_string.30", ptr %3, i32 0, i32 0
   %5 = call noundef nonnull align 8 dereferenceable(24) ptr @_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(24) %4) #17
-  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.18", ptr %5, i32 0, i32 0
-  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__short.31", ptr %6, i32 0, i32 0
+  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.27", ptr %5, i32 0, i32 0
+  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__short.40", ptr %6, i32 0, i32 0
   %8 = load i8, ptr %7, align 8
   %9 = and i8 %8, 1
   %10 = icmp ne i8 %9, 0
@@ -4903,10 +4903,10 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__112basic_stringIcNS_11char_trai
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_string.21", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"class.std::__1::basic_string.30", ptr %3, i32 0, i32 0
   %5 = call noundef nonnull align 8 dereferenceable(24) ptr @_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(24) %4) #17
-  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.18", ptr %5, i32 0, i32 0
-  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__long.16", ptr %6, i32 0, i32 2
+  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.27", ptr %5, i32 0, i32 0
+  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__long.25", ptr %6, i32 0, i32 2
   %8 = load ptr, ptr %7, align 8
   ret ptr %8
 }
@@ -4916,10 +4916,10 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__112basic_stringIcNS_11char_trai
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_string.21", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"class.std::__1::basic_string.30", ptr %3, i32 0, i32 0
   %5 = call noundef nonnull align 8 dereferenceable(24) ptr @_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(24) %4) #17
-  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.18", ptr %5, i32 0, i32 0
-  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__short.31", ptr %6, i32 0, i32 2
+  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.27", ptr %5, i32 0, i32 0
+  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__short.40", ptr %6, i32 0, i32 2
   %8 = getelementptr inbounds [23 x i8], ptr %7, i64 0, i64 0
   %9 = call noundef ptr @_ZNSt3__114pointer_traitsIPKcE10pointer_toB7v160006ERS1_(ptr noundef nonnull align 1 dereferenceable(1) %8) #17
   ret ptr %9
@@ -4939,7 +4939,7 @@ define linkonce_odr hidden noundef nonnull align 8 dereferenceable(24) ptr @_ZNK
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.19", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.28", ptr %3, i32 0, i32 0
   ret ptr %4
 }
 
@@ -4958,7 +4958,7 @@ define linkonce_odr hidden void @_ZNSt3__18ios_base8setstateB7v160006Ej(ptr noun
   store ptr %0, ptr %3, align 8
   store i32 %1, ptr %4, align 4
   %5 = load ptr, ptr %3, align 8
-  %6 = getelementptr inbounds %"class.std::__1::ios_base.0", ptr %5, i32 0, i32 4
+  %6 = getelementptr inbounds %"class.std::__1::ios_base.9", ptr %5, i32 0, i32 4
   %7 = load i32, ptr %6, align 8
   %8 = load i32, ptr %4, align 4
   %9 = or i32 %7, %8
@@ -4973,7 +4973,7 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNKSt3__113basic_filebufIcNS_11c
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_filebuf.10", ptr %3, i32 0, i32 8
+  %4 = getelementptr inbounds %"class.std::__1::basic_filebuf.19", ptr %3, i32 0, i32 8
   %5 = load ptr, ptr %4, align 8
   %6 = icmp ne ptr %5, null
   ret i1 %6
@@ -4984,11 +4984,11 @@ define linkonce_odr hidden noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt
   %4 = alloca ptr, align 8
   %5 = alloca ptr, align 8
   %6 = alloca i64, align 8
-  %7 = alloca %"class.std::__1::basic_ostream<char>::sentry.32", align 8
+  %7 = alloca %"class.std::__1::basic_ostream<char>::sentry.41", align 8
   %8 = alloca ptr, align 8
   %9 = alloca i32, align 4
-  %10 = alloca %"class.std::__1::ostreambuf_iterator.33", align 8
-  %11 = alloca %"class.std::__1::ostreambuf_iterator.33", align 8
+  %10 = alloca %"class.std::__1::ostreambuf_iterator.42", align 8
+  %11 = alloca %"class.std::__1::ostreambuf_iterator.42", align 8
   store ptr %0, ptr %4, align 8
   store ptr %1, ptr %5, align 8
   store i64 %2, ptr %6, align 8
@@ -5049,13 +5049,13 @@ define linkonce_odr hidden noundef nonnull align 8 dereferenceable(8) ptr @_ZNSt
           to label %50 unwind label %68
 
 50:                                               ; preds = %34
-  %51 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %11, i32 0, i32 0
+  %51 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %11, i32 0, i32 0
   %52 = load ptr, ptr %51, align 8
   %53 = invoke ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_(ptr %52, ptr noundef %18, ptr noundef %35, ptr noundef %38, ptr noundef nonnull align 8 dereferenceable(136) %43, i8 noundef signext %49)
           to label %54 unwind label %68
 
 54:                                               ; preds = %50
-  %55 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %10, i32 0, i32 0
+  %55 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %10, i32 0, i32 0
   store ptr %53, ptr %55, align 8
   %56 = call noundef zeroext i1 @_ZNKSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEE6failedB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(8) %10) #17
   br i1 %56, label %57, label %83
@@ -5152,7 +5152,7 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNKSt3__113basic_ostreamIcNS_11c
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_ostream<char>::sentry.32", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"class.std::__1::basic_ostream<char>::sentry.41", ptr %3, i32 0, i32 0
   %5 = load i8, ptr %4, align 8
   %6 = trunc i8 %5 to i1
   ret i1 %6
@@ -5160,8 +5160,8 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNKSt3__113basic_ostreamIcNS_11c
 
 ; Function Attrs: mustprogress noinline sspstrong uwtable
 define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_(ptr %0, ptr noundef %1, ptr noundef %2, ptr noundef %3, ptr noundef nonnull align 8 dereferenceable(136) %4, i8 noundef signext %5) #0 comdat personality ptr @__gxx_personality_v0 {
-  %7 = alloca %"class.std::__1::ostreambuf_iterator.33", align 8
-  %8 = alloca %"class.std::__1::ostreambuf_iterator.33", align 8
+  %7 = alloca %"class.std::__1::ostreambuf_iterator.42", align 8
+  %8 = alloca %"class.std::__1::ostreambuf_iterator.42", align 8
   %9 = alloca ptr, align 8
   %10 = alloca ptr, align 8
   %11 = alloca ptr, align 8
@@ -5170,18 +5170,18 @@ define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_
   %14 = alloca i64, align 8
   %15 = alloca i64, align 8
   %16 = alloca i64, align 8
-  %17 = alloca %"class.std::__1::basic_string.21", align 8
+  %17 = alloca %"class.std::__1::basic_string.30", align 8
   %18 = alloca ptr, align 8
   %19 = alloca i32, align 4
   %20 = alloca i32, align 4
-  %21 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %8, i32 0, i32 0
+  %21 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %8, i32 0, i32 0
   store ptr %0, ptr %21, align 8
   store ptr %1, ptr %9, align 8
   store ptr %2, ptr %10, align 8
   store ptr %3, ptr %11, align 8
   store ptr %4, ptr %12, align 8
   store i8 %5, ptr %13, align 1
-  %22 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %8, i32 0, i32 0
+  %22 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %8, i32 0, i32 0
   %23 = load ptr, ptr %22, align 8
   %24 = icmp eq ptr %23, null
   br i1 %24, label %25, label %26
@@ -5228,7 +5228,7 @@ define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_
   br i1 %49, label %50, label %61
 
 50:                                               ; preds = %42
-  %51 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %8, i32 0, i32 0
+  %51 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %8, i32 0, i32 0
   %52 = load ptr, ptr %51, align 8
   %53 = load ptr, ptr %9, align 8
   %54 = load i64, ptr %16, align 8
@@ -5238,7 +5238,7 @@ define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_
   br i1 %57, label %58, label %60
 
 58:                                               ; preds = %50
-  %59 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %8, i32 0, i32 0
+  %59 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %8, i32 0, i32 0
   store ptr null, ptr %59, align 8
   call void @llvm.memcpy.p0.p0.i64(ptr align 8 %7, ptr align 8 %8, i64 8, i1 false)
   br label %107
@@ -5255,7 +5255,7 @@ define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_
   %65 = load i64, ptr %15, align 8
   %66 = load i8, ptr %13, align 1
   call void @_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2B7v160006Emc(ptr noundef nonnull align 8 dereferenceable(24) %17, i64 noundef %65, i8 noundef signext %66)
-  %67 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %8, i32 0, i32 0
+  %67 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %8, i32 0, i32 0
   %68 = load ptr, ptr %67, align 8
   %69 = call noundef ptr @_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4dataB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(24) %17) #17
   %70 = load i64, ptr %15, align 8
@@ -5268,7 +5268,7 @@ define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_
   br i1 %74, label %75, label %81
 
 75:                                               ; preds = %72
-  %76 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %8, i32 0, i32 0
+  %76 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %8, i32 0, i32 0
   store ptr null, ptr %76, align 8
   call void @llvm.memcpy.p0.p0.i64(ptr align 8 %7, ptr align 8 %8, i64 8, i1 false)
   store i32 1, ptr %20, align 4
@@ -5311,7 +5311,7 @@ define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_
   br i1 %92, label %93, label %104
 
 93:                                               ; preds = %85
-  %94 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %8, i32 0, i32 0
+  %94 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %8, i32 0, i32 0
   %95 = load ptr, ptr %94, align 8
   %96 = load ptr, ptr %10, align 8
   %97 = load i64, ptr %16, align 8
@@ -5321,7 +5321,7 @@ define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_
   br i1 %100, label %101, label %103
 
 101:                                              ; preds = %93
-  %102 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %8, i32 0, i32 0
+  %102 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %8, i32 0, i32 0
   store ptr null, ptr %102, align 8
   call void @llvm.memcpy.p0.p0.i64(ptr align 8 %7, ptr align 8 %8, i64 8, i1 false)
   br label %107
@@ -5336,7 +5336,7 @@ define linkonce_odr hidden ptr @_ZNSt3__116__pad_and_outputB7v160006IcNS_11char_
   br label %107
 
 107:                                              ; preds = %104, %101, %82, %58, %25
-  %108 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %7, i32 0, i32 0
+  %108 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %7, i32 0, i32 0
   %109 = load ptr, ptr %108, align 8
   ret ptr %109
 
@@ -5358,7 +5358,7 @@ define linkonce_odr hidden void @_ZNSt3__119ostreambuf_iteratorIcNS_11char_trait
   store ptr %0, ptr %3, align 8
   store ptr %1, ptr %4, align 8
   %5 = load ptr, ptr %3, align 8
-  %6 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %5, i32 0, i32 0
+  %6 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %5, i32 0, i32 0
   %7 = load ptr, ptr %4, align 8
   %8 = load ptr, ptr %7, align 8
   %9 = getelementptr i8, ptr %8, i64 -24
@@ -5384,7 +5384,7 @@ define linkonce_odr hidden noundef i32 @_ZNKSt3__18ios_base5flagsB7v160006Ev(ptr
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::ios_base.0", ptr %3, i32 0, i32 1
+  %4 = getelementptr inbounds %"class.std::__1::ios_base.9", ptr %3, i32 0, i32 1
   %5 = load i32, ptr %4, align 8
   ret i32 %5
 }
@@ -5395,7 +5395,7 @@ define linkonce_odr hidden noundef signext i8 @_ZNKSt3__19basic_iosIcNS_11char_t
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
   %4 = call noundef i32 @_ZNSt3__111char_traitsIcE3eofEv() #17
-  %5 = getelementptr inbounds %"class.std::__1::basic_ios.29", ptr %3, i32 0, i32 2
+  %5 = getelementptr inbounds %"class.std::__1::basic_ios.38", ptr %3, i32 0, i32 2
   %6 = load i32, ptr %5, align 8
   %7 = call noundef zeroext i1 @_ZNSt3__111char_traitsIcE11eq_int_typeEii(i32 noundef %4, i32 noundef %6) #17
   br i1 %7, label %8, label %12
@@ -5403,12 +5403,12 @@ define linkonce_odr hidden noundef signext i8 @_ZNKSt3__19basic_iosIcNS_11char_t
 8:                                                ; preds = %1
   %9 = call noundef signext i8 @_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenB7v160006Ec(ptr noundef nonnull align 8 dereferenceable(148) %3, i8 noundef signext 32)
   %10 = sext i8 %9 to i32
-  %11 = getelementptr inbounds %"class.std::__1::basic_ios.29", ptr %3, i32 0, i32 2
+  %11 = getelementptr inbounds %"class.std::__1::basic_ios.38", ptr %3, i32 0, i32 2
   store i32 %10, ptr %11, align 8
   br label %12
 
 12:                                               ; preds = %8, %1
-  %13 = getelementptr inbounds %"class.std::__1::basic_ios.29", ptr %3, i32 0, i32 2
+  %13 = getelementptr inbounds %"class.std::__1::basic_ios.38", ptr %3, i32 0, i32 2
   %14 = load i32, ptr %13, align 8
   %15 = trunc i32 %14 to i8
   ret i8 %15
@@ -5419,7 +5419,7 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNKSt3__119ostreambuf_iteratorIc
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.33", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"class.std::__1::ostreambuf_iterator.42", ptr %3, i32 0, i32 0
   %5 = load ptr, ptr %4, align 8
   %6 = icmp eq ptr %5, null
   ret i1 %6
@@ -5435,7 +5435,7 @@ define linkonce_odr hidden noundef i64 @_ZNKSt3__18ios_base5widthB7v160006Ev(ptr
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::ios_base.0", ptr %3, i32 0, i32 3
+  %4 = getelementptr inbounds %"class.std::__1::ios_base.9", ptr %3, i32 0, i32 3
   %5 = load i64, ptr %4, align 8
   ret i64 %5
 }
@@ -5463,13 +5463,13 @@ define linkonce_odr hidden void @_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS
   %4 = alloca ptr, align 8
   %5 = alloca i64, align 8
   %6 = alloca i8, align 1
-  %7 = alloca %"struct.std::__1::__default_init_tag.22", align 1
-  %8 = alloca %"struct.std::__1::__default_init_tag.22", align 1
+  %7 = alloca %"struct.std::__1::__default_init_tag.31", align 1
+  %8 = alloca %"struct.std::__1::__default_init_tag.31", align 1
   store ptr %0, ptr %4, align 8
   store i64 %1, ptr %5, align 8
   store i8 %2, ptr %6, align 1
   %9 = load ptr, ptr %4, align 8
-  %10 = getelementptr inbounds %"class.std::__1::basic_string.21", ptr %9, i32 0, i32 0
+  %10 = getelementptr inbounds %"class.std::__1::basic_string.30", ptr %9, i32 0, i32 0
   call void @_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_EC2B7v160006INS_18__default_init_tagESA_EEOT_OT0_(ptr noundef nonnull align 8 dereferenceable(24) %10, ptr noundef nonnull align 1 dereferenceable(1) %7, ptr noundef nonnull align 1 dereferenceable(1) %8)
   %11 = load i64, ptr %5, align 8
   %12 = load i8, ptr %6, align 1
@@ -5496,11 +5496,11 @@ define linkonce_odr hidden noundef i64 @_ZNSt3__18ios_base5widthB7v160006El(ptr 
   store ptr %0, ptr %3, align 8
   store i64 %1, ptr %4, align 8
   %6 = load ptr, ptr %3, align 8
-  %7 = getelementptr inbounds %"class.std::__1::ios_base.0", ptr %6, i32 0, i32 3
+  %7 = getelementptr inbounds %"class.std::__1::ios_base.9", ptr %6, i32 0, i32 3
   %8 = load i64, ptr %7, align 8
   store i64 %8, ptr %5, align 8
   %9 = load i64, ptr %4, align 8
-  %10 = getelementptr inbounds %"class.std::__1::ios_base.0", ptr %6, i32 0, i32 3
+  %10 = getelementptr inbounds %"class.std::__1::ios_base.9", ptr %6, i32 0, i32 3
   store i64 %9, ptr %10, align 8
   %11 = load i64, ptr %5, align 8
   ret i64 %11
@@ -5542,10 +5542,10 @@ define linkonce_odr hidden noundef ptr @_ZNSt3__112basic_stringIcNS_11char_trait
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_string.21", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"class.std::__1::basic_string.30", ptr %3, i32 0, i32 0
   %5 = call noundef nonnull align 8 dereferenceable(24) ptr @_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(24) %4) #17
-  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.18", ptr %5, i32 0, i32 0
-  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__long.16", ptr %6, i32 0, i32 2
+  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.27", ptr %5, i32 0, i32 0
+  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__long.25", ptr %6, i32 0, i32 2
   %8 = load ptr, ptr %7, align 8
   ret ptr %8
 }
@@ -5555,10 +5555,10 @@ define linkonce_odr hidden noundef ptr @_ZNSt3__112basic_stringIcNS_11char_trait
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::basic_string.21", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"class.std::__1::basic_string.30", ptr %3, i32 0, i32 0
   %5 = call noundef nonnull align 8 dereferenceable(24) ptr @_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstB7v160006Ev(ptr noundef nonnull align 8 dereferenceable(24) %4) #17
-  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.18", ptr %5, i32 0, i32 0
-  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__short.31", ptr %6, i32 0, i32 2
+  %6 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__rep.27", ptr %5, i32 0, i32 0
+  %7 = getelementptr inbounds %"struct.std::__1::basic_string<char>::__short.40", ptr %6, i32 0, i32 2
   %8 = getelementptr inbounds [23 x i8], ptr %7, i64 0, i64 0
   %9 = call noundef ptr @_ZNSt3__114pointer_traitsIPcE10pointer_toB7v160006ERc(ptr noundef nonnull align 1 dereferenceable(1) %8) #17
   ret ptr %9
@@ -5578,7 +5578,7 @@ define linkonce_odr hidden noundef nonnull align 8 dereferenceable(24) ptr @_ZNS
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.19", ptr %3, i32 0, i32 0
+  %4 = getelementptr inbounds %"struct.std::__1::__compressed_pair_elem.28", ptr %3, i32 0, i32 0
   ret ptr %4
 }
 
@@ -5604,7 +5604,7 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__18ios_base5rdbufB7v160006Ev(ptr
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::ios_base.0", ptr %3, i32 0, i32 6
+  %4 = getelementptr inbounds %"class.std::__1::ios_base.9", ptr %3, i32 0, i32 6
   %5 = load ptr, ptr %4, align 8
   ret ptr %5
 }
@@ -5613,13 +5613,13 @@ define linkonce_odr hidden noundef ptr @_ZNKSt3__18ios_base5rdbufB7v160006Ev(ptr
 define linkonce_odr hidden noundef signext i8 @_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenB7v160006Ec(ptr noundef nonnull align 8 dereferenceable(148) %0, i8 noundef signext %1) #0 comdat align 2 personality ptr @__gxx_personality_v0 {
   %3 = alloca ptr, align 8
   %4 = alloca i8, align 1
-  %5 = alloca %"class.std::__1::locale.5", align 8
+  %5 = alloca %"class.std::__1::locale.14", align 8
   %6 = alloca ptr, align 8
   %7 = alloca i32, align 4
   store ptr %0, ptr %3, align 8
   store i8 %1, ptr %4, align 1
   %8 = load ptr, ptr %3, align 8
-  call void @_ZNKSt3__18ios_base6getlocEv(ptr sret(%"class.std::__1::locale.5") align 8 %5, ptr noundef nonnull align 8 dereferenceable(136) %8)
+  call void @_ZNKSt3__18ios_base6getlocEv(ptr sret(%"class.std::__1::locale.14") align 8 %5, ptr noundef nonnull align 8 dereferenceable(136) %8)
   %9 = invoke noundef nonnull align 8 dereferenceable(25) ptr @_ZNSt3__19use_facetB7v160006INS_5ctypeIcEEEERKT_RKNS_6localeE(ptr noundef nonnull align 8 dereferenceable(8) %5)
           to label %10 unwind label %14
 
@@ -5659,7 +5659,7 @@ define linkonce_odr hidden noundef nonnull align 8 dereferenceable(25) ptr @_ZNS
   ret ptr %4
 }
 
-declare void @_ZNKSt3__18ios_base6getlocEv(ptr sret(%"class.std::__1::locale.5") align 8, ptr noundef nonnull align 8 dereferenceable(136)) #2
+declare void @_ZNKSt3__18ios_base6getlocEv(ptr sret(%"class.std::__1::locale.14") align 8, ptr noundef nonnull align 8 dereferenceable(136)) #2
 
 ; Function Attrs: mustprogress noinline sspstrong uwtable
 define linkonce_odr hidden noundef signext i8 @_ZNKSt3__15ctypeIcE5widenB7v160006Ec(ptr noundef nonnull align 8 dereferenceable(25) %0, i8 noundef signext %1) #0 comdat align 2 {
@@ -5692,7 +5692,7 @@ define linkonce_odr hidden noundef zeroext i1 @_ZNKSt3__18ios_base4failB7v160006
   %2 = alloca ptr, align 8
   store ptr %0, ptr %2, align 8
   %3 = load ptr, ptr %2, align 8
-  %4 = getelementptr inbounds %"class.std::__1::ios_base.0", ptr %3, i32 0, i32 4
+  %4 = getelementptr inbounds %"class.std::__1::ios_base.9", ptr %3, i32 0, i32 4
   %5 = load i32, ptr %4, align 8
   %6 = and i32 %5, 5
   %7 = icmp ne i32 %6, 0

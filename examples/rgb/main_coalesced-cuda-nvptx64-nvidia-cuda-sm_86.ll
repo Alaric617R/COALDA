@@ -3,13 +3,13 @@ source_filename = "main_coalesced.cu"
 target datalayout = "e-i64:64-i128:128-v16:16-v32:32-n16:32:64"
 target triple = "nvptx64-nvidia-cuda"
 
-%struct.__cuda_builtin_blockIdx_t = type { i8 }
-%struct.__cuda_builtin_blockDim_t = type { i8 }
-%struct.__cuda_builtin_threadIdx_t = type { i8 }
+%struct.__cuda_builtin_blockIdx_t.3 = type { i8 }
+%struct.__cuda_builtin_blockDim_t.4 = type { i8 }
+%struct.__cuda_builtin_threadIdx_t.5 = type { i8 }
 
-@blockIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockIdx_t, align 1
-@blockDim = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockDim_t, align 1
-@threadIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_threadIdx_t, align 1
+@blockIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockIdx_t.3, align 1
+@blockDim = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_blockDim_t.4, align 1
+@threadIdx = extern_weak dso_local addrspace(1) global %struct.__cuda_builtin_threadIdx_t.5, align 1
 @_ZZ44rgb_increase_brightness_pass_ready_coalescedPiS_ifE14pixel_smem_src = internal addrspace(3) global [1536 x i32] undef, align 4
 @_ZZ44rgb_increase_brightness_pass_ready_coalescedPiS_ifE14pixel_smem_dst = internal addrspace(3) global [1536 x i32] undef, align 4
 

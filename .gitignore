@@ -6,4 +6,5 @@
 *.cubin
 *.cache
 .vscode
+**.log
 build

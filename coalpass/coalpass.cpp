@@ -1,4 +1,5 @@
 #include "coalpass.h"
+#include "coalMemOp.h"
 #include "debugLog.h"
 #include <fstream>
 #include <llvm/Support/raw_ostream.h>
@@ -229,6 +230,29 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
 
     if (debug) { for (auto e : coalStoreGroupingDeque) e->print();}
 
+    /// TODO: if SIMD token is not found, cannot do any transform
+    if (!BlockDimRegister || !BlockIndexRegister || !LocalTidRegister){
+    #ifdef TRACE_LL_OUTPUT
+        ofstream outputLL(std::string(LOG_PATH) + "CoalPassOutput_" + F.getName().str() + ".ll");
+        sep_center_sm("Modified LLVM IR for Function: " + F.getName().str(), outputLL);
+
+        outputLL <<  "This function cannot be coalesced!\n";
+
+        outputLL.close();
+    #endif
+        return;
+    }
+
+    /// TODO: rename global token registers
+
+    BlockDimRegister->setName("BlockDim");
+
+    BlockIndexRegister->setName("BlockIndex");
+
+    LocalTidRegister->setName("LocalTid");
+    
+
+
     /// TODO: for each CoalStore group, insert new offset calculation instruction before the original store
     insertGlobalTidRegister(F);
     for (auto& coalGroup : coalStoreGroupingDeque){
@@ -252,6 +276,7 @@ void coalPass::CoalPass::run_coal(Function &F, FunctionAnalysisManager &FAM){
             bb.setName("BB_" + std::to_string(bb_idx++));
         }
         sep_center_sm("Modified LLVM IR for Function: " + F.getName().str(), outputLL);
+        sep_center_sm( F.getName().str() + " has been coalesced!", outputLL);
         for (auto &bb : F){
             outputLL << bb.getName().str() << ":\n";
             for (auto &inst : bb){
