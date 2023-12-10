@@ -4,9 +4,10 @@
     The desired effect after applying the pass
 */
 
-__global__ void rgb_increase_brightness_coalesced(int *pixel_dst,
-                                                  int *pixel_src, int size,
-                                                  float factor) {
+__global__ void rgb_increase_brightness_pass_ready_coalesced(int *pixel_dst,
+                                                             int *pixel_src,
+                                                             int size,
+                                                             float factor) {
   /*
     Declaration
   */
