@@ -6,6 +6,8 @@ GPU_ARCH="sm_86"
 CUDA_PATH="/opt/cuda-11.7"
 NVCC="/opt/cuda-11.7/bin/nvcc"
 
+rm *.ll *.bc *.ptx *.o *.out
+
 # Compile the CUDA device and host code to rgb_device.bc and rgb_host.o
 clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-path=${CUDA_PATH} --cuda-device-only -emit-llvm -c rgb_pass_ready.cu -o rgb_pass_ready_device_origin.bc -Xclang -disable-O0-optnone
 clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-path=${CUDA_PATH} --cuda-host-only -emit-llvm -c rgb_pass_ready.cu -o rgb_pass_ready_host_origin.o -Xclang -disable-O0-optnone
@@ -14,8 +16,8 @@ clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-path=${CUDA_PATH} --cu
 opt -load-pass-plugin ../../build/coalpass/CoalPass.so -passes=coal rgb_pass_ready_device_origin.bc -o rgb_pass_ready_device_opted.bc
 
 # Convert rgb_device.bc to ptx
-llc -march=nvptx64 -mcpu=${GPU_ARCH} -O0 --nvptx-fma-level=0 --disable-nvptx-load-store-vectorizer --disable-nvptx-require-structured-cfg rgb_pass_ready_device_opted.bc -o rgb_pass_ready_device_opted.ptx
-llc -march=nvptx64 -mcpu=${GPU_ARCH} -O0 --nvptx-fma-level=0 --disable-nvptx-load-store-vectorizer --disable-nvptx-require-structured-cfg rgb_pass_ready_device_origin.bc -o rgb_pass_ready_device_origin.ptx
+llc -march=nvptx64 -mcpu=${GPU_ARCH} -O0 --nvvm-reflect-enable=0 --nvptx-fma-level=0 --disable-nvptx-load-store-vectorizer --disable-nvptx-require-structured-cfg rgb_pass_ready_device_opted.bc -o rgb_pass_ready_device_opted.ptx
+llc -march=nvptx64 -mcpu=${GPU_ARCH} -O0 --nvvm-reflect-enable=0 --nvptx-fma-level=0 --disable-nvptx-load-store-vectorizer --disable-nvptx-require-structured-cfg rgb_pass_ready_device_origin.bc -o rgb_pass_ready_device_origin.ptx
 
 # Convert rgb_device.ptx to cubin
 ${NVCC} --gpu-architecture=${GPU_ARCH} -O0 -Xptxas -O0 --cubin rgb_pass_ready_device_opted.ptx
