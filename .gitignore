@@ -1,5 +1,9 @@
 *.o
-.vscode
+*.bc
+*.ll
 *.out
+*.ptx
+*.cubin
 *.cache
+.vscode
 build
