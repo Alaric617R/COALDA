@@ -28,3 +28,7 @@ ${NVCC} --gpu-architecture=${GPU_ARCH} --device-link rgb_pass_ready_device_origi
 # Assemble the device code and main to generate an executable rgb.out
 ${NVCC} main.cu rgb_pass_ready_opted.o -o rgb_pass_ready_opted.out
 ${NVCC} main.cu rgb_pass_ready_opted.o -o rgb_pass_ready_origin.out
+
+# Run ncu
+# sudo /opt/cuda/nsight_compute/ncu -c 1 -o origin --section MemoryWorkloadAnalysis_Chart "./rgb_pass_ready_origin.out"
+# sudo /opt/cuda/nsight_compute/ncu -c 1 -o opted --section MemoryWorkloadAnalysis_Chart "./rgb_pass_ready_opted.out"
