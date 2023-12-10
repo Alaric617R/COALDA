@@ -1,16 +1,10 @@
 #!/bin/bash
 
-GPU_ARCH="sm_75"
+# This script walks through the compile pipeline and generate two executable, origin and opted
+
+GPU_ARCH="sm_86"
 CUDA_PATH="/opt/cuda-11.7"
 NVCC="/opt/cuda-11.7/bin/nvcc"
-
-cd ../..
-rm -rf build
-mkdir build
-cd build
-cmake ..
-make
-cd ../examples/rgb
 
 # Compile the CUDA device and host code to rgb_device.bc and rgb_host.o
 clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-path=${CUDA_PATH} --cuda-device-only -emit-llvm -c rgb_pass_ready.cu -o rgb_pass_ready_device_origin.bc -Xclang -disable-O0-optnone
