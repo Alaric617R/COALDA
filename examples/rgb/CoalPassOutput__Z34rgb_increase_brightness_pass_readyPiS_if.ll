@@ -33,16 +33,16 @@ BB_0:
   %24 = mul nsw i32 3, %23
   %25 = add nsw i32 %24, 0
   %26 = sext i32 %25 to i64
-  %valLoadNewOffsetBase1 = add i32 %"GlobalTIDScaled#3", %17
-  %valLoadNewOffsetWithOffset1 = add i32 %valLoadNewOffsetBase1, 0
+  %"offset$0TimesBlockDim" = mul i32 0, %17
+  %valLoadNewOffsetWithOffset1 = add i32 %"GlobalTIDScaled#3", %"offset$0TimesBlockDim"
   %27 = getelementptr inbounds i32, ptr %22, i32 %valLoadNewOffsetWithOffset1
   %28 = load i32, ptr %27, align 4
   %29 = load i32, ptr %15, align 4
   %30 = mul nsw i32 3, %29
   %31 = add nsw i32 %30, 0
   %32 = sext i32 %31 to i64
-  %storePtrGEPNewOffsetBase1 = add i32 %19, %17
-  %storePtrGEPNewOffset1 = add i32 %storePtrGEPNewOffsetBase1, 0
+  %"offset$0TimesBlockDimForStore" = mul i32 0, %17
+  %storePtrGEPNewOffset1 = add i32 %"offset$0TimesBlockDimForStore", %19
   %33 = getelementptr inbounds [1536 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ34rgb_increase_brightness_pass_readyPiS_ifE14pixel_smem_src to ptr), i64 0, i32 %storePtrGEPNewOffset1
   store i32 %28, ptr %33, align 4
   call void @llvm.nvvm.barrier0()
@@ -51,16 +51,16 @@ BB_0:
   %36 = mul nsw i32 3, %35
   %37 = add nsw i32 %36, 1
   %38 = sext i32 %37 to i64
-  %valLoadNewOffsetBase2 = add i32 %"GlobalTIDScaled#3", %17
-  %valLoadNewOffsetWithOffset2 = add i32 %valLoadNewOffsetBase2, 1
+  %"offset$1TimesBlockDim" = mul i32 1, %17
+  %valLoadNewOffsetWithOffset2 = add i32 %"GlobalTIDScaled#3", %"offset$1TimesBlockDim"
   %39 = getelementptr inbounds i32, ptr %34, i32 %valLoadNewOffsetWithOffset2
   %40 = load i32, ptr %39, align 4
   %41 = load i32, ptr %15, align 4
   %42 = mul nsw i32 3, %41
   %43 = add nsw i32 %42, 1
   %44 = sext i32 %43 to i64
-  %storePtrGEPNewOffsetBase2 = add i32 %19, %17
-  %storePtrGEPNewOffset2 = add i32 %storePtrGEPNewOffsetBase2, 1
+  %"offset$1TimesBlockDimForStore" = mul i32 1, %17
+  %storePtrGEPNewOffset2 = add i32 %"offset$1TimesBlockDimForStore", %19
   %45 = getelementptr inbounds [1536 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ34rgb_increase_brightness_pass_readyPiS_ifE14pixel_smem_src to ptr), i64 0, i32 %storePtrGEPNewOffset2
   store i32 %40, ptr %45, align 4
   call void @llvm.nvvm.barrier0()
@@ -69,16 +69,16 @@ BB_0:
   %48 = mul nsw i32 3, %47
   %49 = add nsw i32 %48, 2
   %50 = sext i32 %49 to i64
-  %valLoadNewOffsetBase3 = add i32 %"GlobalTIDScaled#3", %17
-  %valLoadNewOffsetWithOffset3 = add i32 %valLoadNewOffsetBase3, 2
+  %"offset$2TimesBlockDim" = mul i32 2, %17
+  %valLoadNewOffsetWithOffset3 = add i32 %"GlobalTIDScaled#3", %"offset$2TimesBlockDim"
   %51 = getelementptr inbounds i32, ptr %46, i32 %valLoadNewOffsetWithOffset3
   %52 = load i32, ptr %51, align 4
   %53 = load i32, ptr %15, align 4
   %54 = mul nsw i32 3, %53
   %55 = add nsw i32 %54, 2
   %56 = sext i32 %55 to i64
-  %storePtrGEPNewOffsetBase3 = add i32 %19, %17
-  %storePtrGEPNewOffset3 = add i32 %storePtrGEPNewOffsetBase3, 2
+  %"offset$2TimesBlockDimForStore" = mul i32 2, %17
+  %storePtrGEPNewOffset3 = add i32 %"offset$2TimesBlockDimForStore", %19
   %57 = getelementptr inbounds [1536 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ34rgb_increase_brightness_pass_readyPiS_ifE14pixel_smem_src to ptr), i64 0, i32 %storePtrGEPNewOffset3
   store i32 %52, ptr %57, align 4
   call void @llvm.nvvm.barrier0()
@@ -153,8 +153,8 @@ BB_0:
   %116 = mul nsw i32 3, %115
   %117 = add nsw i32 %116, 0
   %118 = sext i32 %117 to i64
-  %valLoadNewOffsetBase11 = add i32 %19, %17
-  %valLoadNewOffsetWithOffset12 = add i32 %valLoadNewOffsetBase11, 0
+  %"offset$0TimesBlockDim1" = mul i32 0, %17
+  %valLoadNewOffsetWithOffset12 = add i32 %19, %"offset$0TimesBlockDim1"
   %119 = getelementptr inbounds [1536 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ34rgb_increase_brightness_pass_readyPiS_ifE14pixel_smem_dst to ptr), i64 0, i32 %valLoadNewOffsetWithOffset12
   %120 = load i32, ptr %119, align 4
   %121 = load ptr, ptr %10, align 8
@@ -162,8 +162,8 @@ BB_0:
   %123 = mul nsw i32 3, %122
   %124 = add nsw i32 %123, 0
   %125 = sext i32 %124 to i64
-  %storePtrGEPNewOffsetBase13 = add i32 %"GlobalTIDScaled#3", %17
-  %storePtrGEPNewOffset14 = add i32 %storePtrGEPNewOffsetBase13, 0
+  %"offset$0TimesBlockDimForStore3" = mul i32 0, %17
+  %storePtrGEPNewOffset14 = add i32 %"offset$0TimesBlockDimForStore3", %"GlobalTIDScaled#3"
   %126 = getelementptr inbounds i32, ptr %121, i32 %storePtrGEPNewOffset14
   store i32 %120, ptr %126, align 4
   call void @llvm.nvvm.barrier0()
@@ -171,8 +171,8 @@ BB_0:
   %128 = mul nsw i32 3, %127
   %129 = add nsw i32 %128, 1
   %130 = sext i32 %129 to i64
-  %valLoadNewOffsetBase25 = add i32 %19, %17
-  %valLoadNewOffsetWithOffset26 = add i32 %valLoadNewOffsetBase25, 1
+  %"offset$1TimesBlockDim5" = mul i32 1, %17
+  %valLoadNewOffsetWithOffset26 = add i32 %19, %"offset$1TimesBlockDim5"
   %131 = getelementptr inbounds [1536 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ34rgb_increase_brightness_pass_readyPiS_ifE14pixel_smem_dst to ptr), i64 0, i32 %valLoadNewOffsetWithOffset26
   %132 = load i32, ptr %131, align 4
   %133 = load ptr, ptr %10, align 8
@@ -180,8 +180,8 @@ BB_0:
   %135 = mul nsw i32 3, %134
   %136 = add nsw i32 %135, 1
   %137 = sext i32 %136 to i64
-  %storePtrGEPNewOffsetBase27 = add i32 %"GlobalTIDScaled#3", %17
-  %storePtrGEPNewOffset28 = add i32 %storePtrGEPNewOffsetBase27, 1
+  %"offset$1TimesBlockDimForStore7" = mul i32 1, %17
+  %storePtrGEPNewOffset28 = add i32 %"offset$1TimesBlockDimForStore7", %"GlobalTIDScaled#3"
   %138 = getelementptr inbounds i32, ptr %133, i32 %storePtrGEPNewOffset28
   store i32 %132, ptr %138, align 4
   call void @llvm.nvvm.barrier0()
@@ -189,8 +189,8 @@ BB_0:
   %140 = mul nsw i32 3, %139
   %141 = add nsw i32 %140, 2
   %142 = sext i32 %141 to i64
-  %valLoadNewOffsetBase39 = add i32 %19, %17
-  %valLoadNewOffsetWithOffset310 = add i32 %valLoadNewOffsetBase39, 2
+  %"offset$2TimesBlockDim9" = mul i32 2, %17
+  %valLoadNewOffsetWithOffset310 = add i32 %19, %"offset$2TimesBlockDim9"
   %143 = getelementptr inbounds [1536 x i32], ptr addrspacecast (ptr addrspace(3) @_ZZ34rgb_increase_brightness_pass_readyPiS_ifE14pixel_smem_dst to ptr), i64 0, i32 %valLoadNewOffsetWithOffset310
   %144 = load i32, ptr %143, align 4
   %145 = load ptr, ptr %10, align 8
@@ -198,8 +198,8 @@ BB_0:
   %147 = mul nsw i32 3, %146
   %148 = add nsw i32 %147, 2
   %149 = sext i32 %148 to i64
-  %storePtrGEPNewOffsetBase311 = add i32 %"GlobalTIDScaled#3", %17
-  %storePtrGEPNewOffset312 = add i32 %storePtrGEPNewOffsetBase311, 2
+  %"offset$2TimesBlockDimForStore11" = mul i32 2, %17
+  %storePtrGEPNewOffset312 = add i32 %"offset$2TimesBlockDimForStore11", %"GlobalTIDScaled#3"
   %150 = getelementptr inbounds i32, ptr %145, i32 %storePtrGEPNewOffset312
   store i32 %144, ptr %150, align 4
   ret void

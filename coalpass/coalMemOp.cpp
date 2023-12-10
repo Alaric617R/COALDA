@@ -1,4 +1,5 @@
 #include "coalMemOp.h"
+#include <llvm/IR/InstrTypes.h>
 
 unordered_set<const char*> OffsetAllowedOpcodeFSM{
     // unary op
@@ -745,12 +746,19 @@ bool CoalStoreGroup::transform(){
         assert(origLoadGEP != nullptr && "CoalStore's load inst must be loading from GEP!");
         /// TODO: generate and insert globalTidScaledOffset register, inserting before whichever comes first: origLoadGEP or origCoalStorePtrGEP
         Instruction* GlobalTidScaledOffset = insertGlobalTidWithScaledOffsetRegister(elemCoalStore.valOpCoalLoad.offsetEquation.stride);
-        // insert localTid/globalTid + blockDim
+        // insert localTid/globalTid + blockDim * offset
         Instruction* tidReg = (elemCoalStore.valOpCoalLoad.offsetEquation.batchedTID) ? GlobalTidScaledOffset : LocalTidRegister;
-        BinaryOperator* newLoadAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidReg, BlockDimRegister, "valLoadNewOffsetBase"+std::to_string(id_cnt), ValueOpLoadInst->getParent());
-        newLoadAddressOffsetBase->moveBefore(origLoadGEP);
-        BinaryOperator* newLoadAddressOffset = BinaryOperator::Create(Instruction::Add, newLoadAddressOffsetBase, ConstantInt::get(Type::getInt32Ty(tidReg->getContext()), 
-                                                                      elemCoalStore.valOpCoalLoad.offsetEquation.offset), "valLoadNewOffsetWithOffset"+std::to_string(id_cnt), ValueOpLoadInst->getParent());
+        BinaryOperator* offsetTimesBlockDim = BinaryOperator::Create(Instruction::Mul, 
+                                                                     ConstantInt::get(Type::getInt32Ty(tidReg->getContext()), elemCoalStore.valOpCoalLoad.offsetEquation.offset), 
+                                                                     BlockDimRegister, 
+                                                                     "offset$"+std::to_string(elemCoalStore.valOpCoalLoad.offsetEquation.offset)+"TimesBlockDim", 
+                                                                     ValueOpLoadInst->getParent());
+        offsetTimesBlockDim->moveBefore(origLoadGEP);
+        BinaryOperator* newLoadAddressOffset = BinaryOperator::Create(Instruction::Add, 
+                                                                      tidReg, 
+                                                                      offsetTimesBlockDim,
+                                                                      "valLoadNewOffsetWithOffset"+std::to_string(id_cnt), 
+                                                                      ValueOpLoadInst->getParent());
         newLoadAddressOffset->moveBefore(origLoadGEP);
         printInfo(debug, "new address offset [", id_cnt, "]:\t", *newLoadAddressOffset);
         // GetElementPtrInst* newLoadAddress = nullptr;
@@ -778,12 +786,19 @@ bool CoalStoreGroup::transform(){
         assert(ptrOpGEP != nullptr && "CoalStore's pointer Op must be GEP!");
         Instruction* globalTidScaledOffsetForStore = insertGlobalTidWithScaledOffsetRegister(elemCoalStore.storeSrcPtrExpr.offsetEquation.stride);
         assert(GlobalTidScaledOffset == globalTidScaledOffsetForStore && "load and store should have same stride!");
-        /// TODO: change the offset of GEP from stride * tid + offset to localTid/globalTid + blockDim + offset
+        /// TODO: change the offset of GEP from stride * tid + offset to localTid/globalTid + blockDim * offset
         Instruction* tidRegPtrOp = (elemCoalStore.storeSrcPtrExpr.offsetEquation.batchedTID) ? GlobalTidScaledOffset : LocalTidRegister;
-        BinaryOperator* newStorePtrAddressOffsetBase = BinaryOperator::Create(Instruction::Add, tidRegPtrOp, BlockDimRegister, "storePtrGEPNewOffsetBase"+std::to_string(id_cnt), ptrOpGEP->getParent());
-        newStorePtrAddressOffsetBase->moveBefore(ptrOpGEP);
-        BinaryOperator* newStorePtrAddressOffset = BinaryOperator::Create(Instruction::Add, newStorePtrAddressOffsetBase, ConstantInt::get(Type::getInt32Ty(tidRegPtrOp->getContext()), 
-                                                                          elemCoalStore.storeSrcPtrExpr.offsetEquation.offset), "storePtrGEPNewOffset"+std::to_string(id_cnt), ptrOpGEP->getParent());
+        BinaryOperator* offsetTimesBlockDimForStore = BinaryOperator::Create(Instruction::Mul, 
+                                                                             ConstantInt::get(Type::getInt32Ty(tidReg->getContext()), elemCoalStore.valOpCoalLoad.offsetEquation.offset), 
+                                                                             BlockDimRegister, 
+                                                                           "offset$"+std::to_string(elemCoalStore.valOpCoalLoad.offsetEquation.offset)+"TimesBlockDimForStore", 
+                                                                     ptrOpGEP->getParent());
+        offsetTimesBlockDimForStore->moveBefore(ptrOpGEP);
+        BinaryOperator* newStorePtrAddressOffset = BinaryOperator::Create(Instruction::Add, 
+                                                                          offsetTimesBlockDimForStore, 
+                                                                          tidRegPtrOp, 
+                                                                        "storePtrGEPNewOffset"+std::to_string(id_cnt), 
+                                                                 ptrOpGEP->getParent());
         newStorePtrAddressOffset->moveBefore(ptrOpGEP);
         /// TODO: change store ptr op GEP offset operand
         if (ptrOpGEP->getNumOperands() == 3){
