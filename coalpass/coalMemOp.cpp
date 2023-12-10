@@ -1,5 +1,6 @@
 #include "coalMemOp.h"
 #include <llvm/IR/InstrTypes.h>
+#include <llvm/IR/Instructions.h>
 
 unordered_set<const char*> OffsetAllowedOpcodeFSM{
     // unary op
@@ -753,6 +754,7 @@ bool CoalStoreGroup::transform(){
                                                                      BlockDimRegister, 
                                                                      "offset$"+std::to_string(elemCoalStore.valOpCoalLoad.offsetEquation.offset)+"TimesBlockDim", 
                                                                      ValueOpLoadInst->getParent());
+        offsetTimesBlockDim->setHasNoSignedWrap(true);
         offsetTimesBlockDim->moveBefore(origLoadGEP);
         BinaryOperator* newLoadAddressOffset = BinaryOperator::Create(Instruction::Add, 
                                                                       tidReg, 
@@ -762,9 +764,13 @@ bool CoalStoreGroup::transform(){
         newLoadAddressOffset->moveBefore(origLoadGEP);
         printInfo(debug, "new address offset [", id_cnt, "]:\t", *newLoadAddressOffset);
         // GetElementPtrInst* newLoadAddress = nullptr;
-
+        ZExtInst* zextInstLoad = new ZExtInst(newLoadAddressOffset, 
+                                             Type::getInt64Ty(newLoadAddressOffset->getContext()), 
+                                        "LoadValLoadNewOffsetZext"+std::to_string(id_cnt),
+                                     ValueOpLoadInst->getParent());
+        zextInstLoad->moveBefore(origLoadGEP);
         if (origLoadGEP->getNumOperands() == 3){
-            origLoadGEP->setOperand(2, newLoadAddressOffset);
+            origLoadGEP->setOperand(2, zextInstLoad);
             /// deal with shared memory
             // Value* indexList[2] = {ConstantInt::get(Type::getInt64Ty(tidReg->getContext()),0), newLoadAddressOffset};
             // newLoadAddress = GetElementPtrInst::Create(origLoadGEP->getSourceElementType(), elemCoalStore.valOpCoalLoad.srcPtrExpr.getArg(), 
@@ -773,7 +779,7 @@ bool CoalStoreGroup::transform(){
             printInfo(debug, "new GEP for Load shared memory:\t", *origLoadGEP);
         }
         else{
-            origLoadGEP->setOperand(1, newLoadAddressOffset);
+            origLoadGEP->setOperand(1, zextInstLoad);
             // Value* indexList[1] = {newLoadAddressOffset};
             // newLoadAddress = GetElementPtrInst::Create(origLoadGEP->getSourceElementType(), elemCoalStore.valOpCoalLoad.srcPtrExpr.getArg(), 
             //                                            ArrayRef<Value*>(indexList, 1), "valLoadNewGEPAddr" + std::to_string(id_cnt), ValueOpLoadInst->getParent());
@@ -793,6 +799,7 @@ bool CoalStoreGroup::transform(){
                                                                              BlockDimRegister, 
                                                                            "offset$"+std::to_string(elemCoalStore.valOpCoalLoad.offsetEquation.offset)+"TimesBlockDimForStore", 
                                                                      ptrOpGEP->getParent());
+        offsetTimesBlockDimForStore->setHasNoSignedWrap(true);
         offsetTimesBlockDimForStore->moveBefore(ptrOpGEP);
         BinaryOperator* newStorePtrAddressOffset = BinaryOperator::Create(Instruction::Add, 
                                                                           offsetTimesBlockDimForStore, 
@@ -800,14 +807,20 @@ bool CoalStoreGroup::transform(){
                                                                         "storePtrGEPNewOffset"+std::to_string(id_cnt), 
                                                                  ptrOpGEP->getParent());
         newStorePtrAddressOffset->moveBefore(ptrOpGEP);
+
+        ZExtInst* zextInst = new ZExtInst(newStorePtrAddressOffset, 
+                                         Type::getInt64Ty(newStorePtrAddressOffset->getContext()), 
+                                    "StorePtrGEPNewOffsetZext"+std::to_string(id_cnt),
+                                 ptrOpGEP->getParent());
+        zextInst->moveBefore(ptrOpGEP);
         /// TODO: change store ptr op GEP offset operand
         if (ptrOpGEP->getNumOperands() == 3){
             printInfo(debug, "new GEP offset for Store ptr Op shared memory:\t", *newStorePtrAddressOffset);
-            ptrOpGEP->setOperand(2, newStorePtrAddressOffset);
+            ptrOpGEP->setOperand(2, zextInst);
         }
         else{
             printInfo(debug, "new GEP offset for Store ptr Op:\t", *newStorePtrAddressOffset);
-            ptrOpGEP->setOperand(1, newStorePtrAddressOffset);
+            ptrOpGEP->setOperand(1, zextInst);
         }
 
     }
