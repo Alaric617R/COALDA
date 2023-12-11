@@ -4,10 +4,10 @@
 GPU_ARCH="sm_75"
 
 # TODO: Set CUDA path
-CUDA_PATH="/opt/cuda-11.7"
+CUDA_PATH="/opt/cuda"
 
 # TODO: Set nvcc path
-NVCC="/opt/cuda-11.7/bin/nvcc"
+NVCC="/opt/cuda/bin/nvcc"
 
 # NOTE: If you have no inline problem, try to switch to CUDA 11.7
 
@@ -19,6 +19,7 @@ cd build
 cmake ..
 make
 cd ../examples/rgb
+
 
 # Seperate Compilation follows the below process
 # "nvptx64-nvidia-cuda" - "clang", inputs: ["rgb.cu"], output: "/tmp/rgb-c42443/rgb-sm_35.s"
@@ -48,10 +49,10 @@ ${NVCC} --gpu-architecture=${GPU_ARCH} --cubin ${1}_device.ptx
 ${NVCC} --gpu-architecture=${GPU_ARCH} --device-link ${1}_device.cubin ${1}_host.o -o ${1}.o
 
 # Assemble the device code and main to generate an executable rgb.out
-${NVCC} main.cu ${1}.o -o ${1}.out
+${NVCC} -gencode arch=compute_75,code=sm_75 ${1}.cu ${1}.o -o ${1}.out
 
 # Run the executable
 ./${1}.out
 
 # Remove redundant files
-rm *.bc *.ptx *.o
+# rm *.bc *.ptx *.o
