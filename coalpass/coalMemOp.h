@@ -20,6 +20,7 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <map>
 
 #include "debugLog.h"
 #include "coalMemAST.h"
@@ -32,6 +33,7 @@ using std::unordered_map;
 using std::unordered_set;
 using std::string;
 using std::nullopt;
+using std::map;
 using namespace llvm;
 
 extern unordered_set<const char*> OffsetAllowedOpcodeFSM;
