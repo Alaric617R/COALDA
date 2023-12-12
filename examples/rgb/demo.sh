@@ -6,6 +6,7 @@ GPU_ARCH="sm_86"
 CUDA_PATH="/opt/cuda-11.7"
 NVCC="/opt/cuda-11.7/bin/nvcc"
 
+# Clean up
 rm *.ll *.bc *.ptx *.o *.out
 
 # Compile the CUDA device and host code to rgb_device.bc and rgb_host.o
@@ -14,6 +15,9 @@ clang++ -stdlib=libc++ --cuda-gpu-arch=${GPU_ARCH} --cuda-path=${CUDA_PATH} --cu
 
 # Apply the pass to the device bc code
 opt -load-pass-plugin ../../build/coalpass/CoalPass.so -passes=coal rgb_pass_ready_device_origin.bc -o rgb_pass_ready_device_opted.bc
+
+# Generate .ll
+llvm-dis *.bc
 
 # Convert rgb_device.bc to ptx
 llc -march=nvptx64 -mcpu=${GPU_ARCH} -O0 --nvvm-reflect-enable=0 --nvptx-fma-level=0 --disable-nvptx-load-store-vectorizer --disable-nvptx-require-structured-cfg rgb_pass_ready_device_opted.bc -o rgb_pass_ready_device_opted.ptx
