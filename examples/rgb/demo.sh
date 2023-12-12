@@ -33,4 +33,11 @@ ${NVCC} main.cu rgb_pass_ready_opted.o -O0 -Xptxas -O0 -o rgb_pass_ready_origin.
 
 # Run ncu
 # sudo /opt/cuda/nsight_compute/ncu -c 1 -o origin --section MemoryWorkloadAnalysis_Chart "./rgb_pass_ready_origin.out"
-sudo /opt/cuda/nsight_compute/ncu -f -c 1 -o opted --section MemoryWorkloadAnalysis_Chart "./rgb_pass_ready_opted.out"
+# sudo /opt/cuda/nsight_compute/ncu -f -c 1 -o opted --section MemoryWorkloadAnalysis_Chart "./rgb_pass_ready_opted.out"
+
+# ls *.out
+# rm images/1_modified.ppm
+# ./rgb_pass_ready_origin.out
+# mv images/1_modified.ppm images/1_origin.ppm
+# ./rgb_pass_ready_device_opted.out
+
